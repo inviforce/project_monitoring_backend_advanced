@@ -22,11 +22,11 @@ function createGauge(id, initialValue, titleText) {
         value: initialValue,
         title: { text: titleText, font: { size: 20 } },
         gauge: {
-            axis: { range: [0, 1000], tickwidth: 1, tickcolor: "darkblue" },
+            axis: { range: [0, 600], tickwidth: 1, tickcolor: "darkblue" },
             bar: { color: "darkblue", thickness: 0.05, length: 0.8 },
             steps: [
-                { range: [0, 500], color: "rgba(255, 99, 132, 0.6)" },
-                { range: [500, 1000], color: "rgba(54, 162, 235, 0.6)" }
+                { range: [0, 300], color: "rgba(255, 99, 132, 0.6)" },
+                { range: [300, 600], color: "rgba(54, 162, 235, 0.6)" }
             ]
         }
     }];
