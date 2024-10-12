@@ -59,7 +59,14 @@ button {
 .gauge {
   padding: 20px;
   border: 10px ;
+<<<<<<< HEAD
   
+=======
+}
+
+.line{
+  display: block;
+>>>>>>> e84432e (connection of backend and frontend)
 }
 
 :root {
