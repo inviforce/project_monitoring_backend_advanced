@@ -1,8 +1,0 @@
-.gauge-container {
-    display: flex;
-    justify-content: left;
-    flex-wrap: wrap;
-  }
-  .gauge {
-    padding: 20px;
-  }
