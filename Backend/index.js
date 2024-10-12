@@ -3,7 +3,6 @@ const url = require('url');
 const express = require('express');
 const port = 8000;
 const mongoose = require('mongoose')
-const shortID = require('shortid');
 const http = require('http');
 const moment = require('moment');
 const { stringify } = require('querystring');
