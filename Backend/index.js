@@ -1,115 +1,125 @@
+const WebSocket = require('ws');
 const mqtt = require('mqtt');
-const url = require('url');
-const express = require('express');
-const port = 8000;
-const mongoose = require('mongoose')
-const http = require('http');
-const moment = require('moment');
-const { stringify } = require('querystring');
+const mongoose = require("mongoose");
+const { newuser } = require("./db_inserter/insert.js");
 
-const app = express();
+const PORT = 3027;
+const wss = new WebSocket.Server({ port: PORT });
 
-const dataSchema = new mongoose.Schema({
-    _id : {
-        type : String,
-        required : true,
-    },
-    device_id : {
-        type : String,
-        required : true,
-    },
-    Type : {
-        type : String,
-        required : true,
-    },
-    value : {
-        type : Number,
-        required : true,
-    },
-    created : {
-        type : Date ,
-        default : moment().utc().add(5,'hours'),
-    },
-} , {
-    _id : false,
-    id : false,
-    versionKey : false,
-    strict : false
-})
+const mongodb = 'mongodb://127.0.0.1:27017/prj';
+mongoose.connect(mongodb)
+    .then(() => {
+        console.log("Connected to MongoDB");
+    })
+    .catch(err => {
+        console.error("MongoDB connection error:", err);
+    });
 
-const data = mongoose.model("user" , dataSchema);
+// Function to parse the incoming device data
+function parseDeviceData(input) {
+    // Remove the last '*' character and split by '-'
+    const data = input.replace('*', '').split('-');
 
-mongoose.connection.on('connected' , ()=>{
-    console.log('MongoDB connected');
-})
+    // Check if the number of elements is as expected (e.g., 9 parts)
+    if (data.length !== 9) {
+        throw new Error(`Unexpected data format: ${input}`);
+    }
+    
+    // Create an object with the extracted values
+    const deviceData = {
+        deviceID: data[0],
+        temperature: parseFloat(data[1]),
+        humidity: parseFloat(data[2]),
+        voltage: parseFloat(data[3]),
+        current: parseFloat(data[4]),
+        power: parseFloat(data[5]),
+        energy: parseFloat(data[6]),
+        frequency: parseFloat(data[7]),
+        powerFactor: parseFloat(data[8])
+    };
 
-mongoose.connection.on('error' , (err) => {
-    console.log('Error connecting MongoDb',err);
-})
+    return deviceData;
+}
 
-
-app.get("/" , (req,res)=> {
-    return res.send("hello fromt the home page");
-})
-
+// MQTT client setup
 const client = mqtt.connect({
-    host: 'e800a45536b84764b7075bdc33165c5a.s1.eu.hivemq.cloud',
-    port: 8883, // Secure port
-    username: 'hellomqtt',
-    password: 'Hello@123',
-    protocol: 'mqtts' // Secure connection
+    host: 'befc1420952d4ab8b4b9284843b122b9.s1.eu.hivemq.cloud',
+    port: 8883,
+    username: 'someone',
+    password: 'some123somE',
+    protocol: 'mqtts'
 });
 
-const topic = "topic1";
-
-client.on('connect',() => {
-    console.log('MQTT Connected');
-    client.subscribe('current',(err)=>{
-        if(!err){
-            console.log("no error");
-        }
-    });
-    client.subscribe(topic);
-})
-
-client.on('connect',() => {
-    console.log('MQTT Connected');
-    client.subscribe('current',(err)=>{
-        if(!err){
-            console.log("no error");
-        }
-    });
-    client.subscribe("topic2");
-})
-
+// Handle MQTT connection
 client.on('connect', () => {
-    client.publish("topicr", 'nodejs mqtt test',(error) => {
-      if (error) {
-        console.error(error)
-      }
-    })
-  })
-  
+    console.log('Connected to HiveMQ broker');
+    client.subscribe('topic7', { qos: 1 }, (err) => {
+        if (!err) {
+            console.log("Successfully subscribed to topic7");
+        } else {
+            console.error("Subscription error:", err);
+        }
+    });
+});
 
-client.on("message",async (topic,message)=>{
-    console.log(`${topic} : ${message}`)
-
-    let data = message.toString();
-    data = JSON.parse(data);
-    data._id = shortID.generate();
-
-    await saveData(data);
-})
-
-saveData = async(data) => {
-    data = new Events(data);
-    data = await data.save();
-    console.log('Saved Data:' , data);
-}
+// Handle MQTT messages
+client.on("message", (topic, message) => {
+    // Ensure we're processing the correct topic
+    if (topic !== 'topic7') {
+        console.warn(`Unexpected topic received: ${topic}`);
+        return;
+    }
     
+    try {
+        // Parse the incoming message
+        const mess = parseDeviceData(message.toString());
 
-app.listen(port , ()=>  {
+        // Prepare the latest data to send via WebSocket
+        const latestData = {
+            voltage: mess.voltage,
+            current: mess.current,
+            power: mess.power,
+            energy: mess.energy,
+            frequency: mess.frequency,
+            powerFactor: mess.powerFactor,  
+            temperature: mess.temperature
+        };
 
-    mongoose.connect('mongodb+srv://hemlatasharmasatish:2023uce0064@cluster0.lm16n.mongodb.net/Practice?retryWrites=true&w=majority&appName=Cluster0')
-    console.log(`Server is connected on PORT ${port}`);
-})
+        // Send the latest data to all WebSocket clients
+        wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(latestData));
+            }
+        });
+
+        // Store the parsed data in MongoDB
+        newuser(
+            mess.voltage,
+            mess.current,
+            mess.power,
+            mess.energy,
+            mess.frequency,
+            mess.powerFactor,
+            mess.temperature,  // Ensure temperature is passed here
+            (err) => {
+                if (err) {
+                    console.error("Error inserting data:", err);
+                    return;
+                }
+                console.log("Data inserted successfully into MongoDB");
+            }
+        );
+    } catch (parseError) {
+        console.error("Failed to parse message:", parseError);
+    }
+});
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+    console.log('New client connected');
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
+
+console.log(`WebSocket server is running on ws://localhost:${PORT}`);
