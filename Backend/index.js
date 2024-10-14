@@ -43,10 +43,10 @@ function parseDeviceData(input) {
 
 // MQTT client setup
 const client = mqtt.connect({
-    host: 'befc1420952d4ab8b4b9284843b122b9.s1.eu.hivemq.cloud',
+    host: 'http://e800a45536b84764b7075bdc33165c5a.s1.eu.hivemq.cloud/',
     port: 8883,
-    username: 'someone',
-    password: 'some123somE',
+    username: 'hellomqtt',
+    password: 'Hello@123',
     protocol: 'mqtts'
 });
 
@@ -84,7 +84,7 @@ client.on("message", (topic, message) => {
             powerFactor: mess.powerFactor,  
             temperature: mess.temperature
         };
-
+        //console.log(latestData)
         // Send the latest data to all WebSocket clients
         wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {

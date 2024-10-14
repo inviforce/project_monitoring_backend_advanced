@@ -8,7 +8,7 @@ socket.onmessage = function(event) {
     try {
         const mess = JSON.parse(event.data);
         console.log(mess);
-        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.power_f, mess.temperature);
+        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature);
     } catch (error) {
         console.error("Error parsing message:", error);
         console.log("Problematic message:", event.data);
@@ -16,18 +16,19 @@ socket.onmessage = function(event) {
 };
 
 // Function to create a gauge
-function createGauge(id, initialValue, titleText) {
+function createGauge(id, initialValue, titleText,initialrange,finalrange) {
     const data = [{
         type: "indicator",
         mode: "gauge+number",
         value: initialValue,
         title: { text: titleText, font: { size: 20 } },
+        number: { valueformat: ".2f" },
         gauge: {
-            axis: { range: [0, 1000], tickwidth: 1, tickcolor: "darkblue" },
+            axis: { range: [initialrange, finalrange], tickwidth: 1, tickcolor: "darkblue" },
             bar: { color: "darkblue", thickness: 0.05, length: 0.8 },
             steps: [
-                { range: [0, 500], color: "rgba(255, 99, 132, 0.6)" },
-                { range: [500, 1000], color: "rgba(54, 162, 235, 0.6)" }
+                { range: [0, (finalrange+initialrange)/2], color: "rgba(255, 99, 132, 0.6)" },
+                { range: [(finalrange+initialrange)/2, finalrange], color: "rgba(54, 162, 235, 0.6)" }
             ]
         }
     }];
@@ -59,7 +60,10 @@ function lineGraph(id, initialValue, titleText) {
     var layout = {
         title: titleText,
         xaxis: { title: 'Time (ms)' },
-        yaxis: { title: 'Temperature Value' },
+        yaxis: { 
+            title: 'Temperature Value',
+            tickformat: '.2f'  // Display y-axis values with 2 decimal places
+        },
         margin: { t: 50 }
     };
 
@@ -67,12 +71,12 @@ function lineGraph(id, initialValue, titleText) {
 }
 
 // Create the gauges with initial values
-createGauge('gauge1', 0, 'Voltage');
-createGauge('gauge2', 0, 'Current');
-createGauge('gauge3', 0, 'Power');
-createGauge('gauge4', 0, 'Energy');
-createGauge('gauge5', 0, 'Frequency');
-createGauge('gauge6', 0, 'Power Factor');
+createGauge('gauge1', 0, 'Voltage',0.00,500.00);
+createGauge('gauge2', 0, 'Current',0.0,100.0);
+createGauge('gauge3', 0, 'Power',0.0,100.0);
+createGauge('gauge4', 0, 'Energy',0.0,100.0);
+createGauge('gauge5', 0, 'Frequency',0.0,200.0);
+createGauge('gauge6', 0, 'Power Factor',0.0,1.0);
 lineGraph('line1', 0, 'Temperature Over Time');
 
 // Function to update the gauges with new data
