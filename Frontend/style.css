@@ -10,18 +10,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-.container10 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  border: 10px solid white;
-  border-radius: 5px;
-  background-color: white;
-}
+
 
 label {
   margin-bottom: 5px;
@@ -224,6 +213,7 @@ header {
   overflow-y: scroll;
   overflow-x: hidden;
   transition: all 0.5s ease-in-out;
+  z-index: 10;
 }
 .navcontainer::-webkit-scrollbar {
   display: none;
@@ -392,6 +382,98 @@ header {
   color: white;
   border-radius: 4px;
 }
+
+/* Base styles for container10 */
+.container10 {
+  width: 100%;
+  padding: 20px;
+  background-color: #f1f1f1;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  
+}
+
+/* For small screens (up to 600px) */
+@media screen and (max-width: 600px) {
+  .container10 {
+      width: 90%;
+      padding: 10px;
+      margin: 10px auto;
+  }
+
+  .container10 form {
+      display: block;
+      position: absolute;
+  }
+
+  .container10 label,
+  .container10 input {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+
+  .container10 button {
+      width: 100%;
+      padding: 10px;
+  }
+}
+
+/* For medium screens (601px to 1024px) */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+  .container10 {
+      width: 80%;
+      padding: 15px;
+      margin: 15px auto;
+  }
+
+  .container10 form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+  }
+
+  .container10 label,
+  .container10 input {
+      flex: 1 1 45%; /* Two items per row */
+      margin-bottom: 10px;
+  }
+
+  .container10 button {
+      flex: 1 1 100%;
+      padding: 10px;
+  }
+}
+
+/* For large screens (above 1024px) */
+@media screen and (min-width: 1025px) {
+  .container10 {
+      width: 25%;
+      padding: 20px;
+      margin: 20px auto;
+  }
+
+  .container10 form {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+  }
+
+  .container10 label,
+  .container10 input {
+      flex: 1 1 30%; /* Three items per row */
+      margin-bottom: 15px;
+  }
+
+  .container10 button {
+      flex: 1 1 100%;
+      padding: 12px;
+  }
+}
+
+
+
+
 /* Responsive CSS Here */
 @media screen and (max-width: 950px) {
     .nav-img {
@@ -553,4 +635,29 @@ header {
       width: 180px;
     }
   }
+
+
+  /* Add this to your existing CSS file */
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+body.dark-theme header,
+body.dark-theme .nav {
+  background-color: #1e1e1e;
+}
+
+body.dark-theme .box {
+  background-color: #242424;
+  border: 1px solid #333;
+}
+
+body.dark-theme h2, 
+body.dark-theme h3 {
+  color: #ffffff;
+}
+
+
+
   

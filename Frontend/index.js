@@ -30,4 +30,3 @@ document.getElementById("deviceDataForm").addEventListener("submit", async funct
         }
     }
 );
-
