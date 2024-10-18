@@ -8,7 +8,7 @@ socket.onmessage = function(event) {
     try {
         const mess = JSON.parse(event.data);
         console.log(mess);
-        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature);
+        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature,mess.humidity);
     } catch (error) {
         console.error("Error parsing message:", error);
         console.log("Problematic message:", event.data);
@@ -61,7 +61,7 @@ function lineGraph(id, initialValue, titleText) {
         title: titleText,
         xaxis: { title: 'Time (ms)' },
         yaxis: { 
-            title: 'Temperature Value',
+            title: titleText,
             tickformat: '.2f'  // Display y-axis values with 2 decimal places
         },
         margin: { t: 50 }
@@ -78,9 +78,11 @@ createGauge('gauge4', 0, 'Energy',0.0,100.0);
 createGauge('gauge5', 0, 'Frequency',0.0,200.0);
 createGauge('gauge6', 0, 'Power Factor',0.0,1.0);
 lineGraph('line1', 0, 'Temperature Over Time');
+lineGraph('line2', 0, 'Humidity Over Time');
+
 
 // Function to update the gauges with new data
-function updateGauges(voltage, current, power, energy, frequency, power_f, temperature) {
+function updateGauges(voltage, current, power, energy, frequency, power_f, temperature,humidity) {
     Plotly.update('gauge1', { value: [voltage] }, [0]);
     Plotly.update('gauge2', { value: [current] }, [0]);
     Plotly.update('gauge3', { value: [power] }, [0]);
@@ -95,7 +97,9 @@ function updateGauges(voltage, current, power, energy, frequency, power_f, tempe
 
     // Update the line graph with new data
     Plotly.update('line1', { y: [temperatureData], x: [timeData] }, [0]);
+    Plotly.update('line2', { y: [humidity], x: [timeData] }, [0]);
 }
+
 
 
 

@@ -1,8 +1,9 @@
 //const mongoose=require("mongoose");
 const User = require("../model/user.js");
 
-async function newuser(voltage, current, power, energy, frequency, powerFactor, temperature) {
+async function newuser(deviceId,voltage, current, power, energy, frequency, powerFactor, temperature) {
     const newUser = new User({
+        deviceId:deviceId,
         voltage: voltage,
         current: current,
         power: power,

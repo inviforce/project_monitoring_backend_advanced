@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const userschema = new mongoose.Schema({
+    deviceId:{
+        type:String,
+        required:true,
+    },
     voltage: {
         type: Number,
         required: true,
