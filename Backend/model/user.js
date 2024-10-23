@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const userschema = new mongoose.Schema({
-    deviceId:{
-        type:String,
-        required:true,
+    deviceId: {
+        type: String,
+        required: true,
     },
     voltage: {
         type: Number,
@@ -33,7 +33,10 @@ const userschema = new mongoose.Schema({
         type: Number,
         required: true,
     }
-});
+}, { timestamps: true });
+
+module.exports = mongoose.model("User", userschema);
+
 
 const User = mongoose.model('User', userschema);
 module.exports = User;
