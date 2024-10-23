@@ -838,5 +838,138 @@ body.dark-theme button {
 }
 
 
+#timeRangeBox {
+  max-width: 700px;
+  float: left;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 30px;
+}
 
+#timeRangeBox h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#timeRangeForm .form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+#timeRangeForm .form-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
+#timeRangeForm .form-group:last-child {
+  margin-right: 0;
+}
+
+#timeRangeForm label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+#timeRangeForm input[type="date"],
+#timeRangeForm input[type="time"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#timeRangeForm button {
+  background-color: #0082e6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+#timeRangeForm button:hover {
+  background-color: #0066b3;
+}
+
+/* Dark theme styles */
+body.dark-theme #timeRangeBox {
+  background-color: #1e1e1e;
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme #timeRangeBox h2 {
+  color: #ffffff;
+}
+
+body.dark-theme #timeRangeForm label {
+  color: #bbbbbb;
+}
+
+body.dark-theme #timeRangeForm input[type="date"],
+body.dark-theme #timeRangeForm input[type="time"] {
+  background-color: #333333;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+body.dark-theme #timeRangeForm button {
+  background-color: #bb86fc;
+  color: #000000;
+}
+
+body.dark-theme #timeRangeForm button:hover {
+  background-color: #9a68d4;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  #timeRangeBox {
+      padding: 15px;
+  }
+
+  #timeRangeForm .form-row {
+      flex-direction: column;
+  }
+
+  #timeRangeForm .form-group {
+      margin-right: 0;
+      margin-bottom: 15px;
+  }
+
+  #timeRangeForm input[type="date"],
+  #timeRangeForm input[type="time"] {
+      font-size: 16px; /* Larger font size for mobile */
+  }
+
+  #timeRangeForm button {
+      width: 100%;
+      padding: 12px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #timeRangeBox h2 {
+      font-size: 20px;
+  }
+
+  #timeRangeForm label {
+      font-size: 14px;
+  }
+
+  #timeRangeForm input[type="date"],
+  #timeRangeForm input[type="time"] {
+      padding: 10px;
+  }
+
+  #timeRangeForm button {
+      font-size: 14px;
+  }
+}
   
