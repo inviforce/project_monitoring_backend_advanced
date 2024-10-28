@@ -1,4 +1,3 @@
-// timeRange.js
 const timeRangeData = {
     startDateTime: null,
     endDateTime: null,
@@ -12,7 +11,7 @@ function initializeTimeRange() {
         return;
     }
 
-    timeRangeForm.addEventListener('submit', function(event) {
+    timeRangeForm.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         // Get form values
@@ -25,55 +24,57 @@ function initializeTimeRange() {
         Object.assign(timeRangeData, {
             startDateTime: `${startDate}T${startTime}`,
             endDateTime: `${endDate}T${endTime}`,
-            isDataSelected: true,
-            startDate: startDate,
-            startTime: startTime,
-            endDate: endDate,
-            endTime: endTime,
-            startTimestamp: new Date(`${startDate}T${startTime}`).getTime(),
-            endTimestamp: new Date(`${endDate}T${endTime}`).getTime()
+            isDataSelected: true
         });
 
-        // Add detailed console logs
-        console.log('Form Submitted!');
-        console.log('Start Date:', startDate);
-        console.log('Start Time:', startTime);
-        console.log('End Date:', endDate);
-        console.log('End Time:', endTime);
-        console.log('Complete timeRangeData:', timeRangeData);
-
-        // Optional: Display the data on the page
+        // Display the data on the page
         displayTimeRangeData();
+
+        try {
+            // Updated URL to use port 3000
+            const response = await fetch(`http://localhost:8737/datee?startTime=${timeRangeData.startDateTime}&endTime=${timeRangeData.endDateTime}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (!data || !data.voltage || !data.current || !data.energy || !data.powerFactor || !data.time) {
+                throw new Error('Invalid data structure received from server');
+            }
+            
+            // Store the data in localStorage for the graph page to access
+            localStorage.setItem('graphData', JSON.stringify(data));
+            console.log('Graph data stored in localStorage:', data);
+            
+            // Open graph.html in a new window/tab
+            window.open('graph.html', '_blank');
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            alert('Error fetching data: ' + error.message);
+        }
     });
 }
 
-// Function to display the time range data on the page
 function displayTimeRangeData() {
-    // Create or get a display element
-    let displayDiv = document.getElementById('timeRangeDisplay');
-    if (!displayDiv) {
-        displayDiv = document.createElement('div');
-        displayDiv.id = 'timeRangeDisplay';
-        document.body.appendChild(displayDiv);
+    const startDisplay = document.getElementById('displayStartDateTime');
+    const endDisplay = document.getElementById('displayEndDateTime');
+    
+    if (startDisplay && endDisplay) {
+        startDisplay.textContent = `Start DateTime: ${timeRangeData.startDateTime}`;
+        endDisplay.textContent = `End DateTime: ${timeRangeData.endDateTime}`;
     }
-
-    // Update the display
-    displayDiv.innerHTML = `
-        <h3>Selected Time Range:</h3>
-        <p>Start: ${timeRangeData.startDate} ${timeRangeData.startTime}</p>
-        <p>End: ${timeRangeData.endDate} ${timeRangeData.endTime}</p>
-    `;
 }
 
-// Add this to your exports/global assignments
+// Ensure initializeTimeRange is called when the page is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTimeRange();
+});
+
+// Expose functions if needed globally
 if (typeof window !== 'undefined') {
     window.timeRangeData = timeRangeData;
     window.initializeTimeRange = initializeTimeRange;
     window.displayTimeRangeData = displayTimeRangeData;
-} else {
-    module.exports = {
-        timeRangeData,
-        initializeTimeRange,
-        displayTimeRangeData
-    };
 }
