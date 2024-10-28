@@ -1,65 +1,61 @@
-const getData = async () => {
-    try {
-        const resp = await fetch("http://localhost:3000/datee");
-        const data = await resp.json();
-        console.log(data);
-        return data; // Return the fetched data
-    } catch (error) {
-        console.error('Error fetching data:', error);
+document.addEventListener('DOMContentLoaded', function() {
+    // Get data from localStorage that was stored by timeRange.js
+    const graphData = JSON.parse(localStorage.getItem('graphData'));
+    
+    if (!graphData) {
+        console.error("No data available");
+        return;
     }
-};
 
-getData()
-    .then(data => { 
-        if (!data) {
-            console.error("No data received");
-            return;
-        }
-        
-        const voltageArray = data.voltage;
-        const currentArray = data.current;
-        const energyArray = data.energy;
-        const powerFactorArray = data.powerFactor; // Make sure this key exists in your data
-        const timeArray = data.time.map(time => new Date(time));  // Convert to Date objects
+    // Convert time strings to Date objects
+    const timeArray = graphData.time.map(time => new Date(time));
 
-        // Create traces for voltage, current, and energy
-        const voltageTrace = {
+    // Create traces for each metric
+    const traces = [
+        {
             x: timeArray,
-            y: voltageArray,
+            y: graphData.voltage,
             type: 'scatter',
             mode: 'lines',
             name: 'Voltage'
-        };
-
-        const currentTrace = {
+        },
+        {
             x: timeArray,
-            y: currentArray,
+            y: graphData.current,
             type: 'scatter',
             mode: 'lines',
             name: 'Current'
-        };
-
-        const energyTrace = {
+        },
+        {
             x: timeArray,
-            y: energyArray,
+            y: graphData.energy,
             type: 'scatter',
             mode: 'lines',
             name: 'Energy'
-        };
+        },
+        {
+            x: timeArray,
+            y: graphData.powerFactor,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Power Factor'
+        }
+    ];
 
-        // Combine all traces into the data array
-        const plotData = [voltageTrace, currentTrace, energyTrace];
+    // Layout configuration
+    const layout = {
+        title: 'Power Metrics Over Time',
+        xaxis: {
+            title: 'Time',
+            rangeslider: {}
+        },
+        yaxis: {
+            title: 'Values'
+        },
+        height: 600,
+        showlegend: true
+    };
 
-        // Layout for the graph
-        const layout = {
-            title: 'Voltage, Current, and Energy Over Time',
-            xaxis: { title: 'Time' },
-            yaxis: { title: 'Values' }
-        };
-
-        // Plot the graph using Plotly
-        Plotly.newPlot('plot', plotData, layout);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    // Plot the graph
+    Plotly.newPlot('plot', traces, layout);
+});
