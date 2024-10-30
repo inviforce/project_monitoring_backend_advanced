@@ -46,11 +46,11 @@ function createGauge(id, initialValue, titleText,initialrange,finalrange) {
 
 let timeData = []; // Array to hold time or index values
 let temperatureData = []; // Array to hold temperature values
-
-function lineGraph(id, initialValue, titleText) {
+let humditydata=[];
+function lineGraph(id, initialValue, titleText,values) {
     var trace = {
         x: timeData,
-        y: temperatureData,
+        y: values,
         mode: 'lines',
         line: { color: '#80CAF6' }
     };
@@ -77,8 +77,8 @@ createGauge('gauge3', 0, 'Power',0.0,100.0);
 createGauge('gauge4', 0, 'Energy',0.0,100.0);
 createGauge('gauge5', 0, 'Frequency',0.0,200.0);
 createGauge('gauge6', 0, 'Power Factor',0.0,1.0);
-lineGraph('line1', 0, 'Temperature Over Time');
-lineGraph('line2', 0, 'Humidity Over Time');
+lineGraph('line1', 0, 'Temperature Over Time',temperatureData);
+lineGraph('line2', 0, 'Humidity Over Time',humditydata);
 
 
 // Function to update the gauges with new data
@@ -94,10 +94,11 @@ function updateGauges(voltage, current, power, energy, frequency, power_f, tempe
     const currentTime = timeData.length; // You can modify this to use real timestamps
     timeData.push(currentTime); // Append the current time/index
     temperatureData.push(temperature); // Append the temperature
+    humditydata.push(humidity);
 
     // Update the line graph with new data
     Plotly.update('line1', { y: [temperatureData], x: [timeData] }, [0]);
-    Plotly.update('line2', { y: [humidity], x: [timeData] }, [0]);
+    Plotly.update('line2', { y: [humditydata], x: [timeData] }, [0]);
 }
 
 
