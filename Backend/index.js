@@ -24,7 +24,7 @@ app.use(express.json());
 const wss = new WebSocket.Server({ port: wsPort });
 
 // MongoDB Connection
-const mongodb = 'mongodb://127.0.0.1:27017/prj';
+const mongodb = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(mongodb)
     .then(() => {
         console.log("Connected to MongoDB");
