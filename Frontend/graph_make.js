@@ -73,7 +73,7 @@ function lineGraph(id, initialValue, titleText,values) {
 // Create the gauges with initial values
 createGauge('gauge1', 0, 'Voltage',0.00,500.00);
 createGauge('gauge2', 0, 'Current',0.0,100.0);
-createGauge('gauge3', 0, 'Power',0.0,100.0);
+createGauge('gauge3', 0, 'Power',0.0,5000.0);
 createGauge('gauge4', 0, 'Energy',0.0,100.0);
 createGauge('gauge5', 0, 'Frequency',0.0,200.0);
 createGauge('gauge6', 0, 'Power Factor',0.0,1.0);
