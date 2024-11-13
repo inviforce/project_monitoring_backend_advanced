@@ -88,3 +88,24 @@ document.addEventListener("DOMContentLoaded", function() {
         //window.location.href="graph.html";
     }
 });
+
+
+
+document.addEventListener("DOMContentLoaded", async function() {
+    try {
+        // Fetch the data from your API
+        const response = await fetch('http://localhost:8737/api/data'); // Replace with your actual endpoint
+        const data = await response.json();
+
+        // Assuming the response is an object with properties for each metric
+        document.getElementById('voltageValue').textContent = data.voltage || 'NA';
+        document.getElementById('currentValue').textContent = data.current || 'NA';
+        document.getElementById('powerValue').textContent = data.power || 'NA';
+        document.getElementById('energyValue').textContent = data.energy || 'NA';
+        document.getElementById('frequencyValue').textContent = data.frequency || 'NA';
+        document.getElementById('powerFactorValue').textContent = data.powerFactor || 'NA';
+        
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+});

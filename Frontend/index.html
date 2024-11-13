@@ -79,59 +79,52 @@
 
             <div class="box-container">
 
-                <div class="box box1">
+                <div class="box box1" id="voltageBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
+                        <h2 class="topic-heading" id="voltageValue">NA</h2>
                         <h2 class="topic">Voltage</h2>
                     </div>
-
-                    <img src="https://static.vecteezy.com/system/resources/previews/023/079/169/non_2x/physics-icon-voltmeter-illustration-sign-measurements-symbol-science-logo-vector.jpg "
-                        alt="img">
+                    <img src="..." alt="img">
                 </div>
 
-                <div class="box box2">
+                <div class="box box2" id="currentBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
+                        <h2 class="topic-heading" id="currentValue">NA</h2>
                         <h2 class="topic">Current</h2>
                     </div>
-
-                    <img src=" " alt="img">
+                    <img src="..." alt="img">
                 </div>
 
-                <div class="box box3">
+                <div class="box box3" id="powerBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
+                        <h2 class="topic-heading" id="powerValue">NA</h2>
                         <h2 class="topic">Power</h2>
                     </div>
-
-                    <img src="" alt="img">
+                    <img src="..." alt="img">
                 </div>
 
-                <div class="box box4">
+                <div class="box box4" id="energyBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
+                        <h2 class="topic-heading" id="energyValue">NA</h2>
                         <h2 class="topic">Energy</h2>
                     </div>
-
-                    <img src="" alt="img">
+                    <img src="..." alt="img">
                 </div>
 
-                <div class="box box5">
+                <div class="box box5" id="frequencyBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
+                        <h2 class="topic-heading" id="frequencyValue">NA</h2>
                         <h2 class="topic">Frequency</h2>
                     </div>
-
-                    <img src="" alt="img">
+                    <img src="..." alt="img">
                 </div>
 
-                <div class="box box6">
+                <div class="box box6" id="powerFactorBox">
                     <div class="text">
-                        <h2 class="topic-heading">NA</h2>
-                        <h2 class="topic">Power factor</h2>
+                        <h2 class="topic-heading" id="powerFactorValue">NA</h2>
+                        <h2 class="topic">Power Factor</h2>
                     </div>
-
-                    <img src="" alt="img">
+                    <img src="..." alt="img">
                 </div>
             </div>
 
@@ -145,7 +138,6 @@
                 <div id="gauge5" class="gauge"></div>
                 <div id="gauge6" class="gauge"></div>
                 <div id="line1" class="line"></div>
-                <div id="line2" class="line"></div>
             </div>
 
 
@@ -191,41 +183,41 @@
                     </div>
                 </div>
                 
-                <div id="timeRangeBox" class="container10">
+                <div class="container10" id="timeRangeBox">
                     <h2>Set Time Range</h2>
                     <form id="timeRangeForm">
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="startDate">Start Date:</label>
-                                <input type="date" id="startDate" required>
+                                <input type="date" id="startDate" name="startDate" required>
                             </div>
                             <div class="form-group">
                                 <label for="startTime">Start Time:</label>
-                                <input type="time" id="startTime" required>
+                                <input type="time" id="startTime" name="startTime" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="endDate">End Date:</label>
-                                <input type="date" id="endDate" required>
+                                <input type="date" id="endDate" name="endDate" required>
                             </div>
                             <div class="form-group">
                                 <label for="endTime">End Time:</label>
-                                <input type="time" id="endTime" required>
+                                <input type="time" id="endTime" name="endTime" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn-set-range" onclick="hey()">View Graphs</button>
+                        <button type="submit">Set Range</button>
                     </form>
+                
+                    <!-- Add this new section to display the selected time range -->
                     <div id="timeRangeDisplay" class="time-range-display">
                         <h3>Selected Time Range:</h3>
                         <div class="display-row">
-                            <span id="displayStartDateTime">Start DateTime: [Not set]</span>
+                            <p><strong>Start DateTime:</strong> <span id="displayStartDateTime">Not set</span></p>
                         </div>
                         <div class="display-row">
-                            <span id="displayEndDateTime">End DateTime: [Not set]</span>
+                            <p><strong>End DateTime:</strong> <span id="displayEndDateTime">Not set</span></p>
                         </div>
-                    </div>
-                </div>
                     </div>
                 </div>
                 
@@ -298,9 +290,6 @@
                 }
                 </style>
 
-
-
-
             </div>
 
         </div>
@@ -310,7 +299,7 @@
     <script src="./index.js"></script>
     <script src="./graph_make.js"></script>
     <script src="./theme.js"></script>
-    <script src="timeRange.js"></script>
+    <script src="./timeRange.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             initializeTimeRange();
