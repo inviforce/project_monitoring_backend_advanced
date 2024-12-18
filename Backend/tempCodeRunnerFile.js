@@ -1,1 +1,0 @@
-onsole.log('Connected to HiveMQ broker');
