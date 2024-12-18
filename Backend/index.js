@@ -52,9 +52,9 @@ client.on('connect', () => {
             console.error("Subscription error:", err);
         }
     });
-    client.subscribe('topic7_rec', { qos: 1 }, (err) => {
+    client.subscribe('neoway', { qos: 1 }, (err) => {
         if (!err) {
-            console.log("Successfully subscribed to topic7_rec");
+            console.log("Successfully subscribed to neoway");
         } else {
             console.error("Subscription error:", err);
         }
@@ -186,7 +186,7 @@ app.get("/datee", async (req, res) => {
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
     const device = req.body;
-    const topic = 'topic7_rec';
+    const topic = 'neoway';
     console.log(device);
     
     try {

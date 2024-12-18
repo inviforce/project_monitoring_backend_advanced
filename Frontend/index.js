@@ -46,6 +46,50 @@ document.addEventListener("DOMContentLoaded", function() {
             addDataToReportContainer(deviceId, dataType, value, false);
         }
     });
+    // Reference to the radio button
+    // Reference to the radio button
+    document.getElementById("deviceForm_megan_fox").addEventListener("submit", async function (event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+    
+        // Get values from the inputs
+        const deviceId = document.getElementById("deviceId_megan").value;
+        const deviceOption = document.getElementById("deviceToggle").checked ? "On" : "Off";
+    
+        // Create the data object
+        const data = {
+            deviceId,
+            deviceOption,
+        };
+    
+        console.log("Form Submitted:", data);
+    
+        try {
+            // Send the POST request using fetch
+            const response = await fetch("http://localhost:8737/api/data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+    
+            // Handle the response
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const result = await response.json(); // If the response contains JSON
+            console.log("Response from server:", result);
+    
+            // Reset the form to clear values and toggle switch
+            document.getElementById("deviceForm_megan_fox").reset();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+    
+    
 
     function addDataToTable(deviceId, dataType, value) {
         const table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
