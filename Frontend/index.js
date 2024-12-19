@@ -46,50 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
             addDataToReportContainer(deviceId, dataType, value, false);
         }
     });
-    // Reference to the radio button
-    // Reference to the radio button
-    document.getElementById("deviceForm_megan_fox").addEventListener("submit", async function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-    
-        // Get values from the inputs
-        const deviceId = document.getElementById("deviceId_megan").value;
-        const deviceOption = document.getElementById("deviceToggle").checked ? "On" : "Off";
-    
-        // Create the data object
-        const data = {
-            deviceId,
-            deviceOption,
-        };
-    
-        console.log("Form Submitted:", data);
-    
-        try {
-            // Send the POST request using fetch
-            const response = await fetch("http://localhost:8737/api/data", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-    
-            // Handle the response
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const result = await response.json(); // If the response contains JSON
-            console.log("Response from server:", result);
-    
-            // Reset the form to clear values and toggle switch
-            document.getElementById("deviceForm_megan_fox").reset();
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    });
-    
-    
 
     function addDataToTable(deviceId, dataType, value) {
         const table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
@@ -141,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const response = await fetch('http://localhost:8737/api/data'); // Replace with your actual endpoint
         const data = await response.json();
 
-        // Assuming the response is an object with properties for each metric
+        // Assuming the response is an object with properties for each metric 
         document.getElementById('voltageValue').textContent = data.voltage || 'NA';
         document.getElementById('currentValue').textContent = data.current || 'NA';
         document.getElementById('powerValue').textContent = data.power || 'NA';
@@ -152,4 +108,69 @@ document.addEventListener("DOMContentLoaded", async function() {
     } catch (error) {
         console.error('Error fetching data:', error);
     }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Existing code...
+
+    // Create AC toggle button dynamically
+    const acToggleContainer = document.getElementById('on_off_btn');
+    const acToggleButton = document.createElement('button');
+    acToggleButton.id = 'acToggleButton';
+    acToggleButton.textContent = 'AC Status: OFF';
+    acToggleButton.classList.add('btn');
+    
+    // Track AC state
+    let isAcOn = false;
+
+    // Style the button
+    acToggleButton.style.backgroundColor = '#ff0000';  // Red when off
+    acToggleButton.style.color = 'white';
+    acToggleButton.style.padding = '10px 20px';
+    acToggleButton.style.margin = '20px';
+    acToggleButton.style.borderRadius = '5px';
+
+    // Add click event to toggle AC
+    acToggleButton.addEventListener('click', async function() {
+        // Toggle the state
+        isAcOn = !isAcOn;
+
+        // Prepare the data to send
+        const acData = {
+            deviceId: "AC 1",
+            status: isAcOn ? "On" : "Off"
+        };
+
+        try {
+            const response = await fetch('http://localhost:8737/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(acData),
+            });
+
+            const result = await response.json();
+            console.log('AC Toggle Response:', result);
+
+            // Update button appearance and text
+            if (isAcOn) {
+                acToggleButton.textContent = 'AC Status: ON';
+                acToggleButton.style.backgroundColor = '#00ff00';  // Green when on
+            } else {
+                acToggleButton.textContent = 'AC Status: OFF';
+                acToggleButton.style.backgroundColor = '#ff0000';  // Red when off
+            }
+
+        } catch (error) {
+            console.error('Error toggling AC:', error);
+            // Revert state if there's an error
+            isAcOn = !isAcOn;
+        }
+    });
+
+    // Add the button to the container
+    acToggleContainer.appendChild(acToggleButton);
+
+    // Rest of your existing code...
 });
