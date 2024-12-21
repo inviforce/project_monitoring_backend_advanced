@@ -19,9 +19,9 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-
 // WebSocket Server
 const wss = new WebSocket.Server({ port: wsPort });
+
 
 // MongoDB Connection
 const mongodb = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
@@ -42,15 +42,24 @@ const client = mqtt.connect({
     protocol: holder.protocol
 });
 
+
+
 // Handle MQTT connection
 client.on('connect', () => {
     console.log('Connected to HiveMQ broker');
-    client.subscribe('topic7', { qos: 1 }, (err) => {
-        if (!err) {
-            console.log("Successfully subscribed to topic7");
-        } else {
-            console.error("Subscription error:", err);
-        }
+    let topic='topic7';
+    app.post('/api/data/topic', async (req, res) => {
+        const device = req.body;
+        topic=device.topic
+        res.status(200).send('Request received'); 
+        console.log(topic)
+        client.subscribe(topic, { qos: 1 }, (err) => {
+            if (!err) {
+                console.log("Successfully subscribed to ",topic);
+            } else {
+                console.error("Subscription error:", err);
+            }
+        });
     });
     client.subscribe('neoway', { qos: 1 }, (err) => {
         if (!err) {
@@ -63,7 +72,7 @@ client.on('connect', () => {
 
 // Handle MQTT messages
 client.on("message", (topic, message) => {
-    if (topic === 'topic7') {
+    if (topic!='neoway') {
         try {
             const mess = maker(message.toString());
             const latestData = key(mess.deviceID, mess);
