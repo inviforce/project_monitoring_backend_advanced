@@ -22,7 +22,7 @@ app.use(express.json());
 // WebSocket Server
 const wss = new WebSocket.Server({ port: wsPort });
 
-
+let selectedTopic = 'topic7'; 
 // MongoDB Connection
 const mongodb = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(mongodb)
@@ -47,65 +47,75 @@ const client = mqtt.connect({
 // Handle MQTT connection
 client.on('connect', () => {
     console.log('Connected to HiveMQ broker');
-    let topic='topic7';
-    app.post('/api/data/topic', async (req, res) => {
-        const device = req.body;
-        topic=device.topic
-        res.status(200).send('Request received'); 
-        console.log(topic)
-        client.subscribe(topic, { qos: 1 }, (err) => {
-            if (!err) {
-                console.log("Successfully subscribed to ",topic);
-            } else {
-                console.error("Subscription error:", err);
-            }
-        });
+
+    // Subscribe to multiple topics
+    const topics = ['topic7', 'topic8', 'topic9', 'topic10'];
+    client.subscribe(topics, { qos: 1 }, (err) => {
+        if (!err) {
+            console.log(`Successfully subscribed to topics: ${topics.join(', ')}`);
+        } else {
+            console.error('Subscription error:', err);
+        }
     });
+
+    // Also subscribe to a generic topic if needed
     client.subscribe('neoway', { qos: 1 }, (err) => {
         if (!err) {
-            console.log("Successfully subscribed to neoway");
+            console.log('Successfully subscribed to neoway');
         } else {
-            console.error("Subscription error:", err);
+            console.error('Subscription error:', err);
         }
     });
 });
 
+app.post('/api/data/topic', async (req, res) => {
+    const { topic } = req.body;
+    if (topic) {
+        selectedTopic = topic; // Update the selected topic
+        console.log(`Frontend selected topic: ${selectedTopic}`);
+        res.status(200).send('Selected topic updated');
+    } else {
+        res.status(400).send('No topic provided');
+    }
+});
+
 // Handle MQTT messages
-client.on("message", (topic, message) => {
-    if (topic!='neoway') {
-        try {
-            const mess = maker(message.toString());
-            const latestData = key(mess.deviceID, mess);
-            
-            // Log and send data via WebSocket
-            console.log(latestData);
-            wss.clients.forEach(client => {
+client.on('message', (topic, message) => {
+    try {
+        const mess = maker(message.toString());
+        const latestData = key(mess.deviceID, mess);
+
+        console.log(`Message received on topic "${topic}":`, latestData);
+
+        // Only send data to the frontend if the topic matches the selected topic
+        if (topic === selectedTopic) {
+            wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify(latestData));
                 }
             });
-
-            // Store data in MongoDB
-            newuser(
-                mess.deviceID,
-                mess.voltage,
-                mess.current,
-                mess.power,
-                mess.energy,
-                mess.frequency,
-                mess.powerFactor,
-                mess.temperature,
-                (err) => {
-                    if (err) {
-                        console.error("Error inserting data:", err);
-                    } else {
-                        console.log("Data inserted successfully into MongoDB");
-                    }
-                }
-            );
-        } catch (parseError) {
-            console.error("Failed to parse message:", parseError);
         }
+
+        // Store data in MongoDB regardless of the topic
+        newuser(
+            mess.deviceID,
+            mess.voltage,
+            mess.current,
+            mess.power,
+            mess.energy,
+            mess.frequency,
+            mess.powerFactor,
+            mess.temperature,
+            (err) => {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                } else {
+                    console.log('Data inserted successfully into MongoDB');
+                }
+            }
+        );
+    } catch (parseError) {
+        console.error('Failed to parse message:', parseError);
     }
 });
 
