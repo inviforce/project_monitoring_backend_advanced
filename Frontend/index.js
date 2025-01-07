@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const deviceId = document.getElementById("deviceId").value;
         const dataType = document.getElementById("dataType").value;
         const value = document.getElementById("value").value;
-
+        let status=value
         const data = {
             deviceId,
-            dataType,
-            value,
+            //dataType,
+            status,
         };
 
         try {
@@ -137,8 +137,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Prepare the data to send
         const acData = {
-            deviceId: "AC 1",
-            status: isAcOn ? "On" : "Off"
+            deviceId: "ac",
+            status: isAcOn ? "on" : "off"
         };
 
         try {
