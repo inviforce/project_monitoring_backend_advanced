@@ -511,3 +511,129 @@ body {
         margin: 0;
     }
 }
+
+
+/* Add this to your existing CSS */
+
+/* General Button Styling */
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Dashboard Button Styling */
+.common-btn {
+    background-color: #0082e6;
+    color: #fff;
+    border: 2px solid #0082e6;
+    transition: all 0.3s ease;
+}
+
+.common-btn:hover {
+    background-color: #fff;
+    color: #0082e6;
+    border: 2px solid #0082e6;
+    outline: none;
+}
+
+/* Dropdown Options Styling */
+#dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#dropdown.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#dropdown button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#dropdown button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Hero Section Animation */
+.hero {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Portfolio Card Hover Effect */
+.port-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.port-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* About Section Animation */
+.about {
+    animation: slideIn 1s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Footer Social Icons Animation */
+.footer-list-items {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.footer-list-items:hover {
+    transform: scale(1.2);
+    background-color: #35A99C;
+}
