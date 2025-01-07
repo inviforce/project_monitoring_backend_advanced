@@ -110,67 +110,30 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Existing code...
+// AC toggle button 
+async function updateStatus() {
+    const acToggle = document.getElementById('acToggle');
+    const acStatus = document.getElementById('acStatus');
+    acStatus.textContent = acToggle.checked ? 'On' : 'Off';
 
-    // Create AC toggle button dynamically
-    const acToggleContainer = document.getElementById('on_off_btn');
-    const acToggleButton = document.createElement('button');
-    acToggleButton.id = 'acToggleButton';
-    acToggleButton.textContent = 'AC Status: OFF';
-    acToggleButton.classList.add('btn');
-    
-    // Track AC state
-    let isAcOn = false;
+    // Prepare the data to send
+    const acData = {
+        deviceId: "ac",
+        status: acToggle.checked ? "on" : "off"
+    };
 
-    // Style the button
-    acToggleButton.style.backgroundColor = '#ff0000';  // Red when off
-    acToggleButton.style.color = 'white';
-    acToggleButton.style.padding = '10px 20px';
-    acToggleButton.style.margin = '20px';
-    acToggleButton.style.borderRadius = '5px';
+    try {
+        const response = await fetch('http://localhost:8737/api/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(acData),
+        });
 
-    // Add click event to toggle AC
-    acToggleButton.addEventListener('click', async function() {
-        // Toggle the state
-        isAcOn = !isAcOn;
-
-        // Prepare the data to send
-        const acData = {
-            deviceId: "ac",
-            status: isAcOn ? "on" : "off"
-        };
-
-        try {
-            const response = await fetch('http://localhost:8737/api/data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(acData),
-            });
-
-            const result = await response.json();
-            console.log('AC Toggle Response:', result);
-
-            // Update button appearance and text
-            if (isAcOn) {
-                acToggleButton.textContent = 'AC Status: ON';
-                acToggleButton.style.backgroundColor = '#00ff00';  // Green when on
-            } else {
-                acToggleButton.textContent = 'AC Status: OFF';
-                acToggleButton.style.backgroundColor = '#ff0000';  // Red when off
-            }
-
-        } catch (error) {
-            console.error('Error toggling AC:', error);
-            // Revert state if there's an error
-            isAcOn = !isAcOn;
-        }
-    });
-
-    // Add the button to the container
-    acToggleContainer.appendChild(acToggleButton);
-
-    // Rest of your existing code...
-});
+        const result = await response.json();
+        console.log('AC Toggle Response:', result);
+    } catch (error) {
+        console.error('Error sending AC status:', error);
+    }
+}
