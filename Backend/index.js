@@ -81,6 +81,12 @@ app.post('/api/data/topic', async (req, res) => {
 
 // Handle MQTT messages
 client.on('message', (topic, message) => {
+    // Ignore messages from topic "neoway"
+    if (topic === "neoway") {
+        console.log(`Ignoring message from topic "${topic}"`);
+        return;
+    }
+
     try {
         const mess = maker(message.toString());
         const latestData = key(mess.deviceID, mess);
@@ -118,6 +124,7 @@ client.on('message', (topic, message) => {
         console.error('Failed to parse message:', parseError);
     }
 });
+
 
 // WebSocket connection handling
 wss.on('connection', (ws) => {
@@ -206,17 +213,18 @@ app.get("/datee", async (req, res) => {
 app.post('/api/data', async (req, res) => {
     const device = req.body;
     const topic = 'neoway';
-    console.log(device);
+    const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
+    console.log({ topic, message });
     
     try {
-        await client.publish(topic, JSON.stringify(device), { qos: 0 });
-        console.log(`Message sent to topic "${topic}":`, device);
+        await client.publish(topic, message, { qos: 0 }); // Send the formatted message
+        console.log(`Message sent to topic "${topic}":`, message);
     } catch (err) {
         console.error('Error publishing message:', err);
         return res.status(500).json({ message: 'Error publishing message' });
     }
     
-    res.json({ message: 'Data received successfully', receivedData: req.body });
+    res.json({ message: 'Data received successfully', receivedData: { topic, message } });
 });
 
 // Start Express server
