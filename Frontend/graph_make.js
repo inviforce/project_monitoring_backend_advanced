@@ -70,11 +70,67 @@ function lineGraph(id, initialValue, titleText,values) {
     Plotly.newPlot(id, data, layout);
 }
 
+// function lineGraph(id, initialValue, titleText, values) {
+//     var trace = {
+//         x: timeData,
+//         y: values,
+//         mode: 'lines',
+//         line: { color: '#80CAF6' }
+//     };
+
+//     var data = [trace];
+
+//     var layout = {
+//         title: titleText,
+//         xaxis: { 
+//             title: 'Time (ms)', 
+//             range: [Math.max(0, timeData[timeData.length - 1] - 10), timeData[timeData.length - 1]] // Window size of 1000
+//         },
+//         yaxis: { 
+//             title: titleText,
+//             tickformat: '.2f'  // Display y-axis values with 2 decimal places
+//         },
+//         margin: { t: 50 }
+//     };
+
+//     Plotly.newPlot(id, data, layout);
+// }
+
+// function lineGraph(id, timeData, values, titleText) {
+//     // Trim the data to the latest 1000 entries if it exceeds 1000
+//     if (timeData.length > 10) {
+//         timeData = timeData.slice(-10); // Keep the last 1000 timestamps
+//         values = values.slice(-10);    // Keep the last 1000 values
+//     }
+
+//     var trace = {
+//         x: timeData,
+//         y: values,
+//         mode: 'lines',
+//         line: { color: '#80CAF6' }
+//     };
+
+//     var data = [trace];
+
+//     var layout = {
+//         title: titleText,
+//         xaxis: { title: 'Time (ms)' },
+//         yaxis: { 
+//             title: titleText,
+//             tickformat: '.2f'  // Display y-axis values with 2 decimal places
+//         },
+//         margin: { t: 50 }
+//     };
+
+//     Plotly.newPlot(id, data, layout);
+// }
+
+
 // Create the gauges with initial values
 createGauge('gauge1', 0, 'Voltage',0.00,500.00);
 createGauge('gauge2', 0, 'Current',0.0,100.0);
-createGauge('gauge3', 0, 'Power',0.0,5000.0);
-createGauge('gauge4', 0, 'Energy',0.0,100.0);
+createGauge('gauge3', 0, 'Power',0.0,500.0);
+createGauge('gauge4', 0, 'Energy',0.0,500.0);
 createGauge('gauge5', 0, 'Frequency',0.0,200.0);
 createGauge('gauge6', 0, 'Power Factor',0.0,1.0);
 lineGraph('line1', 0, 'Temperature Over Time',temperatureData);

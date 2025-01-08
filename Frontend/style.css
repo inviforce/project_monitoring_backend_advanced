@@ -41,7 +41,7 @@ button {
   border-radius: 30px;
   margin-top: 50px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-wrap: wrap; 
 
   
@@ -311,6 +311,7 @@ header {
 
 /* Ac Toggle */
 .ac-toggle-container {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -485,13 +486,14 @@ input:not(:checked) ~ .status-text span {
   border-radius: 4px;
 }
 
+
 /* Base styles for container10 */
 .container10 {
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: center;
-  width: 400px;
+  width: auto;
   margin: 50px auto;
   padding: 20px;
   border: 10px solid white;
