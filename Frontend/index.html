@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <div class="box-container">
+            <!-- <div class="box-container">
 
                 <div class="box box1" id="voltageBox">
                     <div class="text">
@@ -126,7 +126,7 @@
                     </div>
                     <img src="..." alt="img">
                 </div>
-            </div>
+            </div> -->
 
 
 
@@ -141,7 +141,17 @@
                 <div id="line2" class="line"></div>
             </div>
 
-
+            <div class="ac-toggle-container">
+                <div class="ac-label">AC Control</div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="acToggle" onchange="updateStatus()">
+                    <span class="slider"></span>
+                </label>
+                <div class="status-text">
+                    Status: <span id="acStatus">Off</span>
+                </div>
+            </div>
+            <div class="container11"> 
             <div class="container10" id="box">
                 <h2>Enter Device Data</h2>
                 <form id="deviceDataForm">
@@ -162,7 +172,7 @@
                     <button type="submit" style="background-color: #0082e6;">Submit</button>
                 </form>
             </div>
-            <div class="ac-toggle-container">
+            <!-- <div class="ac-toggle-container">
                 <div class="ac-label">AC Control</div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="acToggle" onchange="updateStatus()">
@@ -171,31 +181,9 @@
                 <div class="status-text">
                     Status: <span id="acStatus">Off</span>
                 </div>
-            </div>
+            </div> -->
 
-            
-            <div class="report-container">
-                <div class="report-header">
-                    <h1 class="recent-Articles">Input Data</h1>
-                    
-                </div>
-
-                <div class="report-body">
-                    <div class="report-topic-heading">
-                        <h3 class="t-op">Device ID</h3>
-                        <h3 class="t-op">Data Type</h3>
-                        <h3 class="t-op">Value</h3>
-                        <h3 class="t-op">Status</h3>
-                    </div>
-
-                    <div class="items">
-                        
-                    </div>                        
-                    </div>
-                </div>
-
-                
-                
+              
                 <div class="container10" id="timeRangeBox">
                     <h2>Set Time Range</h2>
                     <form id="timeRangeForm">
@@ -222,7 +210,7 @@
                         <button type="submit">Set Range</button>
                     </form>
                 
-                    <!-- Add this new section to display the selected time range -->
+                    
                     <div id="timeRangeDisplay" class="time-range-display">
                         <h3>Selected Time Range:</h3>
                         <div class="display-row">
@@ -233,7 +221,67 @@
                         </div>
                     </div>
                 </div>
+                </div>
+            <div class="report-container">
+                <div class="report-header">
+                    <h1 class="recent-Articles">Input Data</h1>
+                    
+                </div>
+
+                <div class="report-body">
+                    <div class="report-topic-heading">
+                        <h3 class="t-op">Device ID</h3>
+                        <h3 class="t-op">Data Type</h3>
+                        <h3 class="t-op">Value</h3>
+                        <h3 class="t-op">Status</h3>
+                    </div>
+
+                    <div class="items">
+                        
+                    </div>                        
+                    </div>
+                </div>
+
                 
+            <!-- <div class="container11">   
+                <div class="container10" id="timeRangeBox">
+                    <h2>Set Time Range</h2>
+                    <form id="timeRangeForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startTime">Start Time:</label>
+                                <input type="time" id="startTime" name="startTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" name="endDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endTime">End Time:</label>
+                                <input type="time" id="endTime" name="endTime" required>
+                            </div>
+                        </div>
+                        <button type="submit">Set Range</button>
+                    </form>
+                
+                    
+                    <div id="timeRangeDisplay" class="time-range-display">
+                        <h3>Selected Time Range:</h3>
+                        <div class="display-row">
+                            <p><strong>Start DateTime:</strong> <span id="displayStartDateTime">Not set</span></p>
+                        </div>
+                        <div class="display-row">
+                            <p><strong>End DateTime:</strong> <span id="displayEndDateTime">Not set</span></p>
+                        </div>
+                    </div>
+                </div>
+                </div> -->
                 <!-- Add some CSS to style the display -->
                 <style>
                 .time-range-display {
@@ -256,6 +304,12 @@
                     color: #333;
                 }
                 
+                .container11{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
                 .container10 {
                     max-width: 600px;
                     margin: 20px auto;
