@@ -70,61 +70,6 @@ function lineGraph(id, initialValue, titleText,values) {
     Plotly.newPlot(id, data, layout);
 }
 
-// function lineGraph(id, initialValue, titleText, values) {
-//     var trace = {
-//         x: timeData,
-//         y: values,
-//         mode: 'lines',
-//         line: { color: '#80CAF6' }
-//     };
-
-//     var data = [trace];
-
-//     var layout = {
-//         title: titleText,
-//         xaxis: { 
-//             title: 'Time (ms)', 
-//             range: [Math.max(0, timeData[timeData.length - 1] - 10), timeData[timeData.length - 1]] // Window size of 1000
-//         },
-//         yaxis: { 
-//             title: titleText,
-//             tickformat: '.2f'  // Display y-axis values with 2 decimal places
-//         },
-//         margin: { t: 50 }
-//     };
-
-//     Plotly.newPlot(id, data, layout);
-// }
-
-// function lineGraph(id, timeData, values, titleText) {
-//     // Trim the data to the latest 1000 entries if it exceeds 1000
-//     if (timeData.length > 10) {
-//         timeData = timeData.slice(-10); // Keep the last 1000 timestamps
-//         values = values.slice(-10);    // Keep the last 1000 values
-//     }
-
-//     var trace = {
-//         x: timeData,
-//         y: values,
-//         mode: 'lines',
-//         line: { color: '#80CAF6' }
-//     };
-
-//     var data = [trace];
-
-//     var layout = {
-//         title: titleText,
-//         xaxis: { title: 'Time (ms)' },
-//         yaxis: { 
-//             title: titleText,
-//             tickformat: '.2f'  // Display y-axis values with 2 decimal places
-//         },
-//         margin: { t: 50 }
-//     };
-
-//     Plotly.newPlot(id, data, layout);
-// }
-
 
 // Create the gauges with initial values
 createGauge('gauge1', 0, 'Voltage',0.00,500.00);
