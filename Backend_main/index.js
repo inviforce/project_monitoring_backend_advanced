@@ -7,7 +7,7 @@ const cors = require('cors');
 const { holder } = require("./utilities/mqtt.js");
 // const key = require("./utilities/data_parser.js");   ************NOT REQUIRED AS MAKER AND KEY IS DOING SAME WORK*************
 const maker = require("./utilities/parseDeviceData.js");
-const Data = require("../model/data.js")
+const Data = require("./model/data.js")
 
 
 const app = express();
@@ -25,7 +25,7 @@ app.use(cors({
 
 app.use(express.json());
 
-
+let selectedTopic = 'topic7'; 
 // WebSocket Server
 const wss = new WebSocket.Server({ port: wsPort });
 
@@ -124,14 +124,14 @@ const client = mqtt.connect({
 // enter topics and nodes we have used
 topics = ["topic7","topic8","topic9","topic10"]
 const nodes = {
-    SEG001: new Node('SEG001', true, true, true, true, true, true, true, true),
-    SEG002: new Node('SEG002', true, true, true, true, true, true, true, true),
-    SEG003: new Node('SEG003', true, true, true, true, true, true, true, true),
-    SEG004: new Node('SEG004', true, true, true, true, true, true, ),
+    SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
+    SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
+    SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
+    SEG0004: new Node('SEG0004', true, true, true, true, true, true, ),
 };
 
-console.log(nodes.SEG001.features)
-console.log(nodes.SEG004.features)
+console.log(nodes.SEG0001.features)
+console.log(nodes.SEG0004.features)
 
 
 
@@ -183,58 +183,7 @@ const messageQueue = []; // Queue to hold incoming messages
 const BATCH_SIZE = 50;   // Adjust batch size based on system capability
 const BATCH_INTERVAL = 100; // Interval to process the queue in milliseconds
 
-// Function to process and insert data into MongoDB
-// const processQueue = async () => {
-//     if (messageQueue.length > 0) {
-//         const batch = messageQueue.splice(0, BATCH_SIZE); // Take a batch of messages
-//         const bulkOperations = batch.map((mess) => ({
-//             insertOne: {
-//                 document: {
-//                     nodeId: mess.nodeId,
-//                     voltage: mess.voltage,
-//                     current: mess.current,
-//                     power: mess.power,
-//                     energy: mess.energy,
-//                     frequency: mess.frequency,
-//                     power_f: mess.power_f,
-//                     temperature: mess.temperature,
-//                     humidity: mess.humidity,
-//                 }
-//             }
-//         }));
 
-//         try {
-//             // Insert batch into MongoDB
-//             const result = await Data.bulkWrite(bulkOperations);
-//             console.log(`Inserted ${result.insertedCount} records successfully.`);
-//         } catch (err) {
-//             console.error("Error inserting batch into MongoDB:", err);
-//         }
-//     }
-// };
-
-// // Schedule the queue processor
-// setInterval(processQueue, BATCH_INTERVAL);
-
-// // Handle incoming MQTT messages
-// client.on("message", (topic,message) => {
-//     try {
-//         const mess = maker(message.toString()); // Process the incoming message
-//         console.log(mess);
-//         messageQueue.push(mess); // Add message to the queue
-
-
-//         // Optionally broadcast via WebSocket
-//         // const latestData = key(mess);
-//         wss.clients.forEach(client => {
-//             if (client.readyState === WebSocket.OPEN) {
-//                 client.send(JSON.stringify({ data: mess })); // Only send processed data 
-//             }
-//         });
-//     } catch (parseError) {
-//         console.error("Failed to parse message:", parseError);
-//     }
-// });
 // Function to process and insert data into MongoDB
 const processQueue = async () => {
     if (messageQueue.length > 0) {
@@ -278,17 +227,23 @@ setInterval(processQueue, BATCH_INTERVAL);
 
 // Handle incoming MQTT messages
 client.on("message", (topic, message) => {
+    if (topic === "neoway") {
+        console.log(`Ignoring message from topic "${topic}"`);
+        return;
+    }
     try {
         const mess = maker(message.toString()); // Process the incoming message
         console.log(mess);
         messageQueue.push(mess); // Add message to the queue
 
         // Optionally broadcast via WebSocket
-        wss.clients.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify({ data: mess })); // Only send processed data
-            }
-        });
+        if (topic === selectedTopic) {
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(mess));
+                }
+            });
+        }
     } catch (parseError) {
         console.error("Failed to parse message:", parseError);
     }
@@ -372,23 +327,33 @@ app.get("/datee", async (req, res) => {
     }
 });
 
-
+app.post('/api/data/topic', async (req, res) => {
+    const { topic } = req.body;
+    if (topic) {
+        selectedTopic = topic; // Update the selected topic
+        console.log(`Frontend selected topic: ${selectedTopic}`);
+        res.status(200).send('Selected topic updated');
+    } else {
+        res.status(400).send('No topic provided');
+    }
+});
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
-    const data = req.body;
+    const device = req.body;
     const topic = 'neoway';
-    console.log(data);
+    const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
+    console.log({ topic, message });
     
     try {
-        await client.publish(topic, JSON.stringify(data), { qos: 0 });
-        console.log(`Message sent to topic "${topic}":`, data);
+        await client.publish(topic, message, { qos: 0 }); // Send the formatted message
+        console.log(`Message sent to topic "${topic}":`, message);
     } catch (err) {
         console.error('Error publishing message:', err);
         return res.status(500).json({ message: 'Error publishing message' });
     }
     
-    res.json({ message: 'Data received successfully', receivedData: req.body });
+    res.json({ message: 'Data received successfully', receivedData: { topic, message } });
 });
 
 // Start Express server
