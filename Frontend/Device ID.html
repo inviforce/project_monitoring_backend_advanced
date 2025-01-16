@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyut - IIT Jammu</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c0e;
+            color: #d4d4d4;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #111217;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #2a2d32;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2d32;
+        }
+
+        .logo {
+            color: #ff5656;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 15px 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .sidebar ul li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 20px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2d32;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e8e;
+        }
+
+        .header input {
+            width: 100%;
+            background-color: #1a1c23;
+            color: #d4d4d4;
+            border: 1px solid #2a2d32;
+            padding: 10px 15px 10px 35px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .header input:focus {
+            outline: none;
+            border-color: #ff5656;
+            box-shadow: 0 0 0 2px rgba(255, 86, 86, 0.1);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .dashboard-card {
+            background-color: #1a1c23;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #2a2d32;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: #ff5656;
+        }
+
+        .dashboard-card .title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card .tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            background-color: #2a2d32;
+            color: #8e8e8e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Vidyut</span>
+            </div>
+        </div>
+        <ul>
+            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-star"></i>Starred</li>
+            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-compass"></i>Explore</li>
+            <li><i class="fas fa-bell"></i>Alerts & IRM</li>
+            <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
+            <li><i class="fas fa-cloud"></i>Cloud Provider</li>
+            <li><i class="fas fa-server"></i>Infrastructure</li>
+            <li><i class="fas fa-code"></i>Application</li>
+            <li><i class="fas fa-desktop"></i>Frontend</li>
+            <li><i class="fas fa-box"></i>Assets</li>
+            <li><i class="fas fa-th"></i>More Apps</li>
+            <li><i class="fas fa-cog"></i>Administration</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Welcome to Vidyut!</h2>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for dashboards...">
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="title">Shared with me</div>
+                <div class="tags">
+                    <span class="tag">Shared</span>
+                    <span class="tag">Recent</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Data Plane</div>
+                <div class="tags">
+                    <span class="tag">Analytics</span>
+                    <span class="tag">Data</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Dataviz Squad</div>
+                <div class="tags">
+                    <span class="tag">Visualization</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Demo: AWS IoT Sitewise</div>
+                <div class="tags">
+                    <span class="tag">AWS</span>
+                    <span class="tag">IoT</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Demo: AWS IoT TwinMaker</div>
+                <div class="tags">
+                    <span class="tag">AWS</span>
+                    <span class="tag">IoT</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Demo: BigQuery</div>
+                <div class="tags">
+                    <span class="tag">Analytics</span>
+                    <span class="tag">BigQuery</span>
+                </div>
+            </div>
+            <div class="dashboard-card">
+                <div class="title">Demo: Correlations</div>
+                <div class="tags">
+                    <span class="tag">Analytics</span>
+                    <span class="tag">Data</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

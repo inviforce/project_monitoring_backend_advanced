@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyut - Analytics Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <style>
+        /* [Previous styles remain the same until .main] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c0e;
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #111217;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #2a2d32;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2d32;
+        }
+
+        .logo {
+            color: #ff5656;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 15px 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .sidebar ul li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* New styles for the landing page */
+        .hero-section {
+            padding: 80px 40px;
+            background: linear-gradient(45deg, #111217, #1a1c23);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #d4d4d4;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .features-section {
+            padding: 80px 40px;
+            background-color: #111217;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #1a1c23;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #ff5656;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            color: #8e8e8e;
+            font-size: 1rem;
+        }
+
+        .dashboard-preview {
+            padding: 80px 40px;
+            background-color: #0b0c0e;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 1000px;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid #2a2d32;
+        }
+
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff5656, #ff8a8a);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <!-- [Previous sidebar content remains the same] -->
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Vidyut</span>
+            </div>
+        </div>
+        <ul>
+            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-star"></i>Starred</li>
+            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-compass"></i>Explore</li>
+            <li><i class="fas fa-bell"></i>Alerts & IRM</li>
+            <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
+            <li><i class="fas fa-cloud"></i>Cloud Provider</li>
+            <li><i class="fas fa-server"></i>Infrastructure</li>
+            <li><i class="fas fa-code"></i>Application</li>
+            <li><i class="fas fa-desktop"></i>Frontend</li>
+            <li><i class="fas fa-box"></i>Assets</li>
+            <li><i class="fas fa-th"></i>More Apps</li>
+            <li><i class="fas fa-cog"></i>Administration</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <section class="hero-section">
+            <div class="floating-shapes">
+                <div class="shape" style="width: 50px; height: 50px; top: 20%; left: 10%;"></div>
+                <div class="shape" style="width: 70px; height: 70px; top: 60%; left: 80%;"></div>
+                <div class="shape" style="width: 35px; height: 35px; top: 80%; left: 30%;"></div>
+            </div>
+            <div class="hero-content" data-aos="fade-up">
+                <h1 class="hero-title">Visualize Your Power Supply </h1>
+                <p class="hero-subtitle">Turn your data into beautiful visualizations and insightful dashboards</p>
+                <a href="#" class="cta-button">Dashboard</a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title">Real-time Analytics</h3>
+                    <p class="feature-description">Monitor your metrics in real-time with powerful visualization tools and customizable dashboards.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Alerts</h3>
+                    <p class="feature-description">Set up intelligent alerts and get notified when your metrics hit critical thresholds.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="feature-title">Data Integration</h3>
+                    <p class="feature-description">Connect to multiple data sources and unify your metrics in one place.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Beautiful Dashboards</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="image.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Stunning Graphs vsisualisation</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="Screenshot 2025-01-15 200537.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Control your Devices</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="Screenshot 2025-01-15 202021.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+        <section class="dashboard-preview" data-aos="fade-up">
+            <h2 class="feature-title">Customize your Data</h2>
+            <p class="feature-description">Create stunning visualizations with our intuitive interface</p>
+            <div class="preview-image">
+                <img src="Screenshot 2025-01-15 202200.png" alt="Dashboard Preview" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>

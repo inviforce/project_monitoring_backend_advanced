@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyut Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: #0b0c0e;
+            color: #d4d4d4;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #111217;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #2a2d32;
+            z-index: 100;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2d32;
+        }
+
+        .logo {
+            color: #ff5656;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 15px 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .sidebar ul li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 20px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2d32;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e8e;
+        }
+
+        .header input {
+            width: 100%;
+            background-color: #1a1c23;
+            color: #d4d4d4;
+            border: 1px solid #2a2d32;
+            padding: 10px 15px 10px 35px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .header input:focus {
+            outline: none;
+            border-color: #ff5656;
+            box-shadow: 0 0 0 2px rgba(255, 86, 86, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .dropdown-btn {
+            padding: 8px 16px;
+            background-color: #1a1c23;
+            border: 1px solid #2a2d32;
+            border-radius: 6px;
+            color: #d4d4d4;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8e8e8e;
+            font-size: 14px;
+        }
+
+        .folder-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #d4d4d4;
+            transition: all 0.3s ease;
+        }
+
+        .folder-item:hover {
+            background-color: #1a1c23;
+        }
+
+        .folder-item span {
+            margin-left: 12px;
+        }
+
+        .chevron {
+            margin-right: 12px;
+            transition: transform 0.2s;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .view-btn {
+            padding: 8px;
+            background: none;
+            border: 1px solid #2a2d32;
+            border-radius: 6px;
+            color: #8e8e8e;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #2a2d32;
+            color: #8e8e8e;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .dashboard-card {
+            background-color: #1a1c23;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid #2a2d32;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: #ff5656;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background-color: #1a1c23;
+            border: 1px solid #2a2d32;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            margin-top: 4px;
+        }
+
+        .dropdown-content.right-aligned {
+            left: auto;
+            right: 0;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 16px;
+            color: #d4d4d4;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-item:hover {
+            background-color: #2a2d32;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #2a2d32;
+            margin: 4px 0;
+        }
+
+        .tag-input {
+            padding: 8px 12px;
+            width: 100%;
+            background-color: #111217;
+            border: 1px solid #2a2d32;
+            color: #d4d4d4;
+            border-radius: 4px;
+        }
+
+
+        .nested-content {
+            display: none;
+            margin-left: 28px;
+            border-left: 1px solid #2a2d32;
+        }
+
+        .nested-content.show {
+            display: block;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #d4d4d4;
+            transition: all 0.3s ease;
+        }
+
+        .nested-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            cursor: pointer;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .nested-item:hover {
+            background-color: #1a1c23;
+            color: #d4d4d4;
+        }
+
+        .nested-item i {
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .folder-stats {
+            margin-left: auto;
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+
+        .folder-item:hover {
+            background-color: #1a1c23;
+        }
+
+        .folder-item.active {
+            background-color: #1a1c23;
+            color: #ff5656;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Vidyut</span>
+            </div>
+        </div>
+        <ul>
+            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-star"></i>Starred</li>
+            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-compass"></i>Explore</li>
+            <li><i class="fas fa-bell"></i>Alerts & IRM</li>
+            <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
+            <li><i class="fas fa-cloud"></i>Cloud Provider</li>
+            <li><i class="fas fa-server"></i>Infrastructure</li>
+            <li><i class="fas fa-code"></i>Application</li>
+            <li><i class="fas fa-desktop"></i>Frontend</li>
+            <li><i class="fas fa-box"></i>Assets</li>
+            <li><i class="fas fa-th"></i>More Apps</li>
+            <li><i class="fas fa-cog"></i>Administration</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Dashboards</h2>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for dashboards and folders">
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="filter-group">
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="filterDropdown">
+                        <i class="fas fa-filter"></i>
+                        Filter by tag
+                    </button>
+                    <div class="dropdown-content" id="filterContent">
+                        <div style="padding: 12px">
+                            <input type="text" class="tag-input" placeholder="Search tags..." id="tagSearch">
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="tag1">
+                            <label for="tag1">Production</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="tag2">
+                            <label for="tag2">Development</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="tag3">
+                            <label for="tag3">Testing</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="tag4">
+                            <label for="tag4">Analytics</label>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-plus"></i>
+                            Add new tag
+                        </div>
+                    </div>
+                </div>
+                
+                <label class="checkbox-label">
+                    <input type="checkbox"> Include panels
+                </label>
+                
+                <label class="checkbox-label">
+                    <input type="checkbox"> Starred
+                </label>
+            </div>
+            
+            <div class="view-controls">
+                <button class="view-btn">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="view-btn">
+                    <i class="fas fa-list"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="sortDropdown">
+                        Sort
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content right-aligned" id="sortContent">
+                        <div class="dropdown-item">
+                            <i class="fas fa-sort-alpha-down"></i>
+                            Alphabetical (A-Z)
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-sort-alpha-up"></i>
+                            Alphabetical (Z-A)
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-clock"></i>
+                            Last modified
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-star"></i>
+                            Most starred
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-header">
+            <span>Name</span>
+            <span>Tags</span>
+        </div>
+
+        <ul class="folder-list">
+            <li>
+                <div class="folder-item" data-folder="shared">
+                    <i class="fas fa-chevron-right chevron"></i>
+                    <i class="fas fa-share-alt"></i>
+                    <span>Old Academic Building</span>
+                    <div class="folder-stats">12 items</div>
+                </div>
+                <div class="nested-content" id="shared-content">
+                    <div class="nested-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Adhrit lab</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Usage Analytics</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Resource Distribution</span>
+                    </div>
+                </div>
+            </li>
+            
+            <li>
+                <div class="folder-item" data-folder="data-plane">
+                    <i class="fas fa-chevron-right chevron"></i>
+                    <i class="fas fa-folder"></i>
+                    <span>Data Plane</span>
+                    <div class="folder-stats">8 items</div>
+                </div>
+                <div class="nested-content" id="data-plane-content">
+                    <div class="nested-item">
+                        <i class="fas fa-database"></i>
+                        <span>Database Metrics</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Data Flow Analysis</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-server"></i>
+                        <span>Server Statistics</span>
+                    </div>
+                </div>
+            </li>
+            
+            <li>
+                <div class="folder-item" data-folder="dataviz">
+                    <i class="fas fa-chevron-right chevron"></i>
+                    <i class="fas fa-folder"></i>
+                    <span>Dataviz Squad</span>
+                    <div class="folder-stats">6 items</div>
+                </div>
+                <div class="nested-content" id="dataviz-content">
+                    <div class="nested-item">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Visualization Projects</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-chart-area"></i>
+                        <span>Trend Analysis</span>
+                    </div>
+                </div>
+            </li>
+            
+            <li>
+                <div class="folder-item" data-folder="aws-iot">
+                    <i class="fas fa-chevron-right chevron"></i>
+                    <i class="fas fa-folder"></i>
+                    <span>Demo: AWS IoT Sitewise</span>
+                    <div class="folder-stats">4 items</div>
+                </div>
+                <div class="nested-content" id="aws-iot-content">
+                    <div class="nested-item">
+                        <i class="fas fa-microchip"></i>
+                        <span>Device Metrics</span>
+                    </div>
+                    <div class="nested-item">
+                        <i class="fas fa-network-wired"></i>
+                        <span>Connection Status</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+    <script>
+        document.querySelectorAll('.folder-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const chevron = item.querySelector('.chevron');
+                chevron.style.transform = 
+                    chevron.style.transform === 'rotate(90deg)' 
+                        ? 'rotate(0deg)' 
+                        : 'rotate(90deg)';
+            });
+        });
+
+
+         // Folder dropdown functionality
+         document.querySelectorAll('.folder-item').forEach(folder => {
+            folder.addEventListener('click', function() {
+                // Toggle chevron rotation
+                const chevron = this.querySelector('.chevron');
+                chevron.style.transform = 
+                    chevron.style.transform === 'rotate(90deg)' 
+                        ? 'rotate(0deg)' 
+                        : 'rotate(90deg)';
+                
+                // Toggle nested content
+                const nestedContent = this.nextElementSibling;
+                nestedContent.classList.toggle('show');
+                
+                // Toggle active state
+                this.classList.toggle('active');
+                
+                // Close other folders
+                const otherFolders = document.querySelectorAll('.folder-item');
+                otherFolders.forEach(otherFolder => {
+                    if (otherFolder !== this) {
+                        otherFolder.classList.remove('active');
+                        otherFolder.querySelector('.chevron').style.transform = 'rotate(0deg)';
+                        const otherContent = otherFolder.nextElementSibling;
+                        if (otherContent) {
+                            otherContent.classList.remove('show');
+                        }
+                    }
+                });
+            });
+        });
+
+        // Nested item click handler
+        document.querySelectorAll('.nested-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent folder from collapsing when clicking item
+                
+                // Remove active state from all nested items
+                document.querySelectorAll('.nested-item').forEach(nestedItem => {
+                    nestedItem.classList.remove('active');
+                });
+                
+                // Add active state to clicked item
+                this.classList.add('active');
+                
+                // Here you can add logic for what happens when a nested item is clicked
+                console.log('Selected:', this.querySelector('span').textContent);
+            });
+        });
+
+        // Dropdown functionality
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (!event.target.closest('.dropdown')) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        });
+
+        // Filter dropdown
+        const filterDropdown = document.getElementById('filterDropdown');
+        const filterContent = document.getElementById('filterContent');
+        
+        filterDropdown.addEventListener('click', function(event) {
+            event.stopPropagation();
+            filterContent.classList.toggle('show');
+            sortContent.classList.remove('show');
+        });
+
+        // Sort dropdown
+        const sortDropdown = document.getElementById('sortDropdown');
+        const sortContent = document.getElementById('sortContent');
+        
+        sortDropdown.addEventListener('click', function(event) {
+            event.stopPropagation();
+            sortContent.classList.toggle('show');
+            filterContent.classList.remove('show');
+        });
+
+        // Tag search functionality
+        const tagSearch = document.getElementById('tagSearch');
+        
+        tagSearch.addEventListener('input', function(event) {
+            const searchText = event.target.value.toLowerCase();
+            const tagItems = filterContent.querySelectorAll('.dropdown-item:not(:last-child)');
+            
+            tagItems.forEach(item => {
+                const label = item.querySelector('label');
+                if (label) {
+                    const text = label.textContent.toLowerCase();
+                    item.style.display = text.includes(searchText) ? 'flex' : 'none';
+                }
+            });
+        });
+
+        // Handle dropdown item selection
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                if (!event.target.matches('input[type="checkbox"]')) {
+                    const text = this.textContent.trim();
+                    if (this.closest('#sortContent')) {
+                        sortDropdown.querySelector('.fas.fa-chevron-down').classList.toggle('fa-flip-vertical');
+                        // Implement sorting logic here
+                        console.log('Sorting by:', text);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
