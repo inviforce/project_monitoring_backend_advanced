@@ -3,253 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidyut - IIT Jammu</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Device Control Panel</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b0c0e;
-            color: #d4d4d4;
-        }
-
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            background-color: #111217;
-            position: fixed;
-            overflow-y: auto;
-            border-right: 1px solid #2a2d32;
-        }
-
-        .logo-container {
+            background: #f0f2f5;
             padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #2a2d32;
         }
 
-        .logo {
-            color: #ff5656;
-            font-size: 24px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .logo i {
-            font-size: 28px;
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .sidebar ul {
-            list-style-type: none;
-            padding: 15px 0;
+        .device-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .sidebar ul li {
-            padding: 12px 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            color: #8e8e8e;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar ul li:hover {
-            background-color: #1a1c23;
-            color: #fff;
-        }
-
-        .sidebar ul li i {
-            width: 20px;
-            text-align: center;
-        }
-
-        .main {
-            margin-left: 250px;
-            padding: 20px 40px;
-        }
-
-        .header {
+        .device-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #2a2d32;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
 
-        .header h2 {
-            font-size: 24px;
-            font-weight: 500;
-            color: #fff;
+        .device-name {
+            font-size: 18px;
+            font-weight: bold;
         }
 
-        .search-container {
+        .toggle-switch {
             position: relative;
-            width: 300px;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
         }
 
-        .search-container i {
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
             position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #8e8e8e;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
         }
 
-        .header input {
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .timer-section {
+            margin-top: 15px;
+        }
+
+        .timer-input {
             width: 100%;
-            background-color: #1a1c23;
-            color: #d4d4d4;
-            border: 1px solid #2a2d32;
-            padding: 10px 15px 10px 35px;
-            border-radius: 6px;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .timer-button {
+            width: 100%;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .timer-button:hover {
+            background-color: #45a049;
+        }
+
+        .status-indicator {
             font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .header input:focus {
-            outline: none;
-            border-color: #ff5656;
-            box-shadow: 0 0 0 2px rgba(255, 86, 86, 0.1);
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
-        }
-
-        .dashboard-card {
-            background-color: #1a1c23;
-            border-radius: 8px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid #2a2d32;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            border-color: #ff5656;
-        }
-
-        .dashboard-card .title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #fff;
-            margin-bottom: 10px;
-        }
-
-        .dashboard-card .tags {
-            display: flex;
-            gap: 8px;
-        }
-
-        .tag {
-            background-color: #2a2d32;
-            color: #8e8e8e;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo-container">
-            <div class="logo">
-                <i class="fas fa-chart-line"></i>
-                <span>Vidyut</span>
-            </div>
-        </div>
-        <ul>
-            <li><i class="fas fa-home"></i>Home</li>
-            <li><i class="fas fa-star"></i>Starred</li>
-            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
-            <li><i class="fas fa-compass"></i>Explore</li>
-            <li><i class="fas fa-bell"></i>Alerts & IRM</li>
-            <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
-            <li><i class="fas fa-cloud"></i>Cloud Provider</li>
-            <li><i class="fas fa-server"></i>Infrastructure</li>
-            <li><i class="fas fa-code"></i>Application</li>
-            <li><i class="fas fa-desktop"></i>Frontend</li>
-            <li><i class="fas fa-box"></i>Assets</li>
-            <li><i class="fas fa-th"></i>More Apps</li>
-            <li><i class="fas fa-cog"></i>Administration</li>
-        </ul>
-    </div>
-
-    <div class="main">
-        <div class="header">
-            <h2>Welcome to Vidyut!</h2>
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search for dashboards...">
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <div class="title">Shared with me</div>
-                <div class="tags">
-                    <span class="tag">Shared</span>
-                    <span class="tag">Recent</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Data Plane</div>
-                <div class="tags">
-                    <span class="tag">Analytics</span>
-                    <span class="tag">Data</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Dataviz Squad</div>
-                <div class="tags">
-                    <span class="tag">Visualization</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Demo: AWS IoT Sitewise</div>
-                <div class="tags">
-                    <span class="tag">AWS</span>
-                    <span class="tag">IoT</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Demo: AWS IoT TwinMaker</div>
-                <div class="tags">
-                    <span class="tag">AWS</span>
-                    <span class="tag">IoT</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Demo: BigQuery</div>
-                <div class="tags">
-                    <span class="tag">Analytics</span>
-                    <span class="tag">BigQuery</span>
-                </div>
-            </div>
-            <div class="dashboard-card">
-                <div class="title">Demo: Correlations</div>
-                <div class="tags">
-                    <span class="tag">Analytics</span>
-                    <span class="tag">Data</span>
-                </div>
-            </div>
+    <div class="container">
+        <h1>Device Control Panel</h1>
+        <div class="device-grid" id="deviceGrid">
+            <!-- Devices will be added here dynamically -->
         </div>
     </div>
+
+    <script>
+        const devices = [
+            { id: 'ac', name: 'Air Conditioner', status: false, timer: null },
+            { id: 'light', name: 'Smart Light', status: false, timer: null },
+            { id: 'fan', name: 'Ceiling Fan', status: false, timer: null }
+        ];
+
+        function createDeviceCard(device) {
+            return `
+                <div class="device-card">
+                    <div class="device-header">
+                        <span class="device-name">${device.name}</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" onchange="toggleDevice('${device.id}')" ${device.status ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="timer-section">
+                        <input type="datetime-local" id="timer-${device.id}" class="timer-input">
+                        <button onclick="setTimer('${device.id}')" class="timer-button">Set Timer</button>
+                    </div>
+                    <div class="status-indicator" id="status-${device.id}">
+                        Status: ${device.status ? 'ON' : 'OFF'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDevices() {
+            const deviceGrid = document.getElementById('deviceGrid');
+            deviceGrid.innerHTML = devices.map(device => createDeviceCard(device)).join('');
+        }
+
+        async function toggleDevice(deviceId) {
+            const device = devices.find(d => d.id === deviceId);
+            device.status = !device.status;
+            
+            try {
+                const response = await fetch('http://localhost:8737/api/data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        deviceId: deviceId,
+                        status: device.status ? 'on' : 'off'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                updateDeviceStatus(deviceId);
+            } catch (error) {
+                console.error('Error:', error);
+                // Revert the status if the request failed
+                device.status = !device.status;
+                updateDeviceStatus(deviceId);
+            }
+        }
+
+        function updateDeviceStatus(deviceId) {
+            const device = devices.find(d => d.id === deviceId);
+            const statusElement = document.getElementById(`status-${deviceId}`);
+            if (statusElement) {
+                statusElement.textContent = `Status: ${device.status ? 'ON' : 'OFF'}`;
+            }
+        }
+
+        function setTimer(deviceId) {
+            const device = devices.find(d => d.id === deviceId);
+            const timerInput = document.getElementById(`timer-${deviceId}`);
+            const targetTime = new Date(timerInput.value).getTime();
+            
+            if (targetTime <= Date.now()) {
+                alert('Please select a future time');
+                return;
+            }
+
+            // Clear existing timer if any
+            if (device.timer) {
+                clearTimeout(device.timer);
+            }
+
+            // Set new timer
+            device.timer = setTimeout(() => {
+                toggleDevice(deviceId);
+            }, targetTime - Date.now());
+
+            alert(`Timer set for ${timerInput.value}`);
+        }
+
+        // Initial render
+        renderDevices();
+    </script>
 </body>
 </html>

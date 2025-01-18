@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const mqtt = require('mqtt');
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 // const { newData } = require("./db_inserter/insert.js");     *********** DO IN CODE ALREADY ******************
 const { holder } = require("./utilities/mqtt.js");
 // const key = require("./utilities/data_parser.js");   ************NOT REQUIRED AS MAKER AND KEY IS DOING SAME WORK*************
@@ -355,6 +356,25 @@ app.post('/api/data', async (req, res) => {
     
     res.json({ message: 'Data received successfully', receivedData: { topic, message } });
 });
+
+app.use(express.static(path.join(__dirname, "../")));
+
+// creating api routes
+app.get("/",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/vidyut.html"));
+})
+
+app.get("/home",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/home1.html"));
+})
+
+app.get("/discography",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
+})
+
+app.get("/discography/Adhrit_Lab",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/index.html"));
+})
 
 // Start Express server
 app.listen(httpPort, () => {
