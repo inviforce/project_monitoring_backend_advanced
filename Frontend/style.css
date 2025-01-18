@@ -470,3 +470,8 @@ font-size: 0.75rem;
       display: none;
   }
 }
+.inv_a{
+  text-decoration: none; /* Removes the underline */
+  color: inherit;        /* Inherits the text color from the parent element */
+
+}

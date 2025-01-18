@@ -308,7 +308,11 @@
             background-color: #ff4242;
             transform: translateY(-2px);
         }
-
+        .inv_a{
+            text-decoration: none; /* Removes the underline */
+            color: inherit;        /* Inherits the text color from the parent element */
+        
+        }
         
     </style>
 </head>
@@ -321,9 +325,9 @@
             </div>
         </div>
         <ul>
-            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-home"></i><a class="inv_a" href="/home">Home</a></li>
             <li><i class="fas fa-star"></i>Starred</li>
-            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>
             <li><i class="fas fa-compass"></i>Explore</li>
             <li><i class="fas fa-bell"></i>Alerts & IRM</li>
             <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
