@@ -343,6 +343,11 @@
             background-color: #1a1c23;
             color: #ff5656;
         }
+        .inv_a{
+            text-decoration: none; /* Removes the underline */
+            color: inherit;        /* Inherits the text color from the parent element */
+        
+        }
 
     </style>
 </head>
@@ -355,9 +360,9 @@
             </div>
         </div>
         <ul>
-            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-home"></i><a class="inv_a" href="/home">Home</a></li>
             <li><i class="fas fa-star"></i>Starred</li>
-            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>
             <li><i class="fas fa-compass"></i>Explore</li>
             <li><i class="fas fa-bell"></i>Alerts & IRM</li>
             <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
@@ -476,7 +481,7 @@
                 <div class="nested-content" id="shared-content">
                     <div class="nested-item">
                         <i class="fas fa-chart-line"></i>
-                        <span>Adhrit lab</span>
+                        <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic7')">Adhrit lab</a></span>
                     </div>
                     <div class="nested-item">
                         <i class="fas fa-chart-bar"></i>
@@ -563,6 +568,19 @@
                         : 'rotate(90deg)';
             });
         });
+        async function sender(topic) {
+            try {
+                await fetch('http://localhost:8737/api/topic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic }),
+                });
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+        }
 
 
          // Folder dropdown functionality

@@ -128,7 +128,7 @@ const nodes = {
     SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
     SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
     SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
-    SEG0004: new Node('SEG0004', true, true, true, true, true, true, ),
+    SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
 };
 
 console.log(nodes.SEG0001.features)
@@ -328,7 +328,7 @@ app.get("/datee", async (req, res) => {
     }
 });
 
-app.post('/api/data/topic', async (req, res) => {
+app.post('/api/topic', async (req, res) => {
     const { topic } = req.body;
     if (topic) {
         selectedTopic = topic; // Update the selected topic
@@ -338,6 +338,7 @@ app.post('/api/data/topic', async (req, res) => {
         res.status(400).send('No topic provided');
     }
 });
+
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
