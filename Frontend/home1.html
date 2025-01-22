@@ -321,23 +321,18 @@
         <div class="logo-container">
             <div class="logo">
                 <i class="fas fa-chart-line"></i>
-                <span>Vidyut</span>
+                <a href="/" style="text-decoration: none; color: inherit;">
+                    <span>Vidyut</span>
+                    </a>
             </div>
         </div>
         <ul>
-            <li><i class="fas fa-home"></i><a class="inv_a" href="/home">Home</a></li>
-            <li><i class="fas fa-star"></i>Starred</li>
-            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>
-            <li><i class="fas fa-compass"></i>Explore</li>
-            <li><i class="fas fa-bell"></i>Alerts & IRM</li>
-            <li><i class="fas fa-vial"></i>Testing & Synthetics</li>
-            <li><i class="fas fa-cloud"></i>Cloud Provider</li>
-            <li><i class="fas fa-server"></i>Infrastructure</li>
-            <li><i class="fas fa-code"></i>Application</li>
-            <li><i class="fas fa-desktop"></i>Frontend</li>
-            <li><i class="fas fa-box"></i>Assets</li>
-            <li><i class="fas fa-th"></i>More Apps</li>
-            <li><i class="fas fa-cog"></i>Administration</li>
+            <li><i class="fas fa-home"></i><a class="inv_a" href="/">Home</a></li>
+            <li><i class="fas fa-compass"></i><a class="inv_a" href="/home">Explore</a></li>
+            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>          
+            <li><i class="fas fa-bell"></i><a class="inv_a" href="/discography">Auto-Timer</a></li>
+            <li><i class="fas fa-code"></i>About Us</li>
+            <li><i class="fas fa-cog"></i>Login / Logout</li>
         </ul>
     </div>
 
@@ -350,9 +345,9 @@
             </div>
         </div>
 
-        <div class="map-container" onclick="window.location.href='map.html'">
-            <div class="map-placeholder">
-                <img src="Screenshot 2025-01-16 101609.png" alt="World Map" style="width: 100%; height: 100%; object-fit: cover;">
+        <div class="map-container" onclick="window.location.href='/home/map'">
+            <div class="map-placeholder" >
+                <img src="/Frontend/Screenshot 2025-01-16 101609.png" alt="World Map" style="width: 100%; height: 100%; object-fit: cover;">
                 <div class="location-marker" style="top: 30%; left: 20%" onclick="showLocation('North America')"></div>
                 <div class="location-marker" style="top: 40%; left: 45%" onclick="showLocation('Europe')"></div>
                 <div class="location-marker" style="top: 45%; left: 70%" onclick="showLocation('Asia')"></div>

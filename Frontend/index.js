@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         document.getElementById('powerValue').textContent = data.power || 'NA';
         document.getElementById('energyValue').textContent = data.energy || 'NA';
         document.getElementById('frequencyValue').textContent = data.frequency || 'NA';
-        document.getElementById('powerFactorValue').textContent = data.powerFactor || 'NA';
+        document.getElementById('powerFactorValue').textContent = data.power_f || 'NA';
         
     } catch (error) {
         console.error('Error fetching data:', error);

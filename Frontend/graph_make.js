@@ -8,7 +8,7 @@ socket.onmessage = function (event) {
     try {
         const mess = JSON.parse(event.data);
         console.log(mess);
-        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature, mess.humidity);
+        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.power_f, mess.temperature, mess.humidity);
     } catch (error) {
         console.error("Error parsing message:", error);
         console.log("Problematic message:", event.data);

@@ -8,13 +8,23 @@ const path = require('path');
 const { holder } = require("./utilities/mqtt.js");
 // const key = require("./utilities/data_parser.js");   ************NOT REQUIRED AS MAKER AND KEY IS DOING SAME WORK*************
 const maker = require("./utilities/parseDeviceData.js");
-const Data = require("./model/data.js")
+const Data = require("./models/data.js")
+const cookieParser = require("cookie-parser");
+const {restrictToLoggedinUserOnly} = require("./middlewares/auth");
 
 
 const app = express();
 const httpPort = 8737;
 const wsPort = 3027;
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
+
+
+const userRoute = require("./routes/user");
+
+app.use("/user",userRoute)
 
 
 // Express middleware
@@ -23,8 +33,6 @@ app.use(cors({
     methods: ['GET', 'POST'],
     credentials: true
 }));
-
-app.use(express.json());
 
 let selectedTopic = 'topic7'; 
 // WebSocket Server
@@ -95,10 +103,8 @@ class Node {
     }
 }
 
-
-
-// const db = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-const db = 'mongodb://127.0.0.1:27017/power_monitoring?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.7'
+const db = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// const db = 'mongodb://127.0.0.1:27017/power_monitoring?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.7'
 
 mongoose.connect(db)
     .then(() => {
@@ -132,7 +138,7 @@ const nodes = {
 };
 
 console.log(nodes.SEG0001.features)
-console.log(nodes.SEG0004.features)
+console.log(nodes.SEG0004.features) 
 
 
 
@@ -360,6 +366,9 @@ app.post('/api/data', async (req, res) => {
 
 app.use(express.static(path.join(__dirname, "../")));
 
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./Backend_main/views"));
+
 // creating api routes
 app.get("/",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/vidyut.html"));
@@ -369,13 +378,30 @@ app.get("/home",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/home1.html"));
 })
 
-app.get("/discography",(req,res)=>{
+app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
 })
 
-app.get("/discography/Adhrit_Lab",(req,res)=>{
+app.get("/discography/Adhrit_Lab", restrictToLoggedinUserOnly,(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/index.html"));
 })
+
+app.get("/home/map",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/map.html"));
+})
+
+app.get("/register" , (req,res) =>{
+    res.render("register")
+  })
+
+  app.get("/login", (req, res) => {
+    res.render("index");
+  });
+  
+  app.get("/forgot" , (req,res) => {
+    res.render("forgot")
+  })
+  
 
 // Start Express server
 app.listen(httpPort, () => {

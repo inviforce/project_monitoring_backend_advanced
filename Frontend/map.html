@@ -23,15 +23,28 @@
 
     // Add markers to specific points
     const points = [
-      { lat: 	32.732998, lng: 74.864273, name: "Point 1", url: "https://example.com/point1" },
-      { lat:  32.80326, lng: 74.89545, name: "Point 2", url: "https://example.com/point2" },
-      { lat: 32.504 , lng: 74.34, name: "Point 3", url: "https://example.com/point3" },
+      { lat: 32.732998, lng: 74.864273, name: "Point 1", url: "https://example.com/point1" },
+      { lat: 32.80326, lng: 74.89545, name: "Point 2", url: "https://example.com/point2" },
+      { lat: 32.504, lng: 74.34, name: "Point 3", url: "https://example.com/point3" },
     ];
 
     points.forEach((point) => {
       const marker = L.marker([point.lat, point.lng]).addTo(map);
-      marker.bindPopup(<a href="${point.url}" target="_blank">${point.name}</a>);
+      marker.bindPopup(`<a href="/discography/Adhrit_Lab" target="_blank" onclick="sender('topic7')">Aadhrit Lab</a>`); // Fixed
     });
+    async function sender(topic) {
+            try {
+                await fetch('http://localhost:8737/api/topic', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ topic }),
+                });
+            } catch (error) {
+                console.log("An error occurred:", error);
+            }
+        }
   </script>
 </body>
 </html>
