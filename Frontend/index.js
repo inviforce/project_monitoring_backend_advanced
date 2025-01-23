@@ -9,7 +9,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     document.getElementById("deviceDataForm").addEventListener("submit", async function(event) {
+        console.log("Form submission triggered");
         event.preventDefault();
+        console.log("Form submission prevented!");
         const deviceId = document.getElementById("deviceId").value;
         const dataType = document.getElementById("dataType").value;
         const value = document.getElementById("value").value;
