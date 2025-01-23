@@ -143,10 +143,10 @@ console.log(nodes.SEG0004.features)
 
 
 const nodeMap = {
-    SEG001: "topic1",
-    SEG002: "topic2",
-    SEG003: "topic3",
-    SEG004: "topic4"
+    SEG001: "topic7",
+    SEG002: "topic8",
+    SEG003: "topic9",
+    SEG004: "topic10"
 };
 
 
