@@ -36,6 +36,18 @@
             <i class="fas fa-home"></i>
             <span><a class="inv_a" href="/discography">Dashboard</a></span>
         </div>
+        <div class="nav-item pahse">
+            <i class="fas fa-chart-line"></i>
+            <span onclick="sender(1)">Phase 1 </span>
+        </div>
+        <div class="nav-item pahse">
+            <i class="fas fa-chart-line"></i>
+            <span onclick="sender(2)">Phase 2</span>
+        </div>
+        <div class="nav-item pahse">
+            <i class="fas fa-chart-line"></i>
+            <span onclick="sender(3)">Phase 3</span>
+        </div>
         <div class="nav-item">
             <i class="fas fa-chart-line"></i>
             <span>Analytics</span>
@@ -88,10 +100,10 @@
             <div id="gauge6" class="gauge" style="height: 50vh;"></div>
         </div>
 
-        <div class="gauge-container" style="display: flex; flex-direction: column;">
+        <!-- <div class="gauge-container" style="display: flex; flex-direction: column;">
             <div id="line1" class="line"></div>
             <div id="line2" class="line"></div>
-        </div>
+        </div> -->
 
 
        
@@ -247,6 +259,32 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeTimeRange();
         });
+        async function sender(phase) {
+            try {
+                const payload = { phase: phase };  // Ensure the correct key
+
+                console.log("Sending payload:", payload);  // Debugging
+
+                const response = await fetch('http://localhost:8737/api/topic/phase', { // Ensure correct endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),  
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();  // Get server response
+                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
+                }
+
+                const data = await response.text(); // Get response as text
+                console.log("Server Response:", data);
+            } catch (error) {
+                console.error("An error occurred:", error);
+            }
+        }
+
     </script>
 </body>
 </html>
