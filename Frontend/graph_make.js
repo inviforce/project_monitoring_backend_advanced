@@ -8,7 +8,7 @@ socket.onmessage = function (event) {
     try {
         const mess = JSON.parse(event.data);
         console.log(mess);
-        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.power_f, mess.temperature, mess.humidity);
+        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature, mess.humidity);
     } catch (error) {
         console.error("Error parsing message:", error);
         console.log("Problematic message:", event.data);
@@ -171,13 +171,13 @@ lineGraph('line2', 0, 'Humidity Over Time', humditydata);
 
 
 // Function to update the gauges with new data
-function updateGauges(voltage, current, power, energy, frequency, power_f, temperature, humidity) {
+function updateGauges(voltage, current, power, energy, frequency, powerFactor, temperature, humidity) {
     Plotly.update('gauge1', { value: [voltage] }, [0]);
     Plotly.update('gauge2', { value: [current] }, [0]);
     Plotly.update('gauge3', { value: [power] }, [0]);
     Plotly.update('gauge4', { value: [energy] }, [0]);
     Plotly.update('gauge5', { value: [frequency] }, [0]);
-    Plotly.update('gauge6', { value: [power_f] }, [0]);
+    Plotly.update('gauge6', { value: [powerFactor] }, [0]);
 
     // Update the temperature data
     const currentTime = timeData.length; // You can modify this to use real timestamps

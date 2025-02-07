@@ -1,9 +1,55 @@
+// const mongoose = require("mongoose");
+
+// const dataSchema = new mongoose.Schema({
+//     nodeId: {
+//         type: String,
+//         required: false,
+//     },
+//     voltage: {
+//         type: Number,
+//         required: true,
+//     },
+//     current: {
+//         type: Number,
+//         required: true,
+//     },
+//     power: {
+//         type: Number,
+//         required: true,
+//     },
+//     energy: {
+//         type: Number,
+//         required: true,
+//     },
+//     frequency: {
+//         type: Number,
+//         required: true,
+//     },
+//     power_f: {
+//         type: Number,
+//         required: false,
+//     },
+//     temperature: {
+//         type: Number,
+//         required: true,
+//     },
+//     humidity: {
+//         type: Number,
+//         required: false,
+//     }
+// }, { timestamps: true });
+
+
+
+// const nodeData = mongoose.model('Data', dataSchema,"node_data");
+// module.exports = nodeData;
+
 const mongoose = require("mongoose");
 
 const dataSchema = new mongoose.Schema({
-    nodeId: {
-        type: String,
-        required: false,
+    device: {
+        type: Number,
+        required: true,
     },
     voltage: {
         type: Number,
@@ -25,21 +71,15 @@ const dataSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    power_f: {
-        type: Number,
-        required: false,
-    },
-    temperature: {
+    powerFactor: {
         type: Number,
         required: true,
     },
-    humidity: {
+    alarms: {
         type: Number,
-        required: false,
+        required: true,
     }
 }, { timestamps: true });
 
-
-
-const nodeData = mongoose.model('Data', dataSchema,"node_data");
-module.exports = nodeData;
+const NodeData = mongoose.model('NodeData', dataSchema, "node_data");
+module.exports = NodeData;
