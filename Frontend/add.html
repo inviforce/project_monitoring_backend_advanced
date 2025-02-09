@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Topic Form</title>
+    <style>
+        /* Global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        /* Container styling */
+        .form-container {
+            background: #2c2c2c;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        .form-container h2 {
+            color: #f22d2d; /* Red color for title */
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #ddd;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #444;
+            color: #fff;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border: 1px solid #f22d2d;
+        }
+
+        /* Submit button styling */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f22d2d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #b71c1c;
+        }
+
+        /* Footer link styling */
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #f22d2d;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Vidyut - Power Monitoring</h2>
+        <form id="topicForm">
+            <div class="input-group">
+                <label for="topic">Topic</label>
+                <input type="text" id="topic" name="topic" placeholder="Enter topic" required>
+            </div>
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter name" required>
+            </div>
+            <button type="submit" class="submit-btn">Add</button>
+        </form>
+        <div class="footer">
+            <a href="#">Forgot Password?</a> | <a href="#">Create Account</a>
+        </div>
+    </div>
+
+    <script src="/Frontend/add.js">
+    </script>
+</body>
+</html>
