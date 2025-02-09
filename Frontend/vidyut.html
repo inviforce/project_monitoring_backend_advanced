@@ -22,6 +22,8 @@
             line-height: 1.6;
         }
 
+        
+
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -208,6 +210,19 @@
     </style>
 </head>
 <body>
+    <!-- Loader Section -->
+    <div class="loader-wrapper" id="loader">
+        <div class="loader">
+            <p>loading</p>
+            <div class="words">
+                <span class="word">Voltage</span>
+                <span class="word">Current</span>
+                <span class="word">Power</span>
+            </div>
+        </div>
+    </div>
+ 
+<div class="content-wrapper" id="content">    
     <div class="sidebar">
         <!-- [Previous sidebar content remains the same] -->
         <div class="logo-container">
@@ -297,6 +312,7 @@
             </div>
         </section>
     </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
@@ -305,6 +321,68 @@
             once: true,
             offset: 100
         });
+    </script>
+
+    <script>
+        // Loading System Configuration
+        const LoadingSystem = {
+            loader: document.getElementById('loader'),
+            content: document.getElementById('content'),
+            
+            // Minimum loading time in milliseconds
+            minLoadTime: 1000,
+            
+            // Initialize loading system
+            init() {
+                // Store the start time
+                this.startTime = Date.now();
+                
+                // Add event listeners
+                window.addEventListener('load', () => this.handlePageLoad());
+                
+                // Add error handling
+                window.addEventListener('error', () => this.handleError());
+            },
+            
+            // Handle page load completion
+            handlePageLoad() {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - this.startTime;
+                
+                // Ensure minimum loading time
+                if (elapsedTime < this.minLoadTime) {
+                    setTimeout(() => this.showContent(), 
+                        this.minLoadTime - elapsedTime);
+                } else {
+                    this.showContent();
+                }
+            },
+            
+            // Show the main content
+            showContent() {
+                // Fade out loader
+                this.loader.style.opacity = '0';
+                this.loader.style.transition = 'opacity 0.5s ease';
+                
+                // Show content
+                this.content.style.display = 'block';
+                
+                // Remove loader after transition
+                setTimeout(() => {
+                    this.loader.style.display = 'none';
+                }, 500);
+            },
+            
+            // Handle loading errors
+            handleError() {
+                console.error('Page loading encountered an error');
+                // You can add custom error handling here
+                this.showContent(); // Still show content on error
+            }
+        };
+
+        // Initialize the loading system
+        LoadingSystem.init();
     </script>
 </body>
 </html>
