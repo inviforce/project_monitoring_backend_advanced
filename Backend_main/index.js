@@ -47,7 +47,6 @@ app.use(cors({
 let selectedTopic = 'topic7';
 let selectedphase= 1;
 
-let selectedTopic = 'topic7'; 
 // WebSocket Server
 const wss = new WebSocket.Server({ port: wsPort });
 
