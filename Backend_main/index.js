@@ -244,27 +244,9 @@ const processQueue = async () => {
         const batch = messageQueue.splice(0, BATCH_SIZE); // Take a batch of messages
 
         const bulkOperations = batch.map((mess) => {
-            // console.log(mess.nodeId)
-            const nodeObject = nodes[mess.nodeId]; // Retrieve the object for the nodeId
-            // console.log(nodeObject)
-            if (!nodeObject) {
-                console.error(`Node object for ID ${mess.nodeId} not found.`);
-                return null;
-            }
-
-            // Build the document based on the features array
-            const document = {};
-            for (const feature of nodeObject.features) {
-                if (mess.hasOwnProperty(feature)) {
-                    document[feature] = mess[feature];
-                }
-            }
-            document.nodeId = mess.nodeId; // Always include the nodeId
-
-            return {
-                insertOne: { document }
-            };
-        }).filter(op => op !== null); // Remove any null operations
+            const document = { ...mess }; // Copy all properties from the message
+            return { insertOne: { document } };
+        });
 
         try {
             // Insert batch into MongoDB
