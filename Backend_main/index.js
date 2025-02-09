@@ -12,11 +12,10 @@ const Data = require("./models/data.js")
 const cookieParser = require("cookie-parser");
 const {restrictToLoggedinUserOnly} = require("./middlewares/auth");
 
-
 const app = express();
 const httpPort = 8737;
 const wsPort = 3027;
-
+8
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
@@ -29,6 +28,7 @@ app.use("/user",userRoute)
 
 
 let topics 
+let email
 try {
     const data = fs.readFileSync('Backend_main/info.txt', 'utf8'); 
     topics = data.split("\n").map(topic => topic.trim()).filter(topic => topic !== ""); // Remove extra spaces and empty lines
@@ -313,6 +313,19 @@ async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
     }
 }
 
+app.post("/api/topic_name", async (req, res) => {
+    const { topic, name } = req.body;
+
+    if (!topic || !name) {
+        return res.status(400).json({ error: "Missing 'topic' or 'name' in the request body." });
+    }
+
+    console.log("Received Data:", { topic, name });
+    
+    // Respond back to the client
+    res.status(200).json({ message: "Data received successfully", topic, name });
+});
+
 // Historical data endpoint
 app.get("/datee", async (req, res) => {
     console.log("GET request received for /datee", req.query);
@@ -404,6 +417,7 @@ app.post('/api/data', async (req, res) => {
     res.json({ message: 'Data received successfully', receivedData: { topic, message } });
 });
 
+
 app.use(express.static(path.join(__dirname, "../")));
 
 app.set("view engine", "ejs");
@@ -423,12 +437,25 @@ app.get("/schedule",(req,res)=>{
 })
 
 app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
+    email = req.cookies.email; // Extract email from cookies
+    
+    if (!email) {
+        return res.status(401).json({ error: "No email found in cookies" });
+    }
+    console.log(email)
     res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
 });
 
 app.get("/discography/Adhrit_Lab", restrictToLoggedinUserOnly,(req,res)=>{
+    
     res.sendFile(path.join(__dirname, "../Frontend/index.html"));
 });
+
+app.get("/discography/Adder", restrictToLoggedinUserOnly,(req,res)=>{
+    
+    res.sendFile(path.join(__dirname, "../Frontend/add.html"));
+});
+
 
 app.get("/home/map",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/map.html"));

@@ -424,7 +424,9 @@
                     <input type="checkbox"> Starred
                 </label>
             </div>
-            
+            <div>
+                <button><a href="/discography/Adder">Add</a></button>
+            </div>
             <div class="view-controls">
                 <button class="view-btn">
                     <i class="fas fa-th-large"></i>
@@ -576,8 +578,9 @@
                 console.log("An error occurred:", error);
             }
         }
-
-
+        async function hehe(){
+            console.log(cookieParser.email)
+        }
          // Folder dropdown functionality
          document.querySelectorAll('.folder-item').forEach(folder => {
             folder.addEventListener('click', function() {

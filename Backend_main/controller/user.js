@@ -26,15 +26,12 @@ async function handleUserSignup(req,res) {
     
 }
 
-
 async function handleUserLogin(req,res) {
 
    
     
     const { email, password } = req.body;
     const user = await User.findOne({ email, password });
-
-
     if(!user) return res.render("index" , {
         error : "Invalid email or password"
     });
@@ -42,6 +39,7 @@ async function handleUserLogin(req,res) {
     const sessionId = uuidv4();
     setUser(sessionId , user);
     res.cookie('uid' , sessionId);
+    res.cookie('email',email)
     return res.redirect("/");
     
 }
