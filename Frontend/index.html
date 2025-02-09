@@ -32,21 +32,17 @@
     </header>
 
     <nav class="sidebar">
-        <div class="nav-item active">
-            <i class="fas fa-home"></i>
-            <span><a class="inv_a" href="/discography">Dashboard</a></span>
-        </div>
-        <div class="nav-item pahse">
+        <div class="nav-item phase" data-phase="1" onclick="sender(1)">
             <i class="fas fa-chart-line"></i>
-            <span onclick="sender(1)">Phase 1 </span>
+            <span>Phase 1</span>
         </div>
-        <div class="nav-item pahse">
+        <div class="nav-item phase" data-phase="2" onclick="sender(2)">
             <i class="fas fa-chart-line"></i>
-            <span onclick="sender(2)">Phase 2</span>
+            <span>Phase 2</span>
         </div>
-        <div class="nav-item pahse">
+        <div class="nav-item phase" data-phase="3" onclick="sender(3)">
             <i class="fas fa-chart-line"></i>
-            <span onclick="sender(3)">Phase 3</span>
+            <span>Phase 3</span>
         </div>
         <div class="nav-item">
             <i class="fas fa-chart-line"></i>
@@ -255,36 +251,11 @@
     <script src="/Frontend/index.js"></script>
     <script src="/Frontend/theme.js"></script>
     <script src="/Frontend/timeRange.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeTimeRange();
-        });
-        async function sender(phase) {
-            try {
-                const payload = { phase: phase };  // Ensure the correct key
+    <!-- <script>
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     initializeTimeRange();
+        // });
 
-                console.log("Sending payload:", payload);  // Debugging
-
-                const response = await fetch('http://localhost:8737/api/topic/phase', { // Ensure correct endpoint
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),  
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();  // Get server response
-                    throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
-                }
-
-                const data = await response.text(); // Get response as text
-                console.log("Server Response:", data);
-            } catch (error) {
-                console.error("An error occurred:", error);
-            }
-        }
-
-    </script>
+    </script> -->
 </body>
 </html>

@@ -27,12 +27,25 @@ const userRoute = require("./routes/user");
 app.use("/user",userRoute)
 
 
+
+let topics 
+try {
+    const data = fs.readFileSync('Backend_main/info.txt', 'utf8'); 
+    topics = data.split("\n").map(topic => topic.trim()).filter(topic => topic !== ""); // Remove extra spaces and empty lines
+    console.log(topics); // Output: ["topic7", "topic8", "topic9", "topic10"]
+} catch (err) {
+    console.error("Error reading file:", err);
+}
+
 // Express middleware
 app.use(cors({
     origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
     methods: ['GET', 'POST'],
     credentials: true
 }));
+
+let selectedTopic = 'topic7';
+let selectedphase= 1;
 
 let selectedTopic = 'topic7'; 
 // WebSocket Server
@@ -56,7 +69,7 @@ class Node {
         this.features = []
 
         this.initialze_features();
-        
+
     }
     initialze_features(){
         if (this.nodeId !== null) this.features.push("nodeId") // not required
@@ -80,7 +93,7 @@ class Node {
     //         }
     //     }
     // }
-    
+
 
 
     // Method to display node information
@@ -95,7 +108,7 @@ class Node {
         console.log(`Temperature: ${this.temperature} `);
         console.log(`Humidity: ${this.humidity}`);
         console.log(this.features);
-        
+
     }
     // Static method to create a Node from an object
     static fromObject({ nodeId, voltage, current,power_f,energy,power,frequency,temp,humidity }) {
@@ -164,7 +177,7 @@ client.on('connect', () => {
                 console.error("Subscription error:", err);
             }
         });
-        
+
     }
     client.subscribe('neoway', { qos: 1 }, (err) => {
         if (!err) {
@@ -174,7 +187,7 @@ client.on('connect', () => {
         }
     });
 
-    
+
 });
 // WebSocket connection handling
 wss.on('connection', (ws) => {
@@ -191,6 +204,41 @@ const BATCH_SIZE = 50;   // Adjust batch size based on system capability
 const BATCH_INTERVAL = 100; // Interval to process the queue in milliseconds
 
 
+// // Function to process and insert data into MongoDB
+// const processQueue = async () => {
+//     if (messageQueue.length > 0) {
+//         const batch = messageQueue.splice(0, BATCH_SIZE); // Take a batch of messages
+//         const bulkOperations = batch.map((mess) => {
+//             // console.log(mess.nodeId)
+//             const nodeObject = nodes[mess.nodeId]; // Retrieve the object for the nodeId
+//             // console.log(nodeObject)
+//             if (!nodeObject) {
+//                 console.error(`Node object for ID ${mess.nodeId} not found.`);
+//                 return null;
+//             }
+//             // Build the document based on the features array
+//             const document = {};
+//             for (const feature of nodeObject.features) {
+//                 if (mess.hasOwnProperty(feature)) {
+//                     document[feature] = mess[feature];
+//                 }
+//             }
+//             document.nodeId = mess.nodeId; // Always include the nodeId
+//             return {
+//                 insertOne: { document }
+//             };
+//         }).filter(op => op !== null); // Remove any null operations
+//         try {
+//             // Insert batch into MongoDB
+//             const result = await Data.bulkWrite(bulkOperations);
+//             console.log(`Inserted ${result.insertedCount} records successfully.`);
+//         } catch (err) {
+//             console.error("Error inserting batch into MongoDB:", err);
+//         }
+//     }
+// };
+// // Schedule the queue processor
+// setInterval(processQueue, BATCH_INTERVAL);
 // Function to process and insert data into MongoDB
 const processQueue = async () => {
     if (messageQueue.length > 0) {
@@ -263,7 +311,7 @@ async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
         // Convert string dates to Date objects
         const startDate = new Date(startTime);
         const endDate = new Date(endTime);
-        
+
         console.log("Querying with dates:", { startDate, endDate });
 
         // Use mongoose model to query (assuming your model is defined in insert.js)
@@ -274,7 +322,7 @@ async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
             },
             nodeId: nodeId // Add this line to filter by nodeId
         }).toArray();
-        
+
 
         console.log(`Found ${documents.length} documents`);
         return documents;
@@ -287,9 +335,9 @@ async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
 // Historical data endpoint
 app.get("/datee", async (req, res) => {
     console.log("GET request received for /datee", req.query);
-    
+
     const {nodeId, startTime, endTime } = req.query;
-    
+
     console.log("Received request with params:", {nodeId, startTime, endTime });
 
     if (!nodeId || !startTime || !endTime) {
@@ -345,6 +393,17 @@ app.post('/api/topic', async (req, res) => {
     }
 });
 
+app.post('/api/topic/phase', async (req, res) => {
+    const { phase } = req.body;
+    if (phase) {
+        selectedphase = phase; // Update the selected topic
+        console.log(`Frontend selected: ${phase}`);
+        res.status(200).send('Selected topic updated');
+    } else {
+        res.status(400).send('No topic provided');
+    }
+});
+
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
@@ -352,7 +411,7 @@ app.post('/api/data', async (req, res) => {
     const topic = 'neoway';
     const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
     console.log({ topic, message });
-    
+
     try {
         await client.publish(topic, message, { qos: 0 }); // Send the formatted message
         console.log(`Message sent to topic "${topic}":`, message);
@@ -360,7 +419,7 @@ app.post('/api/data', async (req, res) => {
         console.error('Error publishing message:', err);
         return res.status(500).json({ message: 'Error publishing message' });
     }
-    
+
     res.json({ message: 'Data received successfully', receivedData: { topic, message } });
 });
 
@@ -401,13 +460,12 @@ app.get("/register" , (req,res) =>{
   app.get("/login", (req, res) => {
     res.render("index");
   });
-  
+
   app.get("/forgot" , (req,res) => {
     res.render("forgot")
   })
 
-  
-  
+
 
 // Start Express server
 app.listen(httpPort, () => {
