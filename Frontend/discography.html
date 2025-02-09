@@ -376,7 +376,7 @@
             transition: all 0.3s ease;
         }
 
-        .nested-item {
+        /* .nested-item {
             display: flex;
             align-items: center;
             padding: 10px 12px;
@@ -384,7 +384,53 @@
             color: #8e8e8e;
             transition: all 0.3s ease;
             font-size: 13px;
-        }
+        } */
+
+        .nested-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    cursor: pointer;
+    color: #8e8e8e;
+    transition: all 0.3s ease;
+    font-size: 13px;
+}
+
+.nested-actions {
+    display: none;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.nested-item:hover {
+    background-color: #1a1c23;
+    color: #d4d4d4;
+}
+
+.nested-item:hover .nested-actions {
+    display: flex;
+}
+
+.nested-btn {
+    padding: 4px 10px;
+    background-color: #111217;
+    border: 1px solid #2a2d32;
+    border-radius: 4px;
+    color: #d4d4d4;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nested-btn:hover {
+    background-color: #ff5656;
+    color: white;
+    border-color: #ff5656;
+}
 
         .nested-item:hover {
             background-color: #1a1c23;
@@ -561,16 +607,52 @@
                 </div>
                 <div class="nested-content" id="shared-content">
                     <div class="nested-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic8')">Adhrit lab</a></span>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Adhrit lab</span>
+                        </div>
+                        <div class="nested-actions">
+                            <a href="/discography/Adhrit_Lab" class="nested-btn" onclick="sender('topic8')" style="text-decoration: none;">
+                                <i class="fas fa-chart-line"></i>
+                                View
+                            </a>
+                            <a href="/schedule" class="nested-btn" style="text-decoration: none;">
+                                <i class="fas fa-clock"></i>
+                                Timer
+                            </a>
+                        </div>
                     </div>
                     <div class="nested-item">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Grand stand Canteen</span>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-chart-line"></i>
+                            <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic8')">Biology lab</a></span>
+                        </div>
+                        <div class="nested-actions">
+                            <button class="nested-btn">
+                                <i class="fas fa-chart-line"></i>
+                                View
+                            </button>
+                            <button class="nested-btn">
+                                <i class="fas fa-clock"></i>
+                                Timer
+                            </button>
+                        </div>
                     </div>
                     <div class="nested-item">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Soil Mechanics Lab</span>
+                        <div style="display: flex; align-items: center;">
+                            <i class="fas fa-chart-line"></i>
+                            <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic8')">Chemistry Lab</a></span>
+                        </div>
+                        <div class="nested-actions">
+                            <button class="nested-btn">
+                                <i class="fas fa-chart-line"></i>
+                                View
+                            </button>
+                            <button class="nested-btn">
+                                <i class="fas fa-clock"></i>
+                                Timer
+                            </button>
+                        </div>
                     </div>
                 </div>
             </li>

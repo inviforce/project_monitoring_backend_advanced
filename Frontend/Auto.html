@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyut - Locations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c0e;
+            color: #d4d4d4;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #111217;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 1px solid #2a2d32;
+        }
+
+        .logo-container {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2d32;
+        }
+
+        .logo {
+            color: #ff5656;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 15px 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8e8e8e;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #1a1c23;
+            color: #fff;
+        }
+
+        .main {
+            margin-left: 250px;
+            padding: 20px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2a2d32;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .location-card {
+            background: #1a1c23;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid #2a2d32;
+        }
+
+        .location-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 86, 86, 0.2);
+            border-color: #ff5656;
+        }
+
+        .card-image {
+            height: 200px;
+            background: #2a2d32;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .location-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .location-name {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-name i {
+            color: #ff5656;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .view-btn {
+            background: #ff5656;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #ff3838;
+            transform: translateY(-2px);
+        }
+
+        .timer-btn {
+            background: #2a2d32;
+            color: #d4d4d4;
+        }
+
+        .timer-btn:hover {
+            background: #3a3d42;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            background: rgba(26, 28, 35, 0.9);
+            border-radius: 20px;
+            color: #4ade80;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(5px);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ff5656;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Vidyut</span>
+            </div>
+        </div>
+        <ul>
+            <li><i class="fas fa-home"></i>Home</li>
+            <li><i class="fas fa-compass"></i>Explore</li>
+            <li><i class="fas fa-tachometer-alt"></i>Dashboards</li>
+            <li><i class="fas fa-bell"></i>Auto-Timer</li>
+            <li><i class="fas fa-code"></i>About Us</li>
+            <li><i class="fas fa-cog"></i>Settings</li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Available Locations</h2>
+        </div>
+
+        <div class="cards-container">
+            <!-- New Delhi Card -->
+            <div class="location-card">
+                <div class="card-image">
+                    <img src="/api/placeholder/400/320" alt="New Delhi">
+                    <div class="status-badge">
+                        <i class="fas fa-circle"></i>
+                        Active
+                    </div>
+                    <div class="new-badge">New</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="location-name">
+                        <i class="fas fa-map-marker-alt"></i>
+                        New Delhi
+                    </h3>
+                    <div class="card-actions">
+                        <button class="card-btn view-btn">
+                            <i class="fas fa-chart-bar"></i>
+                            View Dashboard
+                        </button>
+                        <button class="card-btn timer-btn">
+                            <i class="fas fa-clock"></i>
+                            Set Timer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mumbai Card -->
+            <div class="location-card">
+                <div class="card-image">
+                    <img src="/api/placeholder/400/320" alt="Mumbai">
+                    <div class="status-badge">
+                        <i class="fas fa-circle"></i>
+                        Active
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="location-name">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Mumbai
+                    </h3>
+                    <div class="card-actions">
+                        <button class="card-btn view-btn">
+                            <i class="fas fa-chart-bar"></i>
+                            View Dashboard
+                        </button>
+                        <button class="card-btn timer-btn">
+                            <i class="fas fa-clock"></i>
+                            Set Timer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bangalore Card -->
+            <div class="location-card">
+                <div class="card-image">
+                    <img src="/api/placeholder/400/320" alt="Bangalore">
+                    <div class="status-badge">
+                        <i class="fas fa-circle"></i>
+                        Active
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3 class="location-name">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Bangalore
+                    </h3>
+                    <div class="card-actions">
+                        <button class="card-btn view-btn">
+                            <i class="fas fa-chart-bar"></i>
+                            View Dashboard
+                        </button>
+                        <button class="card-btn timer-btn">
+                            <i class="fas fa-clock"></i>
+                            Set Timer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

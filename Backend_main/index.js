@@ -15,7 +15,7 @@ const {restrictToLoggedinUserOnly} = require("./middlewares/auth");
 const app = express();
 const httpPort = 8737;
 const wsPort = 3027;
-8
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
