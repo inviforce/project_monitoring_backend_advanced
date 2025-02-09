@@ -19,6 +19,74 @@
             color: #d4d4d4;
         }
 
+        /* Content Wrapper Styles */
+        .content-wrapper {
+            display: none;
+        }
+
+        /* Loader Styles */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #212121;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            color: rgb(124, 124, 124);
+            font-family: "Poppins", sans-serif;
+            font-weight: 500;
+            font-size: 25px;
+            height: 40px;
+            padding: 10px 10px;
+            display: flex;
+            border-radius: 8px;
+        }
+
+        .words {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .words::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                #212121 10%,
+                transparent 30%,
+                transparent 70%,
+                #212121 90%
+            );
+            z-index: 20;
+        }
+
+        .word {
+            display: block;
+            height: 100%;
+            padding-left: 6px;
+            color: #956afa;
+            animation: spin_4991 4s infinite;
+        }
+
+        @keyframes spin_4991 {
+            10% { transform: translateY(-102%); }
+            25% { transform: translateY(-100%); }
+            35% { transform: translateY(-202%); }
+            50% { transform: translateY(-200%); }
+            60% { transform: translateY(-302%); }
+            75% { transform: translateY(-300%); }
+            85% { transform: translateY(-402%); }
+            100% { transform: translateY(-400%); }
+        }
+
+        /* Main Content Styles */
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -124,7 +192,6 @@
             box-shadow: 0 0 0 2px rgba(255, 86, 86, 0.1);
         }
 
-        /* New Styles for Map Section */
         .map-container {
             position: relative;
             width: 100%;
@@ -133,16 +200,69 @@
             border-radius: 12px;
             overflow: hidden;
             margin: 20px 0;
-            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .map-placeholder {
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: #1a1c23;
+            background-color: rgba(26, 28, 35, 0.7);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .map-overlay h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff5656;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .map-overlay p {
+            font-size: 1.2rem;
+            color: #d4d4d4;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .map-container:hover .map-overlay {
+            background-color: rgba(26, 28, 35, 0.85);
+        }
+
+        .map-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 86, 86, 0.2);
+        }
+
+        .click-indication {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff5656;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+        }
+
+        .click-indication i {
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         .location-marker {
@@ -155,80 +275,6 @@
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
         }
-
-        /* Add these styles to your existing CSS */
-.map-container {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    background-color: #1a1c23;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 20px 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.map-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(26, 28, 35, 0.7);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.map-overlay h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #ff5656;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.map-overlay p {
-    font-size: 1.2rem;
-    color: #d4d4d4;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.map-container:hover .map-overlay {
-    background-color: rgba(26, 28, 35, 0.85);
-}
-
-.map-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(255, 86, 86, 0.2);
-}
-
-.click-indication {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #ff5656;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0.8;
-}
-
-.click-indication i {
-    animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
 
         @keyframes pulse {
             0% {
@@ -243,23 +289,6 @@
                 transform: scale(1);
                 box-shadow: 0 0 0 0 rgba(255, 86, 86, 0);
             }
-        }
-
-        .location-info {
-            position: absolute;
-            background-color: #111217;
-            border: 1px solid #2a2d32;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-            z-index: 100;
-            min-width: 200px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .stats-container {
@@ -293,226 +322,153 @@
             font-size: 14px;
         }
 
-        .view-button {
-            background-color: #ff5656;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 20px;
+        .inv_a {
+            text-decoration: none;
+            color: inherit;
         }
-
-        .view-button:hover {
-            background-color: #ff4242;
-            transform: translateY(-2px);
-        }
-        .inv_a{
-            text-decoration: none; /* Removes the underline */
-            color: inherit;        /* Inherits the text color from the parent element */
-        
-        }
-
-        /* loader */
-        /* From Uiverse.io by kennyotsu */ 
-.card {
-  /* color used to softly clip top and bottom of the .words container */
-  --bg-color: #212121;
-  background-color: var(--bg-color);
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 2rem;
-  border-radius: 1.25rem;
-}
-.loader {
-  color: rgb(124, 124, 124);
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 25px;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-  height: 40px;
-  padding: 10px 10px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border-radius: 8px;
-}
-
-.words {
-  overflow: hidden;
-  position: relative;
-}
-.words::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    var(--bg-color) 10%,
-    transparent 30%,
-    transparent 70%,
-    var(--bg-color) 90%
-  );
-  z-index: 20;
-}
-
-.word {
-  display: block;
-  height: 100%;
-  padding-left: 6px;
-  color: #956afa;
-  animation: spin_4991 4s infinite;
-}
-
-@keyframes spin_4991 {
-  10% {
-    -webkit-transform: translateY(-102%);
-    transform: translateY(-102%);
-  }
-
-  25% {
-    -webkit-transform: translateY(-100%);
-    transform: translateY(-100%);
-  }
-
-  35% {
-    -webkit-transform: translateY(-202%);
-    transform: translateY(-202%);
-  }
-
-  50% {
-    -webkit-transform: translateY(-200%);
-    transform: translateY(-200%);
-  }
-
-  60% {
-    -webkit-transform: translateY(-302%);
-    transform: translateY(-302%);
-  }
-
-  75% {
-    -webkit-transform: translateY(-300%);
-    transform: translateY(-300%);
-  }
-
-  85% {
-    -webkit-transform: translateY(-402%);
-    transform: translateY(-402%);
-  }
-
-  100% {
-    -webkit-transform: translateY(-400%);
-    transform: translateY(-400%);
-  }
-}
-
-
-        
     </style>
 </head>
 <body>
-
-    <!-- Loader -->
-
-    <!-- From Uiverse.io by kennyotsu --> 
-<div class="card">
-    <div class="loader">
-      <p>loading</p>
-      <div class="words">
-        <span class="word">buttons</span>
-        <span class="word">forms</span>
-        <span class="word">switches</span>
-        <span class="word">cards</span>
-        <span class="word">buttons</span>
-      </div>
+    <!-- Loader Section -->
+    <div class="loader-wrapper" id="loader">
+        <div class="loader">
+            <p>loading</p>
+            <div class="words">
+                <span class="word">Voltage</span>
+                <span class="word">Current</span>
+                <span class="word">Power</span>
+            </div>
+        </div>
     </div>
-  </div>
-  
-  
-  
 
-
-
-
-
-
-    <div class="sidebar">
-        <div class="logo-container">
-            <div class="logo">
-                <i class="fas fa-chart-line"></i>
-                <a href="/" style="text-decoration: none; color: inherit;">
-                    <span>Vidyut</span>
+    <!-- Main Content Wrapper -->
+    <div class="content-wrapper" id="content">
+        <div class="sidebar">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <a href="/" style="text-decoration: none; color: inherit;">
+                        <span>Vidyut</span>
                     </a>
+                </div>
             </div>
-        </div>
-        <ul>
-            <li><i class="fas fa-home"></i><a class="inv_a" href="/">Home</a></li>
-            <li><i class="fas fa-compass"></i><a class="inv_a" href="/home">Explore</a></li>
-            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>          
-            <li><i class="fas fa-bell"></i><a class="inv_a" href="/discography">Auto-Timer</a></li>
-            <li><i class="fas fa-code"></i>About Us</li>
-            <li><i class="fas fa-cog"></i>Login / Logout</li>
-        </ul>
-    </div>
-
-    <div class="main">
-        <div class="header">
-            <h2>We are currently active in these regions!</h2>
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search for dashboards...">
-            </div>
+            <ul>
+                <li><i class="fas fa-home"></i><a class="inv_a" href="/">Home</a></li>
+                <li><i class="fas fa-compass"></i><a class="inv_a" href="/home">Explore</a></li>
+                <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>          
+                <li><i class="fas fa-bell"></i><a class="inv_a" href="/discography">Auto-Timer</a></li>
+                <li><i class="fas fa-code"></i>About Us</li>
+                <li><i class="fas fa-cog"></i>Login / Logout</li>
+            </ul>
         </div>
 
-        <div class="map-container" onclick="window.location.href='/home/map'">
-            <div class="map-placeholder" >
-                <img src="/Frontend/Screenshot 2025-01-16 101609.png" alt="World Map" style="width: 100%; height: 100%; object-fit: cover;">
-                <div class="location-marker" style="top: 30%; left: 20%" onclick="showLocation('North America')"></div>
-                <div class="location-marker" style="top: 40%; left: 45%" onclick="showLocation('Europe')"></div>
-                <div class="location-marker" style="top: 45%; left: 70%" onclick="showLocation('Asia')"></div>
+        <div class="main">
+            <div class="header">
+                <h2>We are currently active in these regions!</h2>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for dashboards...">
+                </div>
             </div>
-            <div class="map-overlay">
-                <h1>Global Presence</h1>
-                <p>We are actively working across these strategic regions</p>
-                <div class="click-indication">
-                    <i class="fas fa-mouse-pointer"></i>
-                    <span>Click anywhere on the map to explore all locations</span>
+
+            <div class="map-container" onclick="window.location.href='/home/map'">
+                <div class="map-placeholder">
+                    <img src="/Frontend/Screenshot 2025-01-16 101609.png" alt="World Map" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="location-marker" style="top: 30%; left: 20%" onclick="showLocation('North America')"></div>
+                    <div class="location-marker" style="top: 40%; left: 45%" onclick="showLocation('Europe')"></div>
+                    <div class="location-marker" style="top: 45%; left: 70%" onclick="showLocation('Asia')"></div>
+                </div>
+                <div class="map-overlay">
+                    <h1>Global Presence</h1>
+                    <p>We are actively working across these strategic regions</p>
+                    <div class="click-indication">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <span>Click anywhere on the map to explore all locations</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-title">Active Deployments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">45+</div>
+                    <div class="stat-title">Countries Served</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-title">Uptime Guaranteed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-title">Support Available</div>
                 </div>
             </div>
         </div>
-
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-number">150+</div>
-                <div class="stat-title">Active Deployments</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">45+</div>
-                <div class="stat-title">Countries Served</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">99.9%</div>
-                <div class="stat-title">Uptime Guaranteed</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24/7</div>
-                <div class="stat-title">Support Available</div>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        var loader = document.getElementById("card");
-        window.addEventListener("load", function() {
-          loader.style.display = "none";
-        });
-      </script>
+        // Loading System Configuration
+        const LoadingSystem = {
+            loader: document.getElementById('loader'),
+            content: document.getElementById('content'),
+            
+            // Minimum loading time in milliseconds
+            minLoadTime: 1000,
+            
+            // Initialize loading system
+            init() {
+                // Store the start time
+                this.startTime = Date.now();
+                
+                // Add event listeners
+                window.addEventListener('load', () => this.handlePageLoad());
+                
+                // Add error handling
+                window.addEventListener('error', () => this.handleError());
+            },
+            
+            // Handle page load completion
+            handlePageLoad() {
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - this.startTime;
+                
+                // Ensure minimum loading time
+                if (elapsedTime < this.minLoadTime) {
+                    setTimeout(() => this.showContent(), 
+                        this.minLoadTime - elapsedTime);
+                } else {
+                    this.showContent();
+                }
+            },
+            
+            // Show the main content
+            showContent() {
+                // Fade out loader
+                this.loader.style.opacity = '0';
+                this.loader.style.transition = 'opacity 0.5s ease';
+                
+                // Show content
+                this.content.style.display = 'block';
+                
+                // Remove loader after transition
+                setTimeout(() => {
+                    this.loader.style.display = 'none';
+                }, 500);
+            },
+            
+            // Handle loading errors
+            handleError() {
+                console.error('Page loading encountered an error');
+                // You can add custom error handling here
+                this.showContent(); // Still show content on error
+            }
+        };
 
-    <script src="../Frontend/loader/loader.js"></script>
+        // Initialize the loading system
+        LoadingSystem.init();
+    </script>
 </body>
 </html>
