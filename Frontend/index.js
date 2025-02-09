@@ -7,7 +7,10 @@ document.addEventListener("DOMContentLoaded", function() {
     menuicn.addEventListener("click", () => {
         nav.classList.toggle("navclose");
     });
-
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTimeRange();
+    });
+    
     document.getElementById("deviceDataForm").addEventListener("submit", async function(event) {
         console.log("Form submission triggered");
         event.preventDefault();
@@ -139,3 +142,43 @@ async function updateStatus() {
         console.error('Error sending AC status:', error);
     }
 }
+
+// ✅ Define sender OUTSIDE `DOMContentLoaded` so it is accessible globally
+async function sender(phase) {
+    try {
+        const payload = { phase: phase };  
+        console.log("Sending payload:", payload);
+
+        const response = await fetch('http://localhost:8737/api/topic/phase', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),  
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
+        }
+
+        const data = await response.text();
+        console.log("Server Response:", data);
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+}
+
+// ✅ Attach `sender` to `window` to make it globally accessible
+window.sender = sender;
+
+// ✅ DOMContentLoaded only for other setup tasks
+document.addEventListener("DOMContentLoaded", function() {
+    const menuicn = document.querySelector(".menuicn");
+    const nav = document.querySelector(".navcontainer");
+
+    menuicn.addEventListener("click", () => {
+        nav.classList.toggle("navclose");
+    });
+
+    // ✅ Ensure initializeTimeRange() runs when DOM is loaded
+    initializeTimeRange();
+});
