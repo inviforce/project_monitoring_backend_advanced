@@ -11,7 +11,7 @@ const maker = require("./utilities/parseDeviceData.js");
 const Data = require("./models/data.js")
 const cookieParser = require("cookie-parser");
 const {restrictToLoggedinUserOnly} = require("./middlewares/auth");
-const fs = require('fs');
+
 
 const app = express();
 const httpPort = 8737;
@@ -27,16 +27,6 @@ const userRoute = require("./routes/user");
 app.use("/user",userRoute)
 
 
-let topics 
-
-try {
-    const data = fs.readFileSync('Backend_main/info.txt', 'utf8'); 
-    topics = data.split("\n").map(topic => topic.trim()).filter(topic => topic !== ""); // Remove extra spaces and empty lines
-
-    console.log(topics); // Output: ["topic7", "topic8", "topic9", "topic10"]
-} catch (err) {
-    console.error("Error reading file:", err);
-}
 // Express middleware
 app.use(cors({
     origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
@@ -44,9 +34,7 @@ app.use(cors({
     credentials: true
 }));
 
-let selectedTopic = 'topic7';
-let selectedphase= 1;
-
+let selectedTopic = 'topic7'; 
 // WebSocket Server
 const wss = new WebSocket.Server({ port: wsPort });
 
@@ -141,23 +129,25 @@ const client = mqtt.connect({
 
 
 // enter topics and nodes we have used
+topics = ["topic7","topic8","topic9","topic10"]
+const nodes = {
+    SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
+    SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
+    SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
+    SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
+};
 
-// const nodes = {
-//     SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
-//     SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
-//     SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
-//     SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
-// };
+console.log(nodes.SEG0001.features)
+console.log(nodes.SEG0004.features) 
 
-// console.log(nodes.SEG0001.features)
-// console.log(nodes.SEG0004.features) 
 
-// const nodeMap = {
-//     SEG001: "topic7",
-//     SEG002: "topic8",
-//     SEG003: "topic9",
-//     SEG004: "topic10"
-// };
+
+const nodeMap = {
+    SEG001: "topic7",
+    SEG002: "topic8",
+    SEG003: "topic9",
+    SEG004: "topic10"
+};
 
                                                 /******** CHANGED **********/ 
 // Handle MQTT connection : connect to all availbale topics
@@ -198,56 +188,33 @@ const BATCH_SIZE = 50;   // Adjust batch size based on system capability
 const BATCH_INTERVAL = 100; // Interval to process the queue in milliseconds
 
 
-// // Function to process and insert data into MongoDB
-// const processQueue = async () => {
-//     if (messageQueue.length > 0) {
-//         const batch = messageQueue.splice(0, BATCH_SIZE); // Take a batch of messages
-
-//         const bulkOperations = batch.map((mess) => {
-//             // console.log(mess.nodeId)
-//             const nodeObject = nodes[mess.nodeId]; // Retrieve the object for the nodeId
-//             // console.log(nodeObject)
-//             if (!nodeObject) {
-//                 console.error(`Node object for ID ${mess.nodeId} not found.`);
-//                 return null;
-//             }
-
-//             // Build the document based on the features array
-//             const document = {};
-//             for (const feature of nodeObject.features) {
-//                 if (mess.hasOwnProperty(feature)) {
-//                     document[feature] = mess[feature];
-//                 }
-//             }
-//             document.nodeId = mess.nodeId; // Always include the nodeId
-
-//             return {
-//                 insertOne: { document }
-//             };
-//         }).filter(op => op !== null); // Remove any null operations
-
-//         try {
-//             // Insert batch into MongoDB
-//             const result = await Data.bulkWrite(bulkOperations);
-//             console.log(`Inserted ${result.insertedCount} records successfully.`);
-//         } catch (err) {
-//             console.error("Error inserting batch into MongoDB:", err);
-//         }
-//     }
-// };
-
-// // Schedule the queue processor
-// setInterval(processQueue, BATCH_INTERVAL);
-
+// Function to process and insert data into MongoDB
 const processQueue = async () => {
     if (messageQueue.length > 0) {
         const batch = messageQueue.splice(0, BATCH_SIZE); // Take a batch of messages
 
         const bulkOperations = batch.map((mess) => {
+            // console.log(mess.nodeId)
+            const nodeObject = nodes[mess.nodeId]; // Retrieve the object for the nodeId
+            // console.log(nodeObject)
+            if (!nodeObject) {
+                console.error(`Node object for ID ${mess.nodeId} not found.`);
+                return null;
+            }
+
+            // Build the document based on the features array
+            const document = {};
+            for (const feature of nodeObject.features) {
+                if (mess.hasOwnProperty(feature)) {
+                    document[feature] = mess[feature];
+                }
+            }
+            document.nodeId = mess.nodeId; // Always include the nodeId
+
             return {
-                insertOne: { document: mess }
+                insertOne: { document }
             };
-        });
+        }).filter(op => op !== null); // Remove any null operations
 
         try {
             // Insert batch into MongoDB
@@ -262,7 +229,6 @@ const processQueue = async () => {
 // Schedule the queue processor
 setInterval(processQueue, BATCH_INTERVAL);
 
-
 // Handle incoming MQTT messages
 client.on("message", (topic, message) => {
     if (topic === "neoway") {
@@ -275,7 +241,7 @@ client.on("message", (topic, message) => {
         messageQueue.push(mess); // Add message to the queue
 
         // Optionally broadcast via WebSocket
-        if (topic === selectedTopic && selectedphase===mess.device) {
+        if (topic === selectedTopic) {
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify(mess));
@@ -376,16 +342,6 @@ app.post('/api/topic', async (req, res) => {
     }
 });
 
-app.post('/api/topic/phase', async (req, res) => {
-    const { phase } = req.body;
-    if (phase) {
-        selectedphase = phase; // Update the selected topic
-        console.log(`Frontend selected: ${typeof phase}`);
-        res.status(200).send('Selected topic updated');
-    } else {
-        res.status(400).send('No topic provided');
-    }
-});
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
@@ -413,27 +369,31 @@ app.set("views", path.resolve("./Backend_main/views"));
 // creating api routes
 app.get("/",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/vidyut.html"));
-})
+});
 
 app.get("/home",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/home1.html"));
+});
+
+app.get("/schedule",(req,res)=>{
+    res.sendFile(path.join(__dirname, "../Frontend/schedule.html"));
 })
 
 app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
-})
+});
 
 app.get("/discography/Adhrit_Lab", restrictToLoggedinUserOnly,(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/index.html"));
-})
+});
 
 app.get("/home/map",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/map.html"));
-})
+});
 
 app.get("/register" , (req,res) =>{
     res.render("register")
-  })
+  });
 
   app.get("/login", (req, res) => {
     res.render("index");
@@ -442,6 +402,8 @@ app.get("/register" , (req,res) =>{
   app.get("/forgot" , (req,res) => {
     res.render("forgot")
   })
+
+  
   
 
 // Start Express server
