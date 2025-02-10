@@ -476,6 +476,11 @@ app.get("/register" , (req,res) =>{
     res.render("forgot")
   })
 
+  app.get('/time', (req, res) => {
+    const serverTime = new Date().toISOString();
+    res.json({ serverTime });
+    });
+
 
 
 // Start Express server
