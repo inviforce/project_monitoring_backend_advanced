@@ -11,80 +11,10 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background-color: #f5f5f5;
             padding: 20px;
         }
-
-        /* Content Wrapper Styles */
-        .content-wrapper {
-            display: none;
-        }
-
-        /* Loader Styles */
-        .loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #212121;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loader {
-            color: rgb(124, 124, 124);
-            font-family: "Poppins", sans-serif;
-            font-weight: 500;
-            font-size: 25px;
-            height: 40px;
-            padding: 10px 10px;
-            display: flex;
-            border-radius: 8px;
-        }
-
-        .words {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .words::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                #212121 10%,
-                transparent 30%,
-                transparent 70%,
-                #212121 90%
-            );
-            z-index: 20;
-        }
-
-        .word {
-            display: block;
-            height: 100%;
-            padding-left: 6px;
-            color: #956afa;
-            animation: spin_4991 4s infinite;
-        }
-
-        @keyframes spin_4991 {
-            10% { transform: translateY(-102%); }
-            25% { transform: translateY(-100%); }
-            35% { transform: translateY(-202%); }
-            50% { transform: translateY(-200%); }
-            60% { transform: translateY(-302%); }
-            75% { transform: translateY(-300%); }
-            85% { transform: translateY(-402%); }
-            100% { transform: translateY(-400%); }
-        }
-
-
         .container {
             max-width: 600px;
             margin: 0 auto;
@@ -93,7 +23,6 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
@@ -102,32 +31,27 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
-
         .world-time {
             font-size: 1.2em;
             color: #666;
         }
-
         .ac-toggle-container {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 60px;
             height: 34px;
         }
-
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
         .slider {
             position: absolute;
             cursor: pointer;
@@ -139,7 +63,6 @@
             transition: .4s;
             border-radius: 34px;
         }
-
         .slider:before {
             position: absolute;
             content: "";
@@ -151,23 +74,18 @@
             transition: .4s;
             border-radius: 50%;
         }
-
         input:checked + .slider {
             background-color: #2196F3;
         }
-
         input:checked + .slider:before {
             transform: translateX(26px);
         }
-
         .scheduler-container {
             margin-top: 20px;
         }
-
         .schedule-list {
             margin-top: 15px;
         }
-
         .schedule-item {
             display: flex;
             justify-content: space-between;
@@ -177,16 +95,13 @@
             border-radius: 8px;
             margin-bottom: 10px;
         }
-
         .schedule-details {
             flex: 1;
         }
-
         .schedule-controls {
             display: flex;
             gap: 10px;
         }
-
         .btn {
             padding: 8px 15px;
             border: none;
@@ -195,51 +110,42 @@
             font-size: 14px;
             transition: background-color 0.3s;
         }
-
         .btn-primary {
             background-color: #2196F3;
             color: white;
         }
-
         .btn-danger {
             background-color: #dc3545;
             color: white;
         }
-
         .schedule-form {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
         }
-
         .form-group {
             margin-bottom: 15px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
         }
-
         .form-group input, .form-group select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-
         .days-selector {
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
         }
-
         .day-checkbox {
             display: none;
         }
-
         .day-label {
             padding: 5px 10px;
             background: #e9ecef;
@@ -247,12 +153,10 @@
             cursor: pointer;
             font-size: 14px;
         }
-
         .day-checkbox:checked + .day-label {
             background: #2196F3;
             color: white;
         }
-
         .status-text {
             margin-top: 5px;
             color: #666;
@@ -260,26 +164,11 @@
     </style>
 </head>
 <body>
-
-    <!-- Loader Section -->
-    <div class="loader-wrapper" id="loader">
-        <div class="loader">
-            <p>loading</p>
-            <div class="words">
-                <span class="word">Voltage</span>
-                <span class="word">Current</span>
-                <span class="word">Power</span>
-            </div>
-        </div>
-    </div>
-
-<div class="content-wrapper" id="content">    
     <div class="container">
         <div class="header">
             <h1>AC Scheduler</h1>
             <div class="world-time" id="worldTime">Loading time...</div>
         </div>
-
         <div class="ac-toggle-container">
             <div class="ac-label">AC Control</div>
             <label class="toggle-switch">
@@ -290,12 +179,10 @@
                 Status: <span id="acStatus">Off</span>
             </div>
         </div>
-
         <div class="scheduler-container">
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="toggleScheduleForm()">Add Schedule</button>
             </div>
-
             <div id="scheduleForm" class="schedule-form" style="display: none;">
                 <div class="form-group">
                     <label>Start Time</label>
@@ -326,90 +213,36 @@
                 </div>
                 <button class="btn btn-primary" onclick="addSchedule()">Save Schedule</button>
             </div>
-
             <div id="scheduleList" class="schedule-list">
                 <!-- Schedules will be added here dynamically -->
             </div>
         </div>
     </div>
-</div>    
-
     <script>
           let schedules = JSON.parse(localStorage.getItem('acSchedules')) || [];
         let worldTime = null;
         const API_ENDPOINT = 'http://localhost:8737/api/data';
         const MQTT_TOPIC = 'neoway';
-
         // Fetch world time and update display with error handling and fallback
-        // async function updateWorldTime() {
-        //     try {
-        //         const response = await fetch('http://localhost:8737/time');
-        //         const data = await response.json();
-        //         if (!response.ok) throw new Error('Network response was not ok');
-                
-        //         worldTime = new Date(data.datetime);
-        //     } catch (error) {
-        //         console.error('Error fetching world time:', error);
-        //         // Fallback to local time if API fails
-        //         worldTime = new Date();
-        //     }
-        //     // Update display
-        //     document.getElementById('worldTime').textContent = worldTime.toLocaleTimeString('en-US', {
-        //         hour: '2-digit',
-        //         minute: '2-digit',
-        //         second: '2-digit',
-        //         hour12: true
-        //     });
-        // }
         async function updateWorldTime() {
-    try {
-        const response = await fetch('http://localhost:8737/time');
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.json();
-
-        // Ensure we have a valid datetime string
-        if (!data.datetime) throw new Error('Invalid datetime received');
-
-        // Convert to Date object
-        const worldTime = new Date(data.datetime);
-
-        if (isNaN(worldTime.getTime())) throw new Error('Parsed date is invalid');
-
-        // Format and update the display
-        const timeElement = document.getElementById('worldTime');
-        if (timeElement) {
-            timeElement.textContent = worldTime.toLocaleTimeString('en-US', {
+            try {
+                const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Kolkata');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                worldTime = new Date(data.datetime);
+            } catch (error) {
+                console.error('Error fetching world time:', error);
+                // Fallback to local time if API fails
+                worldTime = new Date();
+            }
+            // Update display
+            document.getElementById('worldTime').textContent = worldTime.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: true
             });
         }
-    } catch (error) {
-        console.error('Error fetching or parsing world time:', error);
-
-        // Fallback to local time if API fails
-        const fallbackTime = new Date();
-        const timeElement = document.getElementById('worldTime');
-        if (timeElement) {
-            timeElement.textContent = fallbackTime.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-        }
-    }
-}
-
-// Update world time every second
-setInterval(updateWorldTime, 1000);
-
-// Initial call
-updateWorldTime();
-
-
         // Initialize and set up intervals with proper error handling
         async function initialize() {
             await updateWorldTime();
@@ -432,7 +265,6 @@ updateWorldTime();
                 updateStatus();
             }
         }
-
         // Update AC status with state persistence
         async function updateStatus(isScheduled = false) {
             try {
@@ -448,7 +280,6 @@ updateWorldTime();
                 
                 // Send to server
                 await sendACControl(status);
-
                 if (!isScheduled) {
                     console.log(`AC manually turned ${status ? 'on' : 'off'}`);
                 }
@@ -457,14 +288,12 @@ updateWorldTime();
                 alert('Failed to update AC status. Please try again.');
             }
         }
-
         // Send control message to server
         async function sendACControl(status) {
             const payload = {
                 deviceId: "ac",
                 status: status ? "on" : "off"
             };
-
             try {
                 const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
@@ -474,14 +303,11 @@ updateWorldTime();
                     body: JSON.stringify(payload),
                     credentials: 'include'
                 });
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const result = await response.json();
                 console.log('Server response:', result);
-
                 if (result.receivedData.topic === MQTT_TOPIC) {
                     console.log(`Successfully sent command to ${MQTT_TOPIC}:`, result.receivedData.message);
                 }
@@ -490,18 +316,15 @@ updateWorldTime();
                 throw error;
             }
         }
-
         // Check and apply schedules with improved time comparison
         async function checkSchedules() {
             if (!worldTime) return;
-
             const currentTime = worldTime.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: false
             });
             const currentDay = worldTime.getDay();
-
             for (const schedule of schedules) {
                 if (schedule.enabled && schedule.days.includes(currentDay)) {
                     const shouldBeOn = isTimeInRange(currentTime, schedule.startTime, schedule.endTime);
@@ -515,42 +338,35 @@ updateWorldTime();
                 }
             }
         }
-
         // Helper function to compare times
         function isTimeInRange(current, start, end) {
             current = convertTo24Hour(current);
             return current >= start && current < end;
         }
-
         // Convert 12-hour format to 24-hour format
         function convertTo24Hour(time) {
             const [hours, minutes] = time.split(':');
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
-
         // Add new schedule with validation and persistence
         function addSchedule() {
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
             const days = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => parseInt(cb.value));
-
             if (!startTime || !endTime || days.length === 0) {
                 alert('Please fill in all fields');
                 return;
             }
-
             if (startTime >= endTime) {
                 alert('End time must be after start time');
                 return;
             }
-
             const schedule = {
                 startTime,
                 endTime,
                 days,
                 enabled: true
             };
-
             schedules.push(schedule);
             saveSchedules();
             renderSchedules();
@@ -558,17 +374,14 @@ updateWorldTime();
             resetScheduleForm();
             checkSchedules();
         }
-
         // Save schedules to localStorage
         function saveSchedules() {
             localStorage.setItem('acSchedules', JSON.stringify(schedules));
         }
-
         // Complete implementation of renderSchedules
         function renderSchedules() {
             const scheduleList = document.getElementById('scheduleList');
             scheduleList.innerHTML = '';
-
             schedules.forEach((schedule, index) => {
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 const selectedDays = schedule.days.map(d => dayNames[d]).join(', ');
@@ -592,14 +405,12 @@ updateWorldTime();
                 scheduleList.appendChild(scheduleItem);
             });
         }
-
         // Delete schedule with persistence
         function deleteSchedule(index) {
             schedules.splice(index, 1);
             saveSchedules();
             renderSchedules();
         }
-
         // Toggle schedule status with persistence
         function toggleScheduleStatus(index) {
             schedules[index].enabled = !schedules[index].enabled;
@@ -607,83 +418,18 @@ updateWorldTime();
             renderSchedules();
             checkSchedules();
         }
-
         // Previous helper functions remain the same
         function toggleScheduleForm() {
             const form = document.getElementById('scheduleForm');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
-
         function resetScheduleForm() {
             document.getElementById('startTime').value = '';
             document.getElementById('endTime').value = '';
             document.querySelectorAll('.day-checkbox').forEach(cb => cb.checked = false);
         }
-
         // Initialize the application
         initialize().catch(console.error);
-    </script>
-
-    <script>
-        // Loading System Configuration
-        const LoadingSystem = {
-            loader: document.getElementById('loader'),
-            content: document.getElementById('content'),
-            
-            // Minimum loading time in milliseconds
-            minLoadTime: 1000,
-            
-            // Initialize loading system
-            init() {
-                // Store the start time
-                this.startTime = Date.now();
-                
-                // Add event listeners
-                window.addEventListener('load', () => this.handlePageLoad());
-                
-                // Add error handling
-                window.addEventListener('error', () => this.handleError());
-            },
-            
-            // Handle page load completion
-            handlePageLoad() {
-                const currentTime = Date.now();
-                const elapsedTime = currentTime - this.startTime;
-                
-                // Ensure minimum loading time
-                if (elapsedTime < this.minLoadTime) {
-                    setTimeout(() => this.showContent(), 
-                        this.minLoadTime - elapsedTime);
-                } else {
-                    this.showContent();
-                }
-            },
-            
-            // Show the main content
-            showContent() {
-                // Fade out loader
-                this.loader.style.opacity = '0';
-                this.loader.style.transition = 'opacity 0.5s ease';
-                
-                // Show content
-                this.content.style.display = 'block';
-                
-                // Remove loader after transition
-                setTimeout(() => {
-                    this.loader.style.display = 'none';
-                }, 500);
-            },
-            
-            // Handle loading errors
-            handleError() {
-                console.error('Page loading encountered an error');
-                // You can add custom error handling here
-                this.showContent(); // Still show content on error
-            }
-        };
-
-        // Initialize the loading system
-        LoadingSystem.init();
     </script>
 </body>
 </html>
