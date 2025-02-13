@@ -1,5 +1,4 @@
 // Dashboard JS file
-
 document.addEventListener("DOMContentLoaded", function() {
     const menuicn = document.querySelector(".menuicn");
     const nav = document.querySelector(".navcontainer");
@@ -119,12 +118,13 @@ document.addEventListener("DOMContentLoaded", async function() {
 async function updateStatus() {
     const acToggle = document.getElementById('acToggle');
     const acStatus = document.getElementById('acStatus');
-    acStatus.textContent = acToggle.checked ? 'On' : 'Off';
+    acStatus.textContent = acToggle.checked ? 'ON' : 'OFF';
 
     // Prepare the data to send
     const acData = {
-        deviceId: "ac",
-        status: acToggle.checked ? "on" : "off"
+        deviceId: "PHASE1",
+        status: acToggle.checked ? "ON" : "OFF"
+
     };
 
     try {
@@ -169,6 +169,136 @@ async function sender(phase) {
 
 // ✅ Attach `sender` to `window` to make it globally accessible
 window.sender = sender;
+
+// Add this to your index.js file
+
+document.addEventListener('DOMContentLoaded', function() {
+    const phaseModal = document.getElementById('phaseModal');
+    const mainContent = document.querySelector('.main-content');
+    const phaseOptions = document.querySelectorAll('.phase-option');
+    const confirmButton = document.getElementById('confirmPhase');
+    const phaseIndicator = document.getElementById('phaseIndicator');
+    
+    let selectedPhase = null;
+    let ws = null;
+
+    // Phase selection handling
+    phaseOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from all options
+            phaseOptions.forEach(opt => opt.classList.remove('active'));
+            // Add active class to selected option
+            this.classList.add('active');
+            // Enable confirm button
+            confirmButton.disabled = false;
+            // Store selected phase
+            selectedPhase = this.dataset.phase;
+        });
+    });
+
+    // Confirm button handling
+    confirmButton.addEventListener('click', async function() {
+        if (selectedPhase) {
+            try {
+                // Send phase selection to server
+                await sender(selectedPhase);
+                
+                // Hide modal and show dashboard
+                phaseModal.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // Show phase indicator
+                updatePhaseIndicator(selectedPhase);
+                
+                // Initialize WebSocket connection
+                initializeWebSocket(selectedPhase);
+                
+                // Show success alert
+                showAlert(`Now monitoring Phase ${selectedPhase}`);
+            } catch (error) {
+                showAlert('Error selecting phase. Please try again.', 'error');
+            }
+        }
+    });
+
+    function updatePhaseIndicator(phase) {
+        const indicator = document.getElementById('phaseIndicator');
+        const phaseNum = document.getElementById('currentPhase');
+        phaseNum.textContent = phase;
+        indicator.style.display = 'block';
+    }
+
+    function initializeWebSocket(phase) {
+        if (ws) {
+            ws.close();
+        }
+
+        ws = new WebSocket('ws://localhost:3027');
+        
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.device.toString() === phase) {
+                updateDashboard(data);
+            }
+        };
+
+        ws.onerror = function(error) {
+            showAlert('Connection error. Please refresh the page.', 'error');
+        };
+    }
+
+    function updateDashboard(data) {
+        // Update voltage
+        if (data.voltage) {
+            document.getElementById('voltageValue').textContent = `${data.voltage.toFixed(1)}V`;
+        }
+        
+        // Update current
+        if (data.current) {
+            document.getElementById('currentValue').textContent = `${data.current.toFixed(2)}A`;
+        }
+        
+        // Update power
+        if (data.power) {
+            document.getElementById('powerValue').textContent = `${data.power.toFixed(2)}W`;
+        }
+        
+        // Update other values as needed
+        updateGauges(data);
+        updateLastRefreshTime();
+    }
+
+    function updateLastRefreshTime() {
+        const now = new Date();
+        document.getElementById('lastUpdateTime').textContent = 
+            now.toLocaleTimeString();
+    }
+
+    function showAlert(message, type = 'success') {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+        `;
+        alert.textContent = message;
+        
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            alert.style.animation = 'slideOut 0.5s ease';
+            setTimeout(() => alert.remove(), 500);
+        }, 3000);
+    }
+});
+
 
 // ✅ DOMContentLoaded only for other setup tasks
 document.addEventListener("DOMContentLoaded", function() {

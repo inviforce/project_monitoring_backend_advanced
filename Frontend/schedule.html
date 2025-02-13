@@ -276,12 +276,12 @@
                 localStorage.setItem('acState', status);
                 
                 // Update UI
-                acStatus.textContent = status ? 'On' : 'Off';
+                acStatus.textContent = status ? 'ON' : 'OFF';
                 
                 // Send to server
                 await sendACControl(status);
                 if (!isScheduled) {
-                    console.log(`AC manually turned ${status ? 'on' : 'off'}`);
+                    console.log(`AC manually turned ${status ? 'ON' : 'OFF'}`);
                 }
             } catch (error) {
                 console.error('Error updating AC status:', error);
@@ -291,8 +291,8 @@
         // Send control message to server
         async function sendACControl(status) {
             const payload = {
-                deviceId: "ac",
-                status: status ? "on" : "off"
+                deviceId: "PHASE1",
+                status: status ? "ON" : "OFF"
             };
             try {
                 const response = await fetch(API_ENDPOINT, {
@@ -333,7 +333,7 @@
                     if (shouldBeOn !== acToggle.checked) {
                         acToggle.checked = shouldBeOn;
                         await updateStatus(true);
-                        console.log(`Schedule triggered: AC turned ${shouldBeOn ? 'on' : 'off'}`);
+                        console.log(`Schedule triggered: AC turned ${shouldBeOn ? 'ON' : 'OFF'}`);
                     }
                 }
             }

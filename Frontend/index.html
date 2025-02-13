@@ -92,7 +92,41 @@
         </div>
     </div>
 
+
+
+
 <div class="content-wrapper" id="content">    
+
+<!-- Phase Selection Modal -->
+<div class="phase-modal" id="phaseModal">
+    <div class="phase-selection">
+        <h2>Select Monitoring Phase</h2>
+        <div class="phase-options">
+            <div class="phase-option" data-phase="1">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 1</h3>
+                <p>Device SEG0001</p>
+            </div>
+            <div class="phase-option" data-phase="2">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 2</h3>
+                <p>Device SEG0002</p>
+            </div>
+            <div class="phase-option" data-phase="3">
+                <i class="fas fa-bolt"></i>
+                <h3 style="color: black;">Phase 3</h3>
+                <p>Device SEG0003</p>
+            </div>
+        </div>
+        <button class="confirm-btn" id="confirmPhase" disabled>Start Monitoring</button>
+    </div>
+</div>
+
+<!-- Active Phase Indicator -->
+<div class="active-phase-indicator" id="phaseIndicator">
+    Monitoring Phase <span id="currentPhase">1</span>
+</div>
+
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
@@ -138,7 +172,7 @@
             }
         </style>
         
-        <div class="nav-item phase" data-phase="1" onclick="selectPhase(this); sender(1)">
+        <!-- <div class="nav-item phase" data-phase="1" onclick="selectPhase(this); sender(1)">
             <i class="fas fa-chart-line"></i>
             <span>Phase 1</span>
         </div>
@@ -149,7 +183,7 @@
         <div class="nav-item phase" data-phase="3" onclick="selectPhase(this); sender(3)">
             <i class="fas fa-chart-line"></i>
             <span>Phase 3</span>
-        </div>
+        </div> -->
         
         <script>
             function selectPhase(selectedElement) {
@@ -179,15 +213,15 @@
 
     <main class="main-content">
         <div class="grid-container">
-            <div class="card">
-                <div class="card-header">
+            <div class="card" style="background-color: #212121;">
+                <div class="card-header" >
                     <h3 class="card-title">Voltage</h3>
                     <i class="fas fa-bolt"></i>
                 </div>
                 <div class="card-value">220V</div>
                 <div class="card-trend">+2.5% from last hour</div>
             </div>
-            <div class="card">
+            <div class="card"  style="background-color: #212121;">
                 <div class="card-header">
                     <h3 class="card-title">Current</h3>
                     <i class="fas fa-wave-square"></i>
@@ -195,7 +229,7 @@
                 <div class="card-value">15A</div>
                 <div class="card-trend">Stable</div>
             </div>
-            <div class="card">
+            <div class="card"  style="background-color: #212121;">
                 <div class="card-header">
                     <h3 class="card-title">Power</h3>
                     <i class="fas fa-plug"></i>
@@ -206,7 +240,7 @@
         </div>
 
 
-        <div class="gauge-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        <div class="gauge-container" style="display: flex; flex-wrap: wrap; justify-content: center; background-color: #212121; ">
             <div id="gauge1" class="gauge" style="height: 50vh;"></div>
             <div id="gauge2" class="gauge" style="height: 50vh;"></div>
             <div id="gauge3" class="gauge" style="height: 50vh;"></div>
@@ -223,9 +257,9 @@
 
        
 
-     <div class="devices" style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 40px;">
+     <div class="devices" style="display: flex; justify-content: center; align-items: center; margin-bottom: 40px;">
                 <div class="ac-toggle-container">
-                    <div class="ac-label">AC Control</div>
+                    <div class="ac-label">Court Lights</div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="acToggle" onchange="updateStatus()">
                         <span class="slider"></span>
@@ -235,38 +269,6 @@
                     </div>
                 </div>
 
-                <div class="ac-toggle-container">
-                    <div class="ac-label">Server</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="acToggle" onchange="updateStatus()">
-                        <span class="slider"></span>
-                    </label>
-                    <div class="status-text">
-                        Status: <span id="acStatus">Off</span>
-                    </div>
-                </div>
-
-                <div class="ac-toggle-container">
-                    <div class="ac-label">Fans</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="acToggle" onchange="updateStatus()">
-                        <span class="slider"></span>
-                    </label>
-                    <div class="status-text">
-                        Status: <span id="acStatus">Off</span>
-                    </div>
-                </div>
-
-                <div class="ac-toggle-container">
-                    <div class="ac-label">Computers</div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="acToggle" onchange="updateStatus()">
-                        <span class="slider"></span>
-                    </label>
-                    <div class="status-text">
-                        Status: <span id="acStatus">Off</span>
-                    </div>
-                </div>
             </div>
             
 
@@ -433,6 +435,7 @@
     <script src="/Frontend/theme.js"></script>
     <script src="/Frontend/timeRange.js"></script>
     <!-- <script>
+        
         // document.addEventListener('DOMContentLoaded', function() {
         //     initializeTimeRange();
         // });

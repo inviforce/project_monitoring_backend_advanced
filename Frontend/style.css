@@ -475,3 +475,154 @@ font-size: 0.75rem;
   color: inherit;        /* Inherits the text color from the parent element */
 
 }
+
+
+
+.phase-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.phase-selection {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.phase-selection h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.phase-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.phase-option {
+  padding: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+}
+
+.phase-option:hover {
+  transform: translateY(-5px);
+  border-color: #956afa;
+  box-shadow: 0 5px 15px rgba(149, 106, 250, 0.2);
+}
+
+.phase-option.active {
+  background: #956afa;
+  color: white;
+  border-color: #956afa;
+}
+
+.phase-option i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #956afa;
+}
+
+.phase-option.active i {
+  color: white;
+}
+
+.phase-option h3 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.phase-option p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.phase-option.active p {
+  color: #fff;
+}
+
+.confirm-btn {
+  background: #956afa;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.confirm-btn:hover {
+  background: #7c4fdb;
+  transform: translateY(-2px);
+}
+
+.confirm-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Active Phase Indicator */
+.active-phase-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #956afa;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: none;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Update existing dashboard styles */
+.main-content {
+  display: none; /* Initially hidden */
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gauge-container {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
