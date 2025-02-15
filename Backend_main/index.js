@@ -11,6 +11,8 @@ const maker = require("./utilities/parseDeviceData.js");
 const Data = require("./models/data.js")
 const cookieParser = require("cookie-parser");
 const {restrictToLoggedinUserOnly} = require("./middlewares/auth");
+const fs = require('fs');
+
 
 const app = express();
 const httpPort = 8737;
@@ -36,6 +38,8 @@ try {
 } catch (err) {
     console.error("Error reading file:", err);
 }
+
+console.log(topics)
 
 // Express middleware
 app.use(cors({
@@ -141,25 +145,25 @@ const client = mqtt.connect({
 
 
 // enter topics and nodes we have used
-topics = ["topic7","topic8","topic9","topic10"]
-const nodes = {
-    SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
-    SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
-    SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
-    SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
-};
+// topics = ["topic7","topic8","topic9","topic10"]
+// const nodes = {
+//     SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
+//     SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
+//     SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
+//     SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
+// };
 
-console.log(nodes.SEG0001.features)
-console.log(nodes.SEG0004.features) 
+// console.log(nodes.SEG0001.features)
+// console.log(nodes.SEG0004.features) 
 
 
 
-const nodeMap = {
-    SEG001: "topic7",
-    SEG002: "topic8",
-    SEG003: "topic9",
-    SEG004: "topic10"
-};
+// const nodeMap = {
+//     SEG001: "topic7",
+//     SEG002: "topic8",
+//     SEG003: "topic9",
+//     SEG004: "topic10"
+// };
 
 
 
@@ -271,15 +275,22 @@ client.on("message", (topic, message) => {
         const mess = maker(message.toString()); // Process the incoming message
         console.log(mess);
         messageQueue.push(mess); // Add message to the queue
-
+        console.log(selectedphase)
+        console.log(mess.device)
+        console.log(typeof mess.device)
+        console.log(typeof selectedphase)
+        const phase = Number(selectedphase);
+        const device_1 = Number(mess.device);
         // Optionally broadcast via WebSocket
         if (topic === selectedTopic) {
+            if(phase===device_1){
+                console.log("hey")
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify(mess));
                 }
             });
-        }
+        }}
     } catch (parseError) {
         console.error("Failed to parse message:", parseError);
     }
