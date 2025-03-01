@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AC Scheduler</title>
+    <title>Scheduler - vidyut</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -45,7 +45,7 @@
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #956afa;
+            color: #ff5656;
         }
 
         .world-time {
@@ -60,6 +60,7 @@
         }
 
         .card {
+            margin-top: 20px;
             background: #212121;
             border-radius: 15px;
             padding: 20px;
@@ -81,7 +82,7 @@
         .status-icon {
             width: 50px;
             height: 50px;
-            background: #956afa;
+            background: #ff5656;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -117,7 +118,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #484848;
+            background-color: #ff5656;
             transition: .4s;
             border-radius: 34px;
         }
@@ -135,7 +136,7 @@
         }
 
         input:checked + .slider {
-            background-color: #956afa;
+            background-color: green;
         }
 
         input:checked + .slider:before {
@@ -189,7 +190,7 @@
         }
 
         .day-checkbox:checked + .day-label {
-            background: #956afa;
+            background: #ff5656;
             color: white;
         }
 
@@ -203,7 +204,7 @@
         }
 
         .btn-primary {
-            background: #956afa;
+            background: #ff5656;
             color: white;
         }
 
@@ -261,7 +262,7 @@
         .stat-value {
             font-size: 24px;
             font-weight: bold;
-            color: #956afa;
+            color: #ff5656;
             margin: 10px 0;
         }
 
@@ -277,7 +278,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: #956afa;
+            background: #ff5656;
             color: white;
             border: none;
             cursor: pointer;
@@ -300,7 +301,7 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-snowflake"></i> Smart AC
+                    <i class="fas"></i> Scheduler - Volleyball Court
                 </div>
                 <div class="world-time" id="worldTime">Loading time...</div>
             </div>
@@ -313,7 +314,7 @@
                         <i class="fas fa-power-off"></i>
                     </div>
                     <div class="status-details">
-                        <h3>AC Control</h3>
+                        <h3>Power Supply</h3>
                         <p>Status: <span id="acStatus">Off</span></p>
                     </div>
                 </div>
@@ -333,11 +334,6 @@
                     <i class="fas fa-calendar-check"></i>
                     <div class="stat-value" id="activeSchedules">0</div>
                     <div class="stat-label">Active Schedules</div>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-temperature-low"></i>
-                    <div class="stat-value">24°C</div>
-                    <div class="stat-label">Target Temperature</div>
                 </div>
             </div>
         </div>
