@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AC Scheduler</title>
+    <title>Smart AC Scheduler</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -11,47 +12,104 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         body {
-            background-color: #f5f5f5;
-            padding: 20px;
+            background-color: #121212;
+            color: #ffffff;
+            min-height: 100vh;
         }
+
         .container {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
         }
+
         .header {
+            background-color: #212121;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #956afa;
+        }
+
         .world-time {
             font-size: 1.2em;
-            color: #666;
+            color: #888;
         }
-        .ac-toggle-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
+
+        .card {
+            background: #212121;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-icon {
+            width: 50px;
+            height: 50px;
+            background: #956afa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .status-details h3 {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .status-details p {
+            color: #888;
+        }
+
         .toggle-switch {
             position: relative;
-            display: inline-block;
             width: 60px;
             height: 34px;
         }
+
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -59,10 +117,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
+            background-color: #484848;
             transition: .4s;
             border-radius: 34px;
         }
+
         .slider:before {
             position: absolute;
             content: "";
@@ -74,156 +133,267 @@
             transition: .4s;
             border-radius: 50%;
         }
+
         input:checked + .slider {
-            background-color: #2196F3;
+            background-color: #956afa;
         }
+
         input:checked + .slider:before {
             transform: translateX(26px);
         }
-        .scheduler-container {
-            margin-top: 20px;
-        }
-        .schedule-list {
-            margin-top: 15px;
-        }
-        .schedule-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        .schedule-details {
-            flex: 1;
-        }
-        .schedule-controls {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-        .btn-primary {
-            background-color: #2196F3;
-            color: white;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
+
         .schedule-form {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #666;
+            color: #888;
         }
-        .form-group input, .form-group select {
+
+        .form-group input {
             width: 100%;
             padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid #484848;
+            background: #333;
+            color: #fff;
+            border-radius: 5px;
         }
+
         .days-selector {
             display: flex;
             gap: 5px;
             flex-wrap: wrap;
         }
+
         .day-checkbox {
             display: none;
         }
+
         .day-label {
-            padding: 5px 10px;
-            background: #e9ecef;
-            border-radius: 4px;
+            padding: 8px 12px;
+            background: #333;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            transition: all 0.3s ease;
         }
+
         .day-checkbox:checked + .day-label {
-            background: #2196F3;
+            background: #956afa;
             color: white;
         }
-        .status-text {
-            margin-top: 5px;
-            color: #666;
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #956afa;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8456e9;
+        }
+
+        .schedule-list {
+            margin-top: 20px;
+        }
+
+        .schedule-item {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-details {
+            color: #fff;
+        }
+
+        .schedule-time {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .schedule-days {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .schedule-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .stats-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #956afa;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .add-schedule-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #956afa;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .add-schedule-btn:hover {
+            transform: scale(1.1);
+            background: #8456e9;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>AC Scheduler</h1>
-            <div class="world-time" id="worldTime">Loading time...</div>
-        </div>
-        <div class="ac-toggle-container">
-            <div class="ac-label">AC Control</div>
-            <label class="toggle-switch">
-                <input type="checkbox" id="acToggle" onchange="updateStatus()">
-                <span class="slider"></span>
-            </label>
-            <div class="status-text">
-                Status: <span id="acStatus">Off</span>
-            </div>
-        </div>
-        <div class="scheduler-container">
-            <div class="header-actions">
-                <button class="btn btn-primary" onclick="toggleScheduleForm()">Add Schedule</button>
-            </div>
-            <div id="scheduleForm" class="schedule-form" style="display: none;">
-                <div class="form-group">
-                    <label>Start Time</label>
-                    <input type="time" id="startTime">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-snowflake"></i> Smart AC
                 </div>
-                <div class="form-group">
-                    <label>End Time</label>
-                    <input type="time" id="endTime">
-                </div>
-                <div class="form-group">
-                    <label>Days</label>
-                    <div class="days-selector">
-                        <input type="checkbox" id="day0" class="day-checkbox" value="0">
-                        <label for="day0" class="day-label">Sun</label>
-                        <input type="checkbox" id="day1" class="day-checkbox" value="1">
-                        <label for="day1" class="day-label">Mon</label>
-                        <input type="checkbox" id="day2" class="day-checkbox" value="2">
-                        <label for="day2" class="day-label">Tue</label>
-                        <input type="checkbox" id="day3" class="day-checkbox" value="3">
-                        <label for="day3" class="day-label">Wed</label>
-                        <input type="checkbox" id="day4" class="day-checkbox" value="4">
-                        <label for="day4" class="day-label">Thu</label>
-                        <input type="checkbox" id="day5" class="day-checkbox" value="5">
-                        <label for="day5" class="day-label">Fri</label>
-                        <input type="checkbox" id="day6" class="day-checkbox" value="6">
-                        <label for="day6" class="day-label">Sat</label>
+                <div class="world-time" id="worldTime">Loading time...</div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="card control-card">
+                <div class="status-section">
+                    <div class="status-icon">
+                        <i class="fas fa-power-off"></i>
+                    </div>
+                    <div class="status-details">
+                        <h3>AC Control</h3>
+                        <p>Status: <span id="acStatus">Off</span></p>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="addSchedule()">Save Schedule</button>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="acToggle" onchange="updateStatus()">
+                    <span class="slider"></span>
+                </label>
             </div>
+
+            <div class="card stats-card">
+                <div class="stat-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-value" id="activeHours">0</div>
+                    <div class="stat-label">Active Hours Today</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="stat-value" id="activeSchedules">0</div>
+                    <div class="stat-label">Active Schedules</div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-temperature-low"></i>
+                    <div class="stat-value">24°C</div>
+                    <div class="stat-label">Target Temperature</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Schedules</h2>
             <div id="scheduleList" class="schedule-list">
                 <!-- Schedules will be added here dynamically -->
             </div>
         </div>
+
+        <div id="scheduleForm" class="schedule-form">
+            <h3>Add New Schedule</h3>
+            <form onsubmit="addSchedule(event)">
+                <div class="form-group">
+                    <label>Start Time</label>
+                    <input type="time" id="startTime" name="startTime" required>
+                </div>
+                <div class="form-group">
+                    <label>End Time</label>
+                    <input type="time" id="endTime" name="endTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Days</label>
+                    <div class="days-selector">
+                        <input type="checkbox" id="day0" class="day-checkbox" name="days" value="0">
+                        <label for="day0" class="day-label">Sun</label>
+                        <input type="checkbox" id="day1" class="day-checkbox" name="days" value="1">
+                        <label for="day1" class="day-label">Mon</label>
+                        <input type="checkbox" id="day2" class="day-checkbox" name="days" value="2">
+                        <label for="day2" class="day-label">Tue</label>
+                        <input type="checkbox" id="day3" class="day-checkbox" name="days" value="3">
+                        <label for="day3" class="day-label">Wed</label>
+                        <input type="checkbox" id="day4" class="day-checkbox" name="days" value="4">
+                        <label for="day4" class="day-label">Thu</label>
+                        <input type="checkbox" id="day5" class="day-checkbox" name="days" value="5">
+                        <label for="day5" class="day-label">Fri</label>
+                        <input type="checkbox" id="day6" class="day-checkbox" name="days" value="6">
+                        <label for="day6" class="day-label">Sat</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Schedule</button>
+            </form>
+        </div>
+
+        <button class="add-schedule-btn" onclick="toggleScheduleForm()">
+            <i class="fas fa-plus"></i>
+        </button>
     </div>
+
     <script>
-          let schedules = JSON.parse(localStorage.getItem('acSchedules')) || [];
+        let schedules = JSON.parse(localStorage.getItem('acSchedules')) || [];
         let worldTime = null;
         const API_ENDPOINT = 'http://localhost:8737/api/data';
         const MQTT_TOPIC = 'neoway';
-        // Fetch world time and update display with error handling and fallback
+
         async function updateWorldTime() {
             try {
                 const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Kolkata');
@@ -232,10 +402,8 @@
                 worldTime = new Date(data.datetime);
             } catch (error) {
                 console.error('Error fetching world time:', error);
-                // Fallback to local time if API fails
                 worldTime = new Date();
             }
-            // Update display
             document.getElementById('worldTime').textContent = worldTime.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -243,21 +411,15 @@
                 hour12: true
             });
         }
-        // Initialize and set up intervals with proper error handling
+
         async function initialize() {
             await updateWorldTime();
             await checkSchedules();
-            
-            // Update time every second for more accurate scheduling
             setInterval(updateWorldTime, 1000);
-            
-            // Check schedules every minute
             setInterval(checkSchedules, 60000);
-            
-            // Load initial state
             renderSchedules();
+            updateStats();
             
-            // Check for any saved AC state
             const savedState = localStorage.getItem('acState');
             if (savedState) {
                 const acToggle = document.getElementById('acToggle');
@@ -265,20 +427,16 @@
                 updateStatus();
             }
         }
-        // Update AC status with state persistence
+
         async function updateStatus(isScheduled = false) {
             try {
                 const acToggle = document.getElementById('acToggle');
                 const acStatus = document.getElementById('acStatus');
                 const status = acToggle.checked;
                 
-                // Save state to localStorage
                 localStorage.setItem('acState', status);
-                
-                // Update UI
                 acStatus.textContent = status ? 'ON' : 'OFF';
                 
-                // Send to server
                 await sendACControl(status);
                 if (!isScheduled) {
                     console.log(`AC manually turned ${status ? 'ON' : 'OFF'}`);
@@ -288,7 +446,7 @@
                 alert('Failed to update AC status. Please try again.');
             }
         }
-        // Send control message to server
+
         async function sendACControl(status) {
             const payload = {
                 deviceId: "PHASE1",
@@ -303,12 +461,10 @@
                     body: JSON.stringify(payload),
                     credentials: 'include'
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const result = await response.json();
                 console.log('Server response:', result);
-                if (result.receivedData.topic === MQTT_TOPIC) {
+                if (result.receivedData && result.receivedData.topic === MQTT_TOPIC) {
                     console.log(`Successfully sent command to ${MQTT_TOPIC}:`, result.receivedData.message);
                 }
             } catch (error) {
@@ -316,6 +472,32 @@
                 throw error;
             }
         }
+
+        function updateStats() {
+            const activeSchedules = schedules.filter(s => s.enabled).length;
+            document.getElementById('activeSchedules').textContent = activeSchedules;
+            
+            // Calculate active hours (simplified version)
+        
+            // Calculate active hours (simplified version)
+            let totalHours = 0;
+            const currentDay = new Date().getDay();
+            schedules.forEach(schedule => {
+                if (schedule.enabled && schedule.days.includes(currentDay)) {
+                    const start = convertTo24Hour(schedule.startTime);
+                    const end = convertTo24Hour(schedule.endTime);
+                    const [startHour, startMinute] = start.split(':').map(Number);
+                    const [endHour, endMinute] = end.split(':').map(Number);
+                    let hours = endHour - startHour;
+                    if (endMinute < startMinute) {
+                        hours -= 1;
+                    }
+                    totalHours += hours;
+                }
+            });
+            document.getElementById('activeHours').textContent = totalHours;
+        }
+
         // Check and apply schedules with improved time comparison
         async function checkSchedules() {
             if (!worldTime) return;
@@ -338,50 +520,68 @@
                 }
             }
         }
+
         // Helper function to compare times
         function isTimeInRange(current, start, end) {
             current = convertTo24Hour(current);
             return current >= start && current < end;
         }
+
         // Convert 12-hour format to 24-hour format
         function convertTo24Hour(time) {
             const [hours, minutes] = time.split(':');
             return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
         }
+
         // Add new schedule with validation and persistence
-        function addSchedule() {
+        function addSchedule(event) {
+            if (event) event.preventDefault();
+            
             const startTime = document.getElementById('startTime').value;
             const endTime = document.getElementById('endTime').value;
             const days = Array.from(document.querySelectorAll('.day-checkbox:checked')).map(cb => parseInt(cb.value));
+            
             if (!startTime || !endTime || days.length === 0) {
                 alert('Please fill in all fields');
                 return;
             }
+            
             if (startTime >= endTime) {
                 alert('End time must be after start time');
                 return;
             }
+            
             const schedule = {
                 startTime,
                 endTime,
                 days,
                 enabled: true
             };
+            
             schedules.push(schedule);
             saveSchedules();
             renderSchedules();
             toggleScheduleForm();
             resetScheduleForm();
+            updateStats();
             checkSchedules();
         }
+
         // Save schedules to localStorage
         function saveSchedules() {
             localStorage.setItem('acSchedules', JSON.stringify(schedules));
         }
-        // Complete implementation of renderSchedules
+
+        // Render schedules with dark theme styling
         function renderSchedules() {
             const scheduleList = document.getElementById('scheduleList');
             scheduleList.innerHTML = '';
+            
+            if (schedules.length === 0) {
+                scheduleList.innerHTML = '<p style="color: #888; text-align: center;">No schedules yet. Add one to get started.</p>';
+                return;
+            }
+            
             schedules.forEach((schedule, index) => {
                 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 const selectedDays = schedule.days.map(d => dayNames[d]).join(', ');
@@ -390,8 +590,8 @@
                 scheduleItem.className = 'schedule-item';
                 scheduleItem.innerHTML = `
                     <div class="schedule-details">
-                        <div>${schedule.startTime} - ${schedule.endTime}</div>
-                        <div style="font-size: 0.9em; color: #666;">${selectedDays}</div>
+                        <div class="schedule-time">${schedule.startTime} - ${schedule.endTime}</div>
+                        <div class="schedule-days">${selectedDays}</div>
                     </div>
                     <div class="schedule-controls">
                         <label class="toggle-switch" style="transform: scale(0.8);">
@@ -399,35 +599,47 @@
                                    onchange="toggleScheduleStatus(${index})">
                             <span class="slider"></span>
                         </label>
-                        <button class="btn btn-danger" onclick="deleteSchedule(${index})">Delete</button>
+                        <button class="btn btn-primary" onclick="deleteSchedule(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 scheduleList.appendChild(scheduleItem);
             });
         }
+
         // Delete schedule with persistence
         function deleteSchedule(index) {
-            schedules.splice(index, 1);
-            saveSchedules();
-            renderSchedules();
+            if (confirm('Are you sure you want to delete this schedule?')) {
+                schedules.splice(index, 1);
+                saveSchedules();
+                renderSchedules();
+                updateStats();
+            }
         }
+
         // Toggle schedule status with persistence
         function toggleScheduleStatus(index) {
             schedules[index].enabled = !schedules[index].enabled;
             saveSchedules();
             renderSchedules();
+            updateStats();
             checkSchedules();
         }
-        // Previous helper functions remain the same
+
+        // Toggle schedule form visibility
         function toggleScheduleForm() {
             const form = document.getElementById('scheduleForm');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
+
+        // Reset schedule form fields
         function resetScheduleForm() {
             document.getElementById('startTime').value = '';
             document.getElementById('endTime').value = '';
             document.querySelectorAll('.day-checkbox').forEach(cb => cb.checked = false);
         }
+
         // Initialize the application
         initialize().catch(console.error);
     </script>
