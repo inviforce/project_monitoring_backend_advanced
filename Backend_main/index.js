@@ -31,6 +31,7 @@ app.use("/user",userRoute)
 
 let topics 
 let email
+let which
 try {
     const data = fs.readFileSync('Backend_main/info.txt', 'utf8'); 
     topics = data.split("\n").map(topic => topic.trim()).filter(topic => topic !== ""); // Remove extra spaces and empty lines
@@ -134,46 +135,44 @@ mongoose.connect(db)
 
 
 
-// MQTT Client Setup
-const client = mqtt.connect({
-    host: holder.host,
-    port: holder.port,
-    username: holder.username,
-    password: holder.password,
-    protocol: holder.protocol
+// // MQTT Client Setup
+// const client = mqtt.connect({
+//     host: holder.host,
+//     port: holder.port,
+//     username: holder.username,
+//     password: holder.password,
+//     protocol: holder.protocol
+// });
+
+const clients = []; // Use an array instead of an object
+
+// Loop through client configurations and connect
+holder.clients.forEach((config, index) => {
+    const client = mqtt.connect({
+        host: config.host,
+        port: config.port,
+        username: config.username,
+        password: config.password,
+        protocol: config.protocol
+    });
+
+    clients.push(client); // Store the client in an array
+    console.log(index)
+    client.on("connect", () => {
+        console.log(`Connected to client ${index + 1} (${config.host})`);
+    });
+
+    client.on("error", (err) => {
+        console.error(`MQTT Connection Error for client ${index + 1}:`, err);
+    });
 });
-
-
-// enter topics and nodes we have used
-// topics = ["topic7","topic8","topic9","topic10"]
-// const nodes = {
-//     SEG0001: new Node('SEG0001', true, true, true, true, true, true, true, true),
-//     SEG0002: new Node('SEG0002', true, true, true, true, true, true, true, true),
-//     SEG0003: new Node('SEG0003', true, true, true, true, true, true, true, true),
-//     SEG0004: new Node('SEG0004', true, true, true, true, true, true,true,true ),
-// };
-
-// console.log(nodes.SEG0001.features)
-// console.log(nodes.SEG0004.features) 
-
-
-
-// const nodeMap = {
-//     SEG001: "topic7",
-//     SEG002: "topic8",
-//     SEG003: "topic9",
-//     SEG004: "topic10"
-// };
-
-
-
-
+ 
                                                 /******** CHANGED **********/ 
 // Handle MQTT connection : connect to all availbale topics
-client.on('connect', () => {
+clients[0].on('connect', () => {
     console.log('Connected to HiveMQ broker');
     for (const topic of topics){
-        client.subscribe(topic, { qos: 1 }, (err) => {
+        clients[0].subscribe(topic, { qos: 1 }, (err) => {
             if (!err) {
                 console.log("Successfully subscribed to ",topic);
             } else {
@@ -182,7 +181,29 @@ client.on('connect', () => {
         });
 
     }
-    client.subscribe('neoway', { qos: 1 }, (err) => {
+    clients[0].subscribe('neoway', { qos: 1 }, (err) => {
+        if (!err) {
+            console.log("Successfully subscribed to neoway");
+        } else {
+            console.error("Subscription error:", err);
+        }
+    });
+
+
+});
+clients[1].on('connect', () => {
+    console.log('Connected to HiveMQ broker');
+    for (const topic of topics){
+        clients[1].subscribe(topic, { qos: 1 }, (err) => {
+            if (!err) {
+                console.log("Successfully subscribed to ",topic);
+            } else {
+                console.error("Subscription error:", err);
+            }
+        });
+
+    }
+    clients[1].subscribe('neoway', { qos: 1 }, (err) => {
         if (!err) {
             console.log("Successfully subscribed to neoway");
         } else {
@@ -194,14 +215,13 @@ client.on('connect', () => {
 });
 // WebSocket connection handling
 wss.on('connection', (ws) => {
-    console.log('New client connected');
+    console.log('New clients connected');
     ws.on('close', () => {
-        console.log('Client disconnected');
+        console.log('clients disconnected');
     });
 });
 
-// Handle MQtt messages
-                                             /*********** CHANGED **************/ 
+/*********** CHANGED **************/ 
 const messageQueue = []; // Queue to hold incoming messages
 const BATCH_SIZE = 50;   // Adjust batch size based on system capability
 const BATCH_INTERVAL = 100; // Interval to process the queue in milliseconds
@@ -266,36 +286,86 @@ const processQueue = async () => {
 setInterval(processQueue, BATCH_INTERVAL);
 
 // Handle incoming MQTT messages
-client.on("message", (topic, message) => {
+clients[0].on("message", (topic, message) => {
     if (topic === "neoway") {
         console.log(`Ignoring message from topic "${topic}"`);
         return;
     }
+
     try {
         const mess = maker(message.toString()); // Process the incoming message
         console.log(mess);
         messageQueue.push(mess); // Add message to the queue
-        console.log(selectedphase)
-        console.log(mess.device)
-        console.log(typeof mess.device)
-        console.log(typeof selectedphase)
+        console.log(selectedphase);
+        console.log(mess.device);
+        console.log(typeof mess.device);
+        console.log(typeof selectedphase);
+
         const phase = Number(selectedphase);
         const device_1 = Number(mess.device);
-        // Optionally broadcast via WebSocket
+
         if (topic === selectedTopic) {
-            if(phase===device_1){
-                console.log("hey")
-            wss.clients.forEach((client) => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify(mess));
-                }
-            });
-        }}
+            if (phase === device_1) {
+                console.log("hey");
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify(mess));
+                    }
+                });
+            }
+        }
     } catch (parseError) {
         console.error("Failed to parse message:", parseError);
     }
 });
 
+clients[1].on("message",(topic,message)=>{
+    const data = message.toString().trim(); // Convert buffer to string and trim whitespace
+
+    // Regular expressions to match v, c, and p values
+    const vMatches = [...data.matchAll(/v(\d+): ([\d.]+)/g)];
+    const cMatches = [...data.matchAll(/c(\d+): ([\d.]+)/g)];
+    const pMatches = [...data.matchAll(/p(\d+): ([\d.]+)/g)];
+
+    let parsedData = [];
+    const phase = Number(selectedphase);
+    // Loop through the matches based on index
+    for (let i = 0; i < vMatches.length; i++) {
+        let index = parseInt(vMatches[i][1]); // Convert index to integer
+        let vValue = vMatches[i] ? parseFloat(vMatches[i][2]) : 0.0;
+        let cValue = (typeof cMatches !== "undefined" && cMatches[i]) ? parseFloat(cMatches[i][2]) : 0.0;
+        let pValue = (typeof pMatches !== "undefined" && pMatches[i]) ? parseFloat(pMatches[i][2]) : 0.0;
+        let eValue = (typeof eMatches !== "undefined" && eMatches[i]) ? parseFloat(eMatches[i][2]) : 0.0;
+        let fValue = (typeof fMatches !== "undefined" && fMatches[i]) ? parseFloat(fMatches[i][2]) : 0.0;
+        let pfValue = (typeof pfMatches !== "undefined" && pfMatches[i]) ? parseFloat(pfMatches[i][2]) : 0.0;
+        let alarmsValue = (typeof alarmsMatches !== "undefined" && alarmsMatches[i]) ? parseInt(alarmsMatches[i][2]) : 0;
+    
+        parsedData.push({
+            "device": index,
+            "voltage": vValue,
+            "current": cValue,
+            "power": pValue,
+            "energy": eValue,
+            "frequency": fValue,
+            "powerFactor": pfValue,
+            "alarms": alarmsValue
+        });
+    }
+    
+    // console.log(parsedData);
+    
+    
+    const filteredData = parsedData.find(item => item.device === phase);
+    if (which === 1) {
+            console.log(filteredData);
+            wss.clients.forEach((client) => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(filteredData));
+                }
+            });
+        
+    }
+})
 
 // Function to fetch historical data
 async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
@@ -333,7 +403,7 @@ app.post("/api/topic_name", async (req, res) => {
 
     console.log("Received Data:", { topic, name });
     
-    // Respond back to the client
+    // Respond back to the clients
     res.status(200).json({ message: "Data received successfully", topic, name });
 });
 
@@ -418,7 +488,7 @@ app.post('/api/data', async (req, res) => {
     console.log({ topic, message });
 
     try {
-        await client.publish(topic, message, { qos: 0 }); // Send the formatted message
+        await clients.publish(topic, message, { qos: 0 }); // Send the formatted message
         console.log(`Message sent to topic "${topic}":`, message);
     } catch (err) {
         console.error('Error publishing message:', err);
@@ -457,6 +527,12 @@ app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
         return res.status(401).json({ error: "No email found in cookies" });
     }
     console.log(email)
+    if(email==="k.gmail.com"){
+        which=1
+    }
+    else{
+        which=0
+    }
     res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
 });
 
