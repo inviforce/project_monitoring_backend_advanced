@@ -482,20 +482,38 @@ app.post('/api/topic/phase', async (req, res) => {
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
-    const device = req.body;
-    const topic = 'neoway';
-    const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
-    console.log({ topic, message });
-
-    try {
-        await clients.publish(topic, message, { qos: 0 }); // Send the formatted message
-        console.log(`Message sent to topic "${topic}":`, message);
-    } catch (err) {
-        console.error('Error publishing message:', err);
-        return res.status(500).json({ message: 'Error publishing message' });
+    if(which===0){
+        const device = req.body;
+        const topic = 'neoway';
+        const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
+        console.log({ topic, message });
+    
+        try {
+            await clients.publish(topic, message, { qos: 0 }); // Send the formatted message
+            console.log(`Message sent to topic "${topic}":`, message);
+        } catch (err) {
+            console.error('Error publishing message:', err);
+            return res.status(500).json({ message: 'Error publishing message' });
+        }
+    
+        res.json({ message: 'Data received successfully', receivedData: { topic, message } });
     }
-
-    res.json({ message: 'Data received successfully', receivedData: { topic, message } });
+    else{
+        const device = req.body;
+        const topic = 'neoway';
+        const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
+        console.log({ topic, message });
+    
+        try {
+            await clients.publish(topic, message, { qos: 0 }); // Send the formatted message
+            console.log(`Message sent to topic "${topic}":`, message);
+        } catch (err) {
+            console.error('Error publishing message:', err);
+            return res.status(500).json({ message: 'Error publishing message' });
+        }
+    
+        res.json({ message: 'Data received successfully', receivedData: { topic, message } });
+    }
 });
 
 
