@@ -293,79 +293,93 @@ clients[0].on("message", (topic, message) => {
     }
 
     try {
+        //console.log(message.toString())
         const mess = maker(message.toString()); // Process the incoming message
         console.log(mess);
         messageQueue.push(mess); // Add message to the queue
-        console.log(selectedphase);
-        console.log(mess.device);
-        console.log(typeof mess.device);
-        console.log(typeof selectedphase);
+        // console.log(selectedphase);
+        //console.log(mess);
+        // console.log(typeof mess.device);
+        // console.log(typeof selectedphase);
 
         const phase = Number(selectedphase);
         const device_1 = Number(mess.device);
-
-        if (topic === selectedTopic) {
-            if (phase === device_1) {
-                console.log("hey");
-                wss.clients.forEach((client) => {
-                    if (client.readyState === WebSocket.OPEN) {
-                        client.send(JSON.stringify(mess));
-                    }
-                });
+        if(email!=="k.gmail.com"){
+            if (topic === selectedTopic) {
+                if (phase === device_1) {
+                    console.log("hey");
+                    wss.clients.forEach((client) => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(JSON.stringify(mess));
+                        }
+                    });
+                }
             }
         }
     } catch (parseError) {
         console.error("Failed to parse message:", parseError);
     }
 });
+clients[1].on("message", (topic, message) => {
+    console.log(message.toString());
 
-clients[1].on("message",(topic,message)=>{
-    const data = message.toString().trim(); // Convert buffer to string and trim whitespace
+    try {
+        // Parse the message as JSON
+        const data = JSON.parse(message.toString().trim());
 
-    // Regular expressions to match v, c, and p values
-    const vMatches = [...data.matchAll(/v(\d+): ([\d.]+)/g)];
-    const cMatches = [...data.matchAll(/c(\d+): ([\d.]+)/g)];
-    const pMatches = [...data.matchAll(/p(\d+): ([\d.]+)/g)];
+        let parsedData = [];
+        const phase = Number(selectedphase);
 
-    let parsedData = [];
-    const phase = Number(selectedphase);
-    // Loop through the matches based on index
-    for (let i = 0; i < vMatches.length; i++) {
-        let index = parseInt(vMatches[i][1]); // Convert index to integer
-        let vValue = vMatches[i] ? parseFloat(vMatches[i][2]) : 0.0;
-        let cValue = (typeof cMatches !== "undefined" && cMatches[i]) ? parseFloat(cMatches[i][2]) : 0.0;
-        let pValue = (typeof pMatches !== "undefined" && pMatches[i]) ? parseFloat(pMatches[i][2]) : 0.0;
-        let eValue = (typeof eMatches !== "undefined" && eMatches[i]) ? parseFloat(eMatches[i][2]) : 0.0;
-        let fValue = (typeof fMatches !== "undefined" && fMatches[i]) ? parseFloat(fMatches[i][2]) : 0.0;
-        let pfValue = (typeof pfMatches !== "undefined" && pfMatches[i]) ? parseFloat(pfMatches[i][2]) : 0.0;
-        let alarmsValue = (typeof alarmsMatches !== "undefined" && alarmsMatches[i]) ? parseInt(alarmsMatches[i][2]) : 0;
-    
-        parsedData.push({
-            "device": index,
-            "voltage": vValue,
-            "current": cValue,
-            "power": pValue,
-            "energy": eValue,
-            "frequency": fValue,
-            "powerFactor": pfValue,
-            "alarms": alarmsValue
-        });
-    }
-    
-    // console.log(parsedData);
-    
-    
-    const filteredData = parsedData.find(item => item.device === phase);
-    if (which === 1) {
+        // Iterate over the expected keys (v1, v2, v3, c1, c2, etc.)
+        for (let i = 1; i <= 3; i++) {
+            let vKey = `v${i}`;
+            let cKey = `c${i}`;
+            let pKey = `p${i}`;
+            let eKey = `e${i}`;
+            let fKey = `f${i}`;
+            let pfKey = `pf${i}`;
+            let alarmsKey = `alarms${i}`;
+
+            let index = i;  // Device index (phase number)
+            let vValue = data[vKey] !== undefined ? Math.abs(Number(data[vKey])) : 0.0;
+            let cValue = data[cKey] !== undefined ? Math.abs(Number(data[cKey])) : 0.0;
+            let pValue = data[pKey] !== undefined ? Math.abs(Number(data[pKey])) : 0.0;
+            let eValue = data[eKey] !== undefined ? Math.abs(Number(data[eKey])) : 0.0;
+            let fValue = data[fKey] !== undefined ? Math.abs(Number(data[fKey])) : 0.0;
+            let pfValue = data[pfKey] !== undefined ? Math.abs(Number(data[pfKey])) : 0.0;
+            let alarmsValue = data[alarmsKey] !== undefined ? Math.abs(Number(data[alarmsKey])) : 0;
+
+            parsedData.push({
+                "device": index,
+                "voltage": vValue,
+                "current": cValue,
+                "power": pValue,
+                "energy": eValue,
+                "frequency": fValue,
+                "powerFactor": pfValue,
+                "alarms": alarmsValue
+            });
+        }
+
+        
+
+        // Find the device corresponding to the selected phase
+        const filteredData = parsedData.find(item => item.device === phase);
+
+        if (email === "k.gmail.com") {
             console.log(filteredData);
             wss.clients.forEach((client) => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify(filteredData));
                 }
             });
-        
+        }
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
     }
-})
+});
+
+
 
 // Function to fetch historical data
 async function getDocumentsWithinTimeRange(nodeId,startTime, endTime) {
@@ -482,7 +496,7 @@ app.post('/api/topic/phase', async (req, res) => {
 
 // API endpoint for incoming data
 app.post('/api/data', async (req, res) => {
-    if(which===0){
+    if(email!=="k.gmail.com"){
         const device = req.body;
         const topic = 'neoway';
         const message = `${device.deviceId} ${device.status}`; // Format the message as "ac on" or "ac off"
@@ -545,12 +559,7 @@ app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
         return res.status(401).json({ error: "No email found in cookies" });
     }
     console.log(email)
-    if(email==="k.gmail.com"){
-        which=1
-    }
-    else{
-        which=0
-    }
+    
     res.sendFile(path.join(__dirname, "../Frontend/discography.html"));
 });
 
