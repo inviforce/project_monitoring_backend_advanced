@@ -1,11 +1,28 @@
 // Dashboard JS file
+
+window.socket = null;
+
+
 document.addEventListener("DOMContentLoaded", function() {
+    window.socket = io("http://localhost:8737");
+
+    window.socket.on("connect", () => {
+        console.log("Connected to WebSocket server with ID:", window.socket.id);
+    });
+
+    window.socket.on("disconnect", () => {
+        console.log("Disconnected from WebSocket server.");
+    });
+
+
+
     const menuicn = document.querySelector(".menuicn");
     const nav = document.querySelector(".navcontainer");
 
     menuicn.addEventListener("click", () => {
         nav.classList.toggle("navclose");
     });
+    
     document.addEventListener('DOMContentLoaded', function() {
         initializeTimeRange();
     });
@@ -144,24 +161,26 @@ async function updateStatus() {
 }
 
 // ✅ Define sender OUTSIDE `DOMContentLoaded` so it is accessible globally
+function getCookie(name) {
+    return document.cookie.split("; ")
+        .find(row => row.startsWith(name + "="))?.split("=")[1] || null;
+}
+
+// Async sender function
 async function sender(phase) {
     try {
-        const payload = { phase: phase };  
-        console.log("Sending payload:", payload);
+        const userEmail = getCookie("email");
 
-        const response = await fetch('http://localhost:8737/api/topic/phase', { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),  
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
+        if (!userEmail) {
+            console.error("No email found in cookies!");
+            return;
         }
 
-        const data = await response.text();
-        console.log("Server Response:", data);
+        console.log("User Email:", userEmail);
+        console.log("Sending phase via WebSocket:", phase);
+
+        window.socket.emit("message", {phase});
+        
     } catch (error) {
         console.error("An error occurred:", error);
     }
@@ -172,6 +191,8 @@ window.sender = sender;
 
 // Add this to your index.js file
 
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const phaseModal = document.getElementById('phaseModal');
     const mainContent = document.querySelector('.main-content');
@@ -180,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const phaseIndicator = document.getElementById('phaseIndicator');
     
     let selectedPhase = null;
-    let ws = null;
 
     // Phase selection handling
     phaseOptions.forEach(option => {
@@ -210,11 +230,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show phase indicator
                 updatePhaseIndicator(selectedPhase);
                 
-                // Initialize WebSocket connection
-                initializeWebSocket(selectedPhase);
+                // Initialize WebSocket connection;
                 
                 // Show success alert
                 showAlert(`Now monitoring Phase ${selectedPhase}`);
+                console.log(selectedPhase)
             } catch (error) {
                 showAlert('Error selecting phase. Please try again.', 'error');
             }
@@ -228,24 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         indicator.style.display = 'block';
     }
 
-    function initializeWebSocket(phase) {
-        if (ws) {
-            ws.close();
-        }
-
-        ws = new WebSocket('ws://localhost:3027');
-        
-        ws.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data.device.toString() === phase) {
-                updateDashboard(data);
-            }
-        };
-
-        ws.onerror = function(error) {
-            showAlert('Connection error. Please refresh the page.', 'error');
-        };
-    }
+    
 
     function updateDashboard(data) {
         // Update voltage

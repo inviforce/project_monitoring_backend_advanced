@@ -14,11 +14,9 @@
         }
 
         body {
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0b0c0e;
             color: #d4d4d4;
-            line-height: 1.6;
         }
 
         .sidebar {
@@ -47,41 +45,6 @@
             gap: 10px;
         }
 
-        .logo i {
-            font-size: 28px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 15px 0;
-        }
-
-        .sidebar ul li {
-            padding: 12px 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            color: #8e8e8e;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar ul li:hover {
-            background-color: #1a1c23;
-            color: #fff;
-        }
-
-        .sidebar ul li i {
-            width: 20px;
-            text-align: center;
-        }
-
-        .inv_a {
-            text-decoration: none;
-            color: inherit;
-        }
-
         .container {
             margin-left: 250px;
             width: calc(100% - 250px);
@@ -92,46 +55,16 @@
             border: 1px solid #2a2d32;
         }
 
-        .card-body {
-            background-color: #111217;
-            color: #d4d4d4;
-        }
-
-        .card-footer {
-            background-color: #1a1c23;
-            border-top: 1px solid #2a2d32;
-        }
-
-        .text-muted {
-            color: #8e8e8e !important;
-        }
-
         .form-control {
             background-color: #1a1c23;
             border: 1px solid #2a2d32;
             color: #d4d4d4;
         }
 
-        .form-control:focus {
-            background-color: #1a1c23;
-            border-color: #ff5656;
-            color: #d4d4d4;
-            box-shadow: 0 0 0 0.25rem rgba(255, 86, 86, 0.25);
-        }
-
         .btn-primary {
             background: linear-gradient(45deg, #ff5656, #ff8a8a);
             border: none;
             transition: transform 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #ff8a8a, #ff5656);
-            transform: translateY(-2px);
-        }
-
-        .text-dark {
-            color: #ff5656 !important;
         }
     </style>
 </head>
@@ -145,14 +78,6 @@
                 </a>
             </div>
         </div>
-        <ul>
-            <li><i class="fas fa-home"></i><a class="inv_a" href="/">Home</a></li>
-            <li><i class="fas fa-compass"></i><a class="inv_a" href="/home">Explore</a></li>
-            <li><i class="fas fa-tachometer-alt"></i><a class="inv_a" href="/discography">Dashboards</a></li>          
-            <li><i class="fas fa-bell"></i><a class="inv_a" href="/discography">Auto-Timer</a></li>
-            <li><i class="fas fa-code"></i>About Us</li>
-            <li><i class="fas fa-cog"></i>Login / Logout</li>
-        </ul>
     </div>
 
     <section class="h-100">
@@ -168,43 +93,40 @@
                             <form action="/user" method="post" class="needs-validation" novalidate="" autocomplete="off">
                                 <div class="mb-3">
                                     <label class="mb-2 text-muted" for="name">Name</label>
-                                    <input id="name" type="text" class="form-control" name="name" value="" required autofocus>
-                                    <div class="invalid-feedback">
-                                        Name is required    
-                                    </div>
+                                    <input id="name" type="text" class="form-control" name="name" required>
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="mb-2 text-muted" for="email">E-Mail Address</label>
-                                    <input id="email" type="text" class="form-control" name="email" value="" required>
-                                    <div class="invalid-feedback">
-                                        Email is invalid
-                                    </div>
+                                    <input id="email" type="text" class="form-control" name="email" required>
                                 </div>
-
                                 <div class="mb-3">
                                     <label class="mb-2 text-muted" for="password">Password</label>
                                     <input id="password" type="password" class="form-control" name="password" required>
-                                    <div class="invalid-feedback">
-                                        Password is required
-                                    </div>
                                 </div>
-
-                                <p class="form-text text-muted mb-3">
-                                    By registering you agree with our terms and condition.
-                                </p>
-
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mqtt_host">MQTT Host</label>
+                                    <input id="mqtt_host" type="text" class="form-control" name="mqtt_host" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mqtt_port">MQTT Port</label>
+                                    <input id="mqtt_port" type="number" class="form-control" name="mqtt_port" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mqtt_username">MQTT Username</label>
+                                    <input id="mqtt_username" type="text" class="form-control" name="mqtt_username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mqtt_password">MQTT Password</label>
+                                    <input id="mqtt_password" type="password" class="form-control" name="mqtt_password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="mb-2 text-muted" for="mqtt_protocol">MQTT Protocol</label>
+                                    <input id="mqtt_protocol" type="text" class="form-control" name="mqtt_protocol" required>
+                                </div>
                                 <div class="align-items-center d-flex">
-                                    <button type="submit" class="btn btn-primary ms-auto">
-                                        Register    
-                                    </button>
+                                    <button type="submit" class="btn btn-primary ms-auto">Register</button>
                                 </div>
                             </form>
-                        </div>
-                        <div class="card-footer py-3 border-0">
-                            <div class="text-center">
-                                Already have an account? <a href="login" class="text-dark">Login</a>
-                            </div>
                         </div>
                     </div>
                     <div class="text-center mt-5 text-muted">
@@ -214,7 +136,5 @@
             </div>
         </div>
     </section>
-
-    <script src="js/login.js"></script>
 </body>
 </html>

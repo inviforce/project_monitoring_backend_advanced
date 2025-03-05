@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node index.js"
   },
+  "type": "commonjs",
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -18,6 +19,7 @@
     "mqtt": "^5.10.1",
     "package": "^1.0.1",
     "plotly.js-dist-min": "^2.35.2",
+    "socket.io": "^4.8.1",
     "uuid": "^11.0.5",
     "ws": "^8.18.0"
   },

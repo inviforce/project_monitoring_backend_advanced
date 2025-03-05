@@ -680,130 +680,12 @@
             <span>Tags</span>
         </div>
 
-        <ul class="folder-list">
-            <li>
-                <div class="folder-item" data-folder="shared">
-                    <i class="fas fa-chevron-right chevron"></i>
-                    <i class="fas fa-share-alt"></i>
-                    <span>Old Academic Building</span>
-                    <div class="folder-stats">12 items</div>
-                </div>
-                <div class="nested-content" id="shared-content">
-                    <div class="nested-item">
-                        <div style="display: flex; align-items: center;">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Adhrit lab</span>
-                        </div>
-                        <div class="nested-actions">
-                            <a href="/discography/Adhrit_Lab" class="nested-btn" onclick="sender('topic8')" style="text-decoration: none;">
-                                <i class="fas fa-chart-line"></i>
-                                View
-                            </a>
-                            <a href="/schedule" class="nested-btn" style="text-decoration: none;">
-                                <i class="fas fa-clock"></i>
-                                Timer
-                            </a>
-                        </div>
-                    </div>
-                    <div class="nested-item">
-                        <div style="display: flex; align-items: center;">
-                            <i class="fas fa-chart-line"></i>
-                            <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic8')">Biology lab</a></span>
-                        </div>
-                        <div class="nested-actions">
-                            <button class="nested-btn">
-                                <i class="fas fa-chart-line"></i>
-                                View
-                            </button>
-                            <button class="nested-btn">
-                                <i class="fas fa-clock"></i>
-                                Timer
-                            </button>
-                        </div>
-                    </div>
-                    <div class="nested-item">
-                        <div style="display: flex; align-items: center;">
-                            <i class="fas fa-chart-line"></i>
-                            <span><a class="inv_a" href="/discography/Adhrit_Lab" onclick="sender('topic8')">Chemistry Lab</a></span>
-                        </div>
-                        <div class="nested-actions">
-                            <button class="nested-btn">
-                                <i class="fas fa-chart-line"></i>
-                                View
-                            </button>
-                            <button class="nested-btn">
-                                <i class="fas fa-clock"></i>
-                                Timer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            
-            <li>
-                <div class="folder-item" data-folder="data-plane">
-                    <i class="fas fa-chevron-right chevron"></i>
-                    <i class="fas fa-folder"></i>
-                    <span>Pushkar - AC Building</span>
-                    <div class="folder-stats">8 items</div>
-                </div>
-                <div class="nested-content" id="data-plane-content">
-                    <div class="nested-item">
-                        <i class="fas fa-database"></i>
-                        <span>Database Metrics</span>
-                    </div>
-                    <div class="nested-item">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span>Data Flow Analysis</span>
-                    </div>
-                    <div class="nested-item">
-                        <i class="fas fa-server"></i>
-                        <span>Server Statistics</span>
-                    </div>
-                </div>
-            </li>
-            
-            <li>
-                <div class="folder-item" data-folder="dataviz">
-                    <i class="fas fa-chevron-right chevron"></i>
-                    <i class="fas fa-folder"></i>
-                    <span>Lecture Hall</span>
-                    <div class="folder-stats">6 items</div>
-                </div>
-                <div class="nested-content" id="dataviz-content">
-                    <div class="nested-item">
-                        <i class="fas fa-project-diagram"></i>
-                        <span>Visualization Projects</span>
-                    </div>
-                    <div class="nested-item">
-                        <i class="fas fa-chart-area"></i>
-                        <span>Trend Analysis</span>
-                    </div>
-                </div>
-            </li>
-            
-            <li>
-                <div class="folder-item" data-folder="aws-iot">
-                    <i class="fas fa-chevron-right chevron"></i>
-                    <i class="fas fa-folder"></i>
-                    <span>Sports Complex</span>
-                    <div class="folder-stats">4 items</div>
-                </div>
-                <div class="nested-content" id="aws-iot-content">
-                    <div class="nested-item">
-                        <i class="fas fa-microchip"></i>
-                        <span>Device Metrics</span>
-                    </div>
-                    <div class="nested-item">
-                        <i class="fas fa-network-wired"></i>
-                        <span>Connection Status</span>
-                    </div>
-                </div>
-            </li>
+        <ul class="folder-list" id="folder-container">
+            <!-- Data will be inserted here dynamically -->
         </ul>
+        
     </div>
 </div>
-
     <script>
 
         // Loading System Configuration
@@ -865,7 +747,52 @@
 
         // Initialize the loading system
         LoadingSystem.init();
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Fetch data from the backend
+                const response = await fetch("/api/getLabNames"); // Adjust endpoint as needed
+                const labNames = await response.json(); // Expected response: ["Adhrit Lab", "Biology Lab", "Chemistry Lab"]
 
+                const folderContainer = document.getElementById("folder-container");
+                folderContainer.innerHTML = ""; // Clear existing content
+
+                const folderId = "shared"; 
+
+                const folderElement = document.createElement("li");
+                folderElement.innerHTML = `
+                    <div class="folder-item" data-folder="${folderId}">
+                        <i class="fas fa-chevron-right chevron"></i>
+                        <i class="fas fa-share-alt"></i>
+                        <span>Old Academic Building</span>
+                        <div class="folder-stats">${labNames.length} items</div>
+                    </div>
+                    <div class="nested-content" id="shared-content">
+                        ${labNames.map(name => `
+                            <div class="nested-item">
+                                <div style="display: flex; align-items: center;">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>${name}</span>
+                                </div>
+                                <div class="nested-actions">
+                                    <a href="/discography/Adhrit_Lab" class="nested-btn" style="text-decoration: none;">
+                                        <i class="fas fa-chart-line"></i>
+                                        View
+                                    </a>
+                                    <a href="/schedule" class="nested-btn" style="text-decoration: none;">
+                                        <i class="fas fa-clock"></i>
+                                        Timer
+                                    </a>
+                                </div>
+                            </div>
+                        `).join("")}
+                    </div>
+                `;
+
+                folderContainer.appendChild(folderElement);
+            } catch (error) {
+                console.error("Error fetching lab names:", error);
+            }
+        });
 
 
         document.querySelectorAll('.folder-item').forEach(item => {

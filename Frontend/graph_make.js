@@ -1,8 +1,9 @@
-const socket = new WebSocket('ws://localhost:3027');
+const socket = io("http://localhost:8737"); // No need for require()
 
-socket.onopen = function () {
-    console.log("WebSocket connection established");
-};
+socket.on("connect", () => {
+    console.log("Connected to WebSocket server with ID:", socket.id);
+});
+
 
 socket.onmessage = function (event) {
     try {
@@ -10,8 +11,8 @@ socket.onmessage = function (event) {
         console.log(mess);
         updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature, mess.humidity);
     } catch (error) {
-        console.error("Error parsing message:", error);
-        console.log("Problematic message:", event.data);
+        //console.error("Error parsing message:", error);
+        //console.log("Problematic message:", event.data);
     }
 };
 

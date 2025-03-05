@@ -5,7 +5,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Get values from the form inputs
         const topic = document.getElementById("topic").value;
         const name = document.getElementById("name").value;
-
+        function getCookie(name) {
+            return document.cookie.split("; ")
+                .find(row => row.startsWith(name + "="))?.split("=")[1] || null;
+        }
+        const userEmail = getCookie("email");
         try {
             // Send the data to the server using fetch
             const response = await fetch('http://localhost:8737/api/topic_name', {
@@ -13,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type
                 },
-                body: JSON.stringify({ topic, name }), // Send data as JSON
+                body: JSON.stringify({ topic, name , userEmail}), // Send data as JSON
             });
 
             // Parse the response
