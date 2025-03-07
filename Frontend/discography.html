@@ -749,50 +749,105 @@
         LoadingSystem.init();
         document.addEventListener("DOMContentLoaded", async function () {
             try {
-                // Fetch data from the backend
-                const response = await fetch("/api/getLabNames"); // Adjust endpoint as needed
-                const labNames = await response.json(); // Expected response: ["Adhrit Lab", "Biology Lab", "Chemistry Lab"]
+                // 1️⃣ Function to get cookie value by name
+                function getCookie(name) {
+                    return document.cookie
+                        .split("; ")
+                        .find(row => row.startsWith(name + "="))
+                        ?.split("=")[1] || null;
+                }
 
+                // 2️⃣ Get user's email from cookies
+                const userEmail = getCookie("email");
+                if (!userEmail) {
+                    console.error("User email not found in cookies!");
+                    return;
+                }
+
+                // 3️⃣ Send email to backend and fetch related labels
+                const response = await fetch("/api/getUserTopics", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: decodeURIComponent(userEmail) })
+                });
+
+                const { labels } = await response.json(); // Expected response: { labels: ["Label1", "Label2", "Label3"] }
+                console.log("User Labels:", labels);
+
+                if (!labels || labels.length === 0) {
+                    console.warn("No topics found for this user!");
+                    return;
+                }
+
+                // 4️⃣ Get container and clear previous content
                 const folderContainer = document.getElementById("folder-container");
-                folderContainer.innerHTML = ""; // Clear existing content
+                folderContainer.innerHTML = "";
 
-                const folderId = "shared"; 
-
+                // Create the dropdown section
+                const folderId = "shared";
                 const folderElement = document.createElement("li");
+                function getCookie(name) {
+                    return document.cookie
+                        .split("; ")
+                        .find(row => row.startsWith(name + "="))
+                        ?.split("=")[1] || null;
+                }
+
+                // 2️⃣ Get user's email from cookies
+                let Email = getCookie("email");
                 folderElement.innerHTML = `
-                    <div class="folder-item" data-folder="${folderId}">
-                        <i class="fas fa-chevron-right chevron"></i>
-                        <i class="fas fa-share-alt"></i>
-                        <span>Old Academic Building</span>
-                        <div class="folder-stats">${labNames.length} items</div>
+                    <div class="folder-item" data-folder="${folderId}" id="dropdown-toggle" 
+                        style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-chevron-right chevron" id="chevron-icon"></i>
+                        <i class="fas fa-folder"></i>
+                        <span>Topics You Subscribed</span>
+                        <div class="folder-stats">${labels.length} items</div>
                     </div>
-                    <div class="nested-content" id="shared-content">
-                        ${labNames.map(name => `
-                            <div class="nested-item">
-                                <div style="display: flex; align-items: center;">
+                    <ul class="nested-content" id="shared-content" style="display: none; padding-left: 20px;">
+                        ${labels.map(label => `
+                            <li class="nested-item" style="list-style: none; margin-top: 5px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
                                     <i class="fas fa-chart-line"></i>
-                                    <span>${name}</span>
-                                </div>
-                                <div class="nested-actions">
-                                    <a href="/discography/Adhrit_Lab" class="nested-btn" style="text-decoration: none;">
-                                        <i class="fas fa-chart-line"></i>
-                                        View
+                                    <span>${label}</span>
+                                <div class="nested-actions" style="margin-left: 20px;">
+                                    <a href="/discography/${label.replace(/\s/g, "_")}/${Email}" class="nested-btn" 
+                                    style="text-decoration: none; margin-right: 10px;">
+                                        <i class="fas fa-chart-line"></i> View ${label}
                                     </a>
                                     <a href="/schedule" class="nested-btn" style="text-decoration: none;">
-                                        <i class="fas fa-clock"></i>
-                                        Timer
+                                        <i class="fas fa-clock"></i> Timer
                                     </a>
                                 </div>
-                            </div>
+                            </li>
                         `).join("")}
-                    </div>
+                    </ul>
                 `;
 
                 folderContainer.appendChild(folderElement);
+
+                // 5️⃣ Add dropdown toggle functionality with smooth animation
+                document.getElementById("dropdown-toggle").addEventListener("click", function () {
+                    const content = document.getElementById("shared-content");
+                    const chevron = document.getElementById("chevron-icon");
+
+                    if (content.style.display === "none") {
+                        content.style.display = "block";
+                        content.style.opacity = "0";
+                        setTimeout(() => (content.style.opacity = "1"), 100); // Smooth transition
+                        chevron.classList.replace("fa-chevron-right", "fa-chevron-down");
+                    } else {
+                        content.style.opacity = "0";
+                        setTimeout(() => (content.style.display = "none"), 200);
+                        chevron.classList.replace("fa-chevron-down", "fa-chevron-right");
+                    }
+                });
+
             } catch (error) {
-                console.error("Error fetching lab names:", error);
+                console.error("Error fetching user labels:", error);
             }
         });
+
+
 
 
         document.querySelectorAll('.folder-item').forEach(item => {

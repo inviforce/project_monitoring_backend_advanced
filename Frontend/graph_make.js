@@ -1,20 +1,73 @@
 const socket = io("http://localhost:8737"); // No need for require()
 
-socket.on("connect", () => {
-    console.log("Connected to WebSocket server with ID:", socket.id);
-});
+const pathParts = window.location.pathname.split("/"); 
+        console.log(pathParts); 
+        // Output: ["", "discography", "adharit", "deepak"]
+
+        const label = pathParts[2];  // "adharit"
+        const email = pathParts[3]; // "deepak"
+        if (!label || !email) {
+            console.error("Missing label or email in URL.");
+            return;
+        }
+
+        // Initialize WebSocket globally
+        window.socket = io("http://localhost:8737");
+
+        function joinRoom(roomName) {
+            console.log(roomName)
+            socket.emit("joinRoom", roomName);
+        }
+
+        function leaveRoom(roomName) {
+            socket.emit("leaveRoom", roomName);
+        }
+
+        socket.on("roomMessage", (message) => {
+            console.log("Raw message received:", message);
+        
+            // Ensure message is an object (try parsing if needed)
+            if (typeof message === "string") {
+                try {
+                    message = JSON.parse(message);
+                } catch (error) {
+                    console.error("Failed to parse message:", error);
+                    return;
+                }
+            }
+        
+            console.log("Parsed message:", (message));
+            let deviceNumber = Number(message.device);
+            if (message.device === deviceNumber) {
+                updateDashboard(message);
+            }
+        });
+        
+
+        try {
+            const response = await fetch(`/api/user-subscription/${label}/${email}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Fetched subscription data:", data);
+
+            // Ensure `data.host` and `data.topic` exist
+            if (!data.host || !data.topic) {
+                throw new Error("Missing required subscription data (host or topic).");
+            }
+
+            // Correct usage of data
+            const roomName = `${data.host}_${data.topic}`;
+            console.log("Joining room:", roomName);
+            joinRoom(roomName);
+        } catch (error) {
+            console.error("Error fetching subscription:", error);
+        }
+        
 
 
-socket.onmessage = function (event) {
-    try {
-        const mess = JSON.parse(event.data);
-        console.log(mess);
-        updateGauges(mess.voltage, mess.current, mess.power, mess.energy, mess.frequency, mess.powerFactor, mess.temperature, mess.humidity);
-    } catch (error) {
-        //console.error("Error parsing message:", error);
-        //console.log("Problematic message:", event.data);
-    }
-};
 
 // Function to create a gauge with dark theme
 function createGauge(id, initialValue, titleText, initialrange, finalrange) {
@@ -172,7 +225,7 @@ lineGraph('line2', 0, 'Humidity Over Time', humditydata);
 
 
 // Function to update the gauges with new data
-function updateGauges(voltage, current, power, energy, frequency, powerFactor, temperature, humidity) {
+function updateGauges(voltage, current, power, energy, frequency, powerFactor, temperature = null, humidity = null) {
     Plotly.update('gauge1', { value: [voltage] }, [0]);
     Plotly.update('gauge2', { value: [current] }, [0]);
     Plotly.update('gauge3', { value: [power] }, [0]);
@@ -180,15 +233,19 @@ function updateGauges(voltage, current, power, energy, frequency, powerFactor, t
     Plotly.update('gauge5', { value: [frequency] }, [0]);
     Plotly.update('gauge6', { value: [powerFactor] }, [0]);
 
-    // Update the temperature data
-    const currentTime = timeData.length; // You can modify this to use real timestamps
-    timeData.push(currentTime); // Append the current time/index
-    temperatureData.push(temperature); // Append the temperature
-    humditydata.push(humidity);
+    const currentTime = timeData.length;
+    timeData.push(currentTime); 
 
-    // Update the line graph with new data
-    Plotly.update('line1', { y: [temperatureData], x: [timeData] }, [0]);
-    Plotly.update('line2', { y: [humditydata], x: [timeData] }, [0]);
+    // Only update the graphs if temperature/humidity data exists
+    if (temperature !== null) {
+        temperatureData.push(temperature);
+        Plotly.update('line1', { y: [temperatureData], x: [timeData] }, [0]);
+    }
+
+    if (humidity !== null) {
+        humditydata.push(humidity);
+        Plotly.update('line2', { y: [humditydata], x: [timeData] }, [0]);
+    }
 }
 
 

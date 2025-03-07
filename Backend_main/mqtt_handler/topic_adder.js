@@ -41,5 +41,5 @@ async function adder(email, topic, name) {
 }
 
 // Export the function
-adder("deepak","topic7","machine_lab")
+//adder("deepak","topic7","machine_lab")
 module.exports = adder;

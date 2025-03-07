@@ -1,28 +1,11 @@
 // Dashboard JS file
-
-window.socket = null;
-
-
 document.addEventListener("DOMContentLoaded", function() {
-    window.socket = io("http://localhost:8737");
-
-    window.socket.on("connect", () => {
-        console.log("Connected to WebSocket server with ID:", window.socket.id);
-    });
-
-    window.socket.on("disconnect", () => {
-        console.log("Disconnected from WebSocket server.");
-    });
-
-
-
     const menuicn = document.querySelector(".menuicn");
     const nav = document.querySelector(".navcontainer");
 
     menuicn.addEventListener("click", () => {
         nav.classList.toggle("navclose");
     });
-    
     document.addEventListener('DOMContentLoaded', function() {
         initializeTimeRange();
     });
@@ -139,7 +122,7 @@ async function updateStatus() {
 
     // Prepare the data to send
     const acData = {
-        deviceId: "PHASE1",
+        deviceId: "MOTOR",
         status: acToggle.checked ? "ON" : "OFF"
 
     };
@@ -161,26 +144,24 @@ async function updateStatus() {
 }
 
 // ✅ Define sender OUTSIDE `DOMContentLoaded` so it is accessible globally
-function getCookie(name) {
-    return document.cookie.split("; ")
-        .find(row => row.startsWith(name + "="))?.split("=")[1] || null;
-}
-
-// Async sender function
 async function sender(phase) {
     try {
-        const userEmail = getCookie("email");
+        const payload = { phase: phase };  
+        console.log("Sending payload:", payload);
 
-        if (!userEmail) {
-            console.error("No email found in cookies!");
-            return;
+        const response = await fetch('http://localhost:8737/api/topic/phase', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),  
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText}`);
         }
 
-        console.log("User Email:", userEmail);
-        console.log("Sending phase via WebSocket:", phase);
-
-        window.socket.emit("message", {phase});
-        
+        const data = await response.text();
+        console.log("Server Response:", data);
     } catch (error) {
         console.error("An error occurred:", error);
     }
@@ -193,7 +174,7 @@ window.sender = sender;
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const phaseModal = document.getElementById('phaseModal');
     const mainContent = document.querySelector('.main-content');
     const phaseOptions = document.querySelectorAll('.phase-option');
@@ -230,7 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show phase indicator
                 updatePhaseIndicator(selectedPhase);
                 
-                // Initialize WebSocket connection;
+                // Initialize WebSocket connection
+                initializeWebSocket(selectedPhase);
                 
                 // Show success alert
                 showAlert(`Now monitoring Phase ${selectedPhase}`);
@@ -248,10 +230,76 @@ document.addEventListener('DOMContentLoaded', function() {
         indicator.style.display = 'block';
     }
 
-    
+        const pathParts = window.location.pathname.split("/"); 
+        console.log(pathParts); 
+        // Output: ["", "discography", "adharit", "deepak"]
+
+        const label = pathParts[2];  // "adharit"
+        const email = pathParts[3]; // "deepak"
+        if (!label || !email) {
+            console.error("Missing label or email in URL.");
+            return;
+        }
+
+        // Initialize WebSocket globally
+        window.socket = io("http://localhost:8737");
+
+        function joinRoom(roomName) {
+            console.log(roomName)
+            socket.emit("joinRoom", roomName);
+        }
+
+        function leaveRoom(roomName) {
+            socket.emit("leaveRoom", roomName);
+        }
+
+        socket.on("roomMessage", (message) => {
+            console.log("Raw message received:", message);
+        
+            // Ensure message is an object (try parsing if needed)
+            if (typeof message === "string") {
+                try {
+                    message = JSON.parse(message);
+                } catch (error) {
+                    console.error("Failed to parse message:", error);
+                    return;
+                }
+            }
+        
+            console.log("Parsed message:", (message));
+            let deviceNumber = Number(message.device);
+            if (message.device === deviceNumber) {
+                updateDashboard(message);
+            }
+        });
+        
+
+        try {
+            const response = await fetch(`/api/user-subscription/${label}/${email}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Fetched subscription data:", data);
+
+            // Ensure `data.host` and `data.topic` exist
+            if (!data.host || !data.topic) {
+                throw new Error("Missing required subscription data (host or topic).");
+            }
+
+            // Correct usage of data
+            const roomName = `${data.host}_${data.topic}`;
+            console.log("Joining room:", roomName);
+            joinRoom(roomName);
+        } catch (error) {
+            console.error("Error fetching subscription:", error);
+        }
+        
+
 
     function updateDashboard(data) {
-        // Update voltage
+        //Update voltage
         if (data.voltage) {
             document.getElementById('voltageValue').textContent = `${data.voltage.toFixed(1)}V`;
         }
@@ -267,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Update other values as needed
+        console.log("ehy")
         updateGauges(data);
         updateLastRefreshTime();
     }

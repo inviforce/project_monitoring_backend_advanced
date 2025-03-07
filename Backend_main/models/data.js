@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
 
 const dataSchema = new mongoose.Schema({
-    device: {
-        type: Number,
+    host: {
+        type: String,
         required: true,
+    },
+    device:{
+        type:Number,
+        required:true,
     },
     voltage: {
         type: Number,
