@@ -218,15 +218,15 @@
                     <h3 class="card-title">Voltage</h3>
                     <i class="fas fa-bolt"></i>
                 </div>
-                <div class="card-value">220V</div>
+                <div class="card-value" id="voltageValue">220V</div>
                 <div class="card-trend">+2.5% from last hour</div>
             </div>
             <div class="card"  style="background-color: #212121;">
                 <div class="card-header">
-                    <h3 class="card-title">Current</h3>
+                    <h3 class="card-title" >Current</h3>
                     <i class="fas fa-wave-square"></i>
                 </div>
-                <div class="card-value">15A</div>
+                <div class="card-value" id="currentValue">15A</div>
                 <div class="card-trend">Stable</div>
             </div>
             <div class="card"  style="background-color: #212121;">
@@ -234,7 +234,7 @@
                     <h3 class="card-title">Power</h3>
                     <i class="fas fa-plug"></i>
                 </div>
-                <div class="card-value">3.3kW</div>
+                <div class="card-value" id="powerValue">3.3kW</div>
                 <div class="card-trend">-1.2% from last hour</div>
             </div>
         </div>
@@ -435,6 +435,7 @@
     <script src="/Frontend/index.js"></script>
     <script src="/Frontend/theme.js"></script>
     <script src="/Frontend/timeRange.js"></script>
+    <script src="/Frontend/graph_make.js"></script>
     <!-- <script>
         
         // document.addEventListener('DOMContentLoaded', function() {

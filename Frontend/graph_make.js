@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", async function() {
+
 const socket = io("http://localhost:8737"); // No need for require()
 
 const pathParts = window.location.pathname.split("/"); 
@@ -39,8 +41,20 @@ const pathParts = window.location.pathname.split("/");
             console.log("Parsed message:", (message));
             let deviceNumber = Number(message.device);
             if (message.device === deviceNumber) {
-                updateDashboard(message);
+                // updateDashboard(message);
+                updateGauges(
+                    message.voltage,
+                    message.current,
+                    message.power,
+                    message.energy,
+                    message.frequency,
+                    message.powerFactor,
+                  
+                );
+                
             }
+            
+            
         });
         
 
@@ -226,6 +240,8 @@ lineGraph('line2', 0, 'Humidity Over Time', humditydata);
 
 // Function to update the gauges with new data
 function updateGauges(voltage, current, power, energy, frequency, powerFactor, temperature = null, humidity = null) {
+    console.log("updateGauges called",voltage);
+
     Plotly.update('gauge1', { value: [voltage] }, [0]);
     Plotly.update('gauge2', { value: [current] }, [0]);
     Plotly.update('gauge3', { value: [power] }, [0]);
@@ -249,5 +265,5 @@ function updateGauges(voltage, current, power, energy, frequency, powerFactor, t
 }
 
 
-
+})
 
