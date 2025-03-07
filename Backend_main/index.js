@@ -47,7 +47,7 @@ const db = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mo
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
-        origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
+        origin: [ 'http://localhost:5500', 'http://127.0.0.1:5500'],
         methods: ['GET', 'POST'],
         credentials: true
     }
@@ -200,6 +200,9 @@ function subscribeToMQTT(cluster) {
     });
 
     client.on("message", (topic, message) => {
+        if(topic==="neoway"){
+            return;
+        }
         let mess = maker(message.toString());
         mess.host = host;
         mess.topic = topic;
@@ -267,6 +270,49 @@ clusterEmitter.on("clustersUpdated", (updatedClusters) => {
     updateSortedClusters();
 });
 
+function publishToMQTT(cluster, topic, message) {
+    console.log("Publishing to MQTT:", cluster, topic, message);
+
+    const { host, port, username, password, protocol } = cluster;
+
+    const mqttConfig = {
+        host,
+        port: parseInt(port),
+        username,
+        password,
+        protocol
+    };
+
+    const client = mqtt.connect(`mqtts://${host}`, mqttConfig);
+
+    client.on("connect", () => {
+        console.log(`Connected to MQTT Broker: ${host}:${port}`);
+
+        client.publish(topic, message, { qos: 1 }, (err) => {
+            if (err) {
+                console.error(`Failed to publish message to ${topic} on ${host}:`, err);
+            } else {
+                console.log(`Message published to ${topic} on ${host}:`, message);
+            }
+
+            // Close connection after publishing
+            console.log(`Disconnecting from ${host}`);
+            client.end();
+        });
+    });
+
+    client.on("error", (err) => {
+        console.error(`MQTT Error for cluster ${host}:`, err);
+        client.end(); // Ensure cleanup on error
+    });
+
+    client.on("close", () => {
+        console.log(`Disconnected from ${host}`);
+    });
+}
+
+
+
 app.post("/api/topic_name", async (req, res) => {
     const { topic, name,userEmail } = req.body;
 
@@ -329,6 +375,34 @@ app.post("/api/getUserTopics", async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
+
+
+app.post("/api/data", async (req, res) => {
+    try {
+        const { email, deviceId, status } = req.body;
+
+        if (!email || !deviceId || !status) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Find the user's cluster
+        const clust = await clusterModel.findOne({ "users.email": email });
+
+        if (!clust || !clust.cluster_info) {
+            return res.status(404).json({ error: "Cluster not found for the user" });
+        }
+
+        // Send message to MQTT
+        let zey=`${req.body.deviceId} ${req.body.status}`
+        await publishToMQTT(clust.cluster_info, "neoway", zey);
+
+        return res.status(200).json({ message: "AC status updated and sent to MQTT" });
+    } catch (error) {
+        console.error("Error in /api/data:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 app.use(express.static(path.join(__dirname, "../")));
 

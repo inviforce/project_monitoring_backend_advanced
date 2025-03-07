@@ -120,28 +120,39 @@ async function updateStatus() {
     const acStatus = document.getElementById('acStatus');
     acStatus.textContent = acToggle.checked ? 'ON' : 'OFF';
 
+    function getCookie(name) {
+        return document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="))
+            ?.split("=")[1] || null;
+    }
+
+    // Get user's email from cookies
+    const userEmail = getCookie("email");
+
     // Prepare the data to send
     const acData = {
         deviceId: "MOTOR",
-        status: acToggle.checked ? "ON" : "OFF"
-
+        status: acToggle.checked ? "ON" : "OFF",
+        email: userEmail
     };
 
+    console.log(acData);
+
     try {
-        const response = await fetch('http://localhost:8737/api/data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch("http://localhost:8737/api/data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(acData),
         });
 
         const result = await response.json();
-        console.log('AC Toggle Response:', result);
+        console.log("AC Toggle Response:", result);
     } catch (error) {
-        console.error('Error sending AC status:', error);
+        console.error("Error sending AC status:", error);
     }
 }
+
 
 // ✅ Define sender OUTSIDE `DOMContentLoaded` so it is accessible globally
 async function sender(phase) {
