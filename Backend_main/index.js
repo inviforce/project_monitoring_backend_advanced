@@ -14,17 +14,17 @@ const socketIo = require('socket.io');
 const { mqtt_subs, clusterEmitter } = require("./mqtt_handler/mqtt_topic_list.js");
 const clusterModel = require("./models/cluster_preff");
 const adder=require("./mqtt_handler/topic_adder.js");
-const { createClient } = require('redis'); //
+// const { createClient } = require('redis'); //
 
-const redisClient = createClient();
-
-
+// const redisClient = createClient();
 
 
-(async () => {
-    await redisClient.connect(); // ✅ Fix: Wrap in an async function
-    console.log("Connected to Redis");
-})();
+
+
+// (async () => {
+//     await redisClient.connect(); // ✅ Fix: Wrap in an async function
+//     console.log("Connected to Redis");
+// })();
 
 
 
