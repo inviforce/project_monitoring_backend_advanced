@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             confirmButton.disabled = false;
             // Store selected phase
             selectedPhase = this.dataset.phase;
+            sessionStorage.setItem('selectedPhase', selectedPhase);
         });
     });
 

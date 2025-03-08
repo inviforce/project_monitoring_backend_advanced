@@ -39,8 +39,10 @@ const pathParts = window.location.pathname.split("/");
             }
         
             console.log("Parsed message:", (message));
+            const selectedPhase = sessionStorage.getItem('selectedPhase');
             let deviceNumber = Number(message.device);
-            if (message.device === deviceNumber) {
+            let key=Number(selectedPhase)
+            if (key === deviceNumber)  {
                 updateDashboard(message);
                 
             }
