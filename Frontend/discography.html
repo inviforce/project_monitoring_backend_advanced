@@ -542,6 +542,131 @@
             }
         }
 
+                /* Mobile Media Queries */
+@media screen and (max-width: 768px) {
+    /* Sidebar transforms into a bottom navigation on mobile */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid #2a2d32;
+        z-index: 1000;
+        overflow-y: hidden;
+    }
+
+    .logo-container {
+        display: none; /* Hide logo container on mobile */
+    }
+
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        padding: 12px 8px;
+        flex-direction: column;
+        text-align: center;
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .sidebar ul li i {
+        font-size: 18px;
+        width: auto;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-group {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .view-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+}
+
+/* Small tablets (576px to 768px) */
+@media (min-width: 576px) and (max-width: 768px) {
+    
+    
+    .main {
+        margin-left: 200px;
+        padding: 15px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .filter-group {
+        flex-wrap: wrap;
+    }
+    
+    .search-container {
+        width: 250px;
+    }
+}
+
+
+/* Medium devices (tablets, 768px to 992px) */
+@media (min-width: 768px) and (max-width: 992px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .main {
+        margin-left: 220px;
+        padding: 20px;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    
+    .nested-actions {
+        display: none;
+    }
+    
+    .nested-item:hover .nested-actions {
+        display: flex;
+    }
+}
+
     </style>
 </head>
 <body>

@@ -273,6 +273,203 @@
             color: inherit;        /* Inherits the text color from the parent element */
         
         }
+
+                /* Mobile Media Queries */
+@media screen and (max-width: 768px) {
+    /* Sidebar transforms into a bottom navigation on mobile */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid #2a2d32;
+        z-index: 1000;
+        overflow-y: hidden;
+    }
+
+    .logo-container {
+        display: none; /* Hide logo container on mobile */
+    }
+
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        padding: 12px 8px;
+        flex-direction: column;
+        text-align: center;
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .sidebar ul li i {
+        font-size: 18px;
+        width: auto;
+    }
+
+    /* Adjust main content area */
+    .main {
+        margin-left: 0;
+        padding-bottom: 70px; /* Space for the bottom navigation */
+    }
+
+    /* Mobile hero section adjustments */
+    .hero-section {
+        padding: 60px 20px;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    .cta-button {
+        padding: 12px 24px;
+    }
+
+    /* Features section mobile adjustments */
+    .features-section {
+        padding: 50px 20px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .feature-card {
+        padding: 25px 20px;
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .feature-title {
+        font-size: 1.3rem;
+    }
+
+    /* Dashboard preview adjustments */
+    .dashboard-preview {
+        padding: 40px 20px;
+    }
+
+    .preview-image {
+        margin: 20px auto;
+        max-width: 100%;
+    }
+
+    /* Loader adjustments */
+    .loader {
+        font-size: 20px;
+        height: 30px;
+    }
+
+    /* Add a nice swipe animation for feature cards on mobile */
+    .feature-card {
+        animation: slide-in 0.6s ease-out;
+    }
+
+    @keyframes slide-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Improve floating shapes for mobile */
+    .floating-shapes .shape {
+        opacity: 0.15;
+    }
+
+    /* Optimize text wrap for smaller screens */
+    .feature-description {
+        font-size: 0.9rem;
+        max-width: 280px;
+        margin: 0 auto;
+    }
+
+    /* Add a smooth transition for bottom nav bar */
+    .sidebar {
+        transition: transform 0.3s ease;
+    }
+
+    /* Hide scrollbar on mobile */
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    
+    body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    /* Fix links in bottom navigation */
+    .inv_a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+/* Small phone optimizations */
+@media screen and (max-width: 375px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .feature-title {
+        font-size: 1.2rem;
+    }
+    
+    .cta-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+    
+    .sidebar ul li {
+        font-size: 10px;
+    }
+    
+    .sidebar ul li i {
+        font-size: 16px;
+    }
+}
+
+/* Add smooth scrolling for better mobile experience */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Animation for page transitions */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.main section {
+    animation: fadeIn 0.8s ease-in-out;
+}
     </style>
 </head>
 <body>
