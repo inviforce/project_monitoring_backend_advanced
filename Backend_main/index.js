@@ -424,7 +424,7 @@ app.get("/schedule",(req,res)=>{
     res.sendFile(path.join(__dirname, "../Frontend/schedule.html"));
 })
 app.get("/auto",(req,res)=>{
-    res.sendFile(path.join(__dirname, "../Frontend/auto.html"));
+    res.sendFile(path.join(__dirname, "../Frontend/Auto.html"));
 })
 
 app.get("/discography", restrictToLoggedinUserOnly ,(req,res)=>{
