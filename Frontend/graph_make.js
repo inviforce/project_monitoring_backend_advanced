@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async function() {
 
-const socket = io("http://localhost:8737"); // No need for require()
+const socket = io("https://vidyut-power-monitoring.onrender.com"); // No need for require()
 
 const pathParts = window.location.pathname.split("/"); 
         console.log(pathParts); 
@@ -14,7 +14,7 @@ const pathParts = window.location.pathname.split("/");
         }
 
         // Initialize WebSocket globally
-        window.socket = io("http://localhost:8737");
+        window.socket = io("https://vidyut-power-monitoring.onrender.com");
 
         function joinRoom(roomName) {
             console.log(roomName)

@@ -1,6 +1,6 @@
 async function openWin(topic = 'topic7') {
   try {
-      await fetch('http://localhost:8737/api/data/topic', {
+      await fetch('https://vidyut-power-monitoring.onrender.com/api/data/topic', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',

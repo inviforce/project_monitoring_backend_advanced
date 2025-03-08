@@ -32,7 +32,7 @@ function initializeTimeRange() {
 
         try {
             // Updated URL to use port 3000
-            const response = await fetch(`http://localhost:8737/datee?startTime=${timeRangeData.startDateTime}&endTime=${timeRangeData.endDateTime}`);
+            const response = await fetch(`https://vidyut-power-monitoring.onrender.com/datee?startTime=${timeRangeData.startDateTime}&endTime=${timeRangeData.endDateTime}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);

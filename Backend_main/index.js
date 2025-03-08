@@ -49,7 +49,7 @@ const db = process.env.MONGO_URL;
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
-        origin: [ 'http://localhost:5500', 'http://127.0.0.1:5500'],
+        origin: [ 'https://vidyut-power-monitoring.onrender.com'],
         methods: ['GET', 'POST'],
         credentials: true
     }

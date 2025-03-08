@@ -387,7 +387,7 @@
     <script>
         let schedules = JSON.parse(localStorage.getItem('acSchedules')) || [];
         let worldTime = null;
-        const API_ENDPOINT = 'http://localhost:8737/api/data';
+        const API_ENDPOINT = 'https://vidyut-power-monitoring.onrender.com/api/data';
         const MQTT_TOPIC = 'neoway';
 
         async function updateWorldTime() {
