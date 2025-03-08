@@ -1,14 +1,8 @@
 // Dashboard JS file
 document.addEventListener("DOMContentLoaded", function() {
-    const menuicn = document.querySelector(".menuicn");
-    const nav = document.querySelector(".navcontainer");
 
-    menuicn.addEventListener("click", () => {
-        nav.classList.toggle("navclose");
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeTimeRange();
-    });
+    initializeTimeRange();
+    
     
     document.getElementById("deviceDataForm").addEventListener("submit", async function(event) {
         console.log("Form submission triggered");
@@ -205,6 +199,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             confirmButton.disabled = false;
             // Store selected phase
             selectedPhase = this.dataset.phase;
+            sessionStorage.setItem('selectedPhase', selectedPhase);
         });
     });
 
@@ -223,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 updatePhaseIndicator(selectedPhase);
                 
                 // Initialize WebSocket connection
-                initializeWebSocket(selectedPhase);
+                // initializeWebSocket(selectedPhase);
                 
                 // Show success alert
                 showAlert(`Now monitoring Phase ${selectedPhase}`);
@@ -241,102 +236,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         indicator.style.display = 'block';
     }
 
-        const pathParts = window.location.pathname.split("/"); 
-        console.log(pathParts); 
-        // Output: ["", "discography", "adharit", "deepak"]
 
-        const label = pathParts[2];  // "adharit"
-        const email = pathParts[3]; // "deepak"
-        if (!label || !email) {
-            console.error("Missing label or email in URL.");
-            return;
-        }
-
-        // Initialize WebSocket globally
-        window.socket = io("http://localhost:8737");
-
-        function joinRoom(roomName) {
-            console.log(roomName)
-            socket.emit("joinRoom", roomName);
-        }
-
-        function leaveRoom(roomName) {
-            socket.emit("leaveRoom", roomName);
-        }
-
-        socket.on("roomMessage", (message) => {
-            console.log("Raw message received:", message);
-        
-            // Ensure message is an object (try parsing if needed)
-            if (typeof message === "string") {
-                try {
-                    message = JSON.parse(message);
-                } catch (error) {
-                    console.error("Failed to parse message:", error);
-                    return;
-                }
-            }
-        
-            console.log("Parsed message:", (message));
-            let deviceNumber = Number(message.device);
-            if (message.device === deviceNumber) {
-                updateDashboard(message);
-            }
-        });
-        
-
-        try {
-            const response = await fetch(`/api/user-subscription/${label}/${email}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log("Fetched subscription data:", data);
-
-            // Ensure `data.host` and `data.topic` exist
-            if (!data.host || !data.topic) {
-                throw new Error("Missing required subscription data (host or topic).");
-            }
-
-            // Correct usage of data
-            const roomName = `${data.host}_${data.topic}`;
-            console.log("Joining room:", roomName);
-            joinRoom(roomName);
-        } catch (error) {
-            console.error("Error fetching subscription:", error);
-        }
-        
-
-
-    function updateDashboard(data) {
-        //Update voltage
-        if (data.voltage) {
-            document.getElementById('voltageValue').textContent = `${data.voltage.toFixed(1)}V`;
-        }
-        
-        // Update current
-        if (data.current) {
-            document.getElementById('currentValue').textContent = `${data.current.toFixed(2)}A`;
-        }
-        
-        // Update power
-        if (data.power) {
-            document.getElementById('powerValue').textContent = `${data.power.toFixed(2)}W`;
-        }
-        
-        // Update other values as needed
-        console.log("ehy")
-        updateGauges(data);
-        updateLastRefreshTime();
-    }
-
-    function updateLastRefreshTime() {
-        const now = new Date();
-        document.getElementById('lastUpdateTime').textContent = 
-            now.toLocaleTimeString();
-    }
-
+    
     function showAlert(message, type = 'success') {
         const alert = document.createElement('div');
         alert.className = `alert alert-${type}`;
@@ -364,14 +265,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 
 // ✅ DOMContentLoaded only for other setup tasks
-document.addEventListener("DOMContentLoaded", function() {
-    const menuicn = document.querySelector(".menuicn");
-    const nav = document.querySelector(".navcontainer");
+// document.addEventListener("DOMContentLoaded", function() {
+//     const menuicn = document.querySelector(".menuicn");
+//     const nav = document.querySelector(".navcontainer");
 
-    menuicn.addEventListener("click", () => {
-        nav.classList.toggle("navclose");
-    });
+//     menuicn.addEventListener("click", () => {
+//         nav.classList.toggle("navclose");
+//     });
 
-    // ✅ Ensure initializeTimeRange() runs when DOM is loaded
-    initializeTimeRange();
-});
+//     // ✅ Ensure initializeTimeRange() runs when DOM is loaded
+//     initializeTimeRange();
+// });

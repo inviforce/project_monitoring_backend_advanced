@@ -39,23 +39,52 @@ const pathParts = window.location.pathname.split("/");
             }
         
             console.log("Parsed message:", (message));
+            const selectedPhase = sessionStorage.getItem('selectedPhase');
             let deviceNumber = Number(message.device);
-            if (message.device === deviceNumber) {
-                // updateDashboard(message);
-                updateGauges(
-                    message.voltage,
-                    message.current,
-                    message.power,
-                    message.energy,
-                    message.frequency,
-                    message.powerFactor,
-                  
-                );
+            let key=Number(selectedPhase)
+            if (key === deviceNumber)  {
+                updateDashboard(message);
                 
             }
             
             
         });
+
+        function updateDashboard(data) {
+            //Update voltage
+            if (data.voltage) {
+                document.getElementById('voltageValue').textContent = `${data.voltage.toFixed(1)}V`;
+            }
+            
+            // Update current
+            if (data.current) {
+                document.getElementById('currentValue').textContent = `${data.current.toFixed(2)}A`;
+            }
+            
+            // Update power
+            if (data.power) {
+                document.getElementById('powerValue').textContent = `${data.power.toFixed(2)}W`;
+            }
+            
+            // Update other values as needed
+            console.log("ehy")
+            updateGauges(
+                data.voltage,
+                data.current,
+                data.power,
+                data.energy,
+                data.frequency,
+                data.powerFactor,
+            );
+            // updateLastRefreshTime();
+        }
+    
+        // function updateLastRefreshTime() {
+        //     const now = new Date();
+        //     document.getElementById('lastUpdateTime').textContent = 
+        //         now.toLocaleTimeString();
+        // }
+    
         
 
         try {
