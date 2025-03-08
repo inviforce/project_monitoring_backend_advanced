@@ -75,7 +75,52 @@
             100% { transform: translateY(-400%); }
         }
 
-        
+         /* Phase selector buttons styling */
+         .phase-selector {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .phase-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 25vw;
+        }
+
+        .phase-btn i {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .phase-btn.active {
+            background-color: #956afa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(149, 106, 250, 0.3);
+        }
+
+        .phase-btn:hover:not(.active) {
+            background-color: #444;
+        }
+
+        .device-id {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 3px;
+        }   
     </style>
 </head>
 <body>
@@ -123,8 +168,8 @@
 </div>
 
 <!-- Active Phase Indicator -->
-<div class="active-phase-indicator" id="phaseIndicator">
-    Monitoring Phase <span id="currentPhase">1</span>
+<div style="margin-top: 50px; margin-right:20px ;" class="active-phase-indicator" id="phaseIndicator">
+    Dashboard <span id="currentPhase">1</span>
 </div>
 
     <header class="header">
@@ -148,42 +193,18 @@
     </header>
 
     <nav class="sidebar">
-        <!-- <div class="nav-item phase" data-phase="1" onclick="sender(1)">
+        <div class="nav-item phase" data-phase="1" onclick="selectPhase(this); changePhase(1)">
             <i class="fas fa-chart-line"></i>
             <span>Phase 1</span>
         </div>
-        <div class="nav-item phase" data-phase="2" onclick="sender(2)">
+        <div class="nav-item phase" data-phase="2" onclick="selectPhase(this); changePhase(2)">
             <i class="fas fa-chart-line"></i>
             <span>Phase 2</span>
         </div>
-        <div class="nav-item phase" data-phase="3" onclick="sender(3)">
+        <div class="nav-item phase" data-phase="3" onclick="selectPhase(this); changePhase(3)">
             <i class="fas fa-chart-line"></i>
             <span>Phase 3</span>
-        </div> -->
-        <style>
-            .nav-item.phase {
-                padding: 10px;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-            }
-            .nav-item.phase.active {
-                background-color: #007bff; /* Change to the desired active color */
-                color: white;
-            }
-        </style>
-        
-        <!-- <div class="nav-item phase" data-phase="1" onclick="selectPhase(this); sender(1)">
-            <i class="fas fa-chart-line"></i>
-            <span>Phase 1</span>
         </div>
-        <div class="nav-item phase" data-phase="2" onclick="selectPhase(this); sender(2)">
-            <i class="fas fa-chart-line"></i>
-            <span>Phase 2</span>
-        </div>
-        <div class="nav-item phase" data-phase="3" onclick="selectPhase(this); sender(3)">
-            <i class="fas fa-chart-line"></i>
-            <span>Phase 3</span>
-        </div> -->
         
         <script>
             function selectPhase(selectedElement) {
@@ -210,35 +231,100 @@
             <span>Logout</span>
         </div>
     </nav>
-
+        
     <main class="main-content">
+        <!-- Phase Selector Buttons (Always visible) -->
+        <div class="phase-selector">
+            <button class="phase-btn" id="phase1Btn" onclick="changePhase(1)">
+                <i class="fas fa-bolt"></i>
+                <span>Phase 1</span>
+                <div class="device-id">SEG0001</div>
+            </button>
+            <button class="phase-btn" id="phase2Btn" onclick="changePhase(2)">
+                <i class="fas fa-bolt"></i>
+                <span>Phase 2</span>
+                <div class="device-id">SEG0002</div>
+            </button>
+            <button class="phase-btn" id="phase3Btn" onclick="changePhase(3)">
+                <i class="fas fa-bolt"></i>
+                <span>Phase 3</span>
+                <div class="device-id">SEG0003</div>
+            </button>
+        </div>
+
         <div class="grid-container">
             <div class="card" style="background-color: #212121;">
-                <div class="card-header" >
+                <div class="card-header">
                     <h3 class="card-title">Voltage</h3>
                     <i class="fas fa-bolt"></i>
                 </div>
                 <div class="card-value" id="voltageValue">220V</div>
-                <div class="card-trend">+2.5% from last hour</div>
+                <div class="card-trend" id="voltageTrend">Stable</div>
             </div>
-            <div class="card"  style="background-color: #212121;">
+        
+            <div class="card" style="background-color: #212121;">
                 <div class="card-header">
-                    <h3 class="card-title" >Current</h3>
+                    <h3 class="card-title">Current</h3>
                     <i class="fas fa-wave-square"></i>
                 </div>
                 <div class="card-value" id="currentValue">15A</div>
-                <div class="card-trend">Stable</div>
+                <div class="card-trend" id="currentTrend">Stable</div>
             </div>
-            <div class="card"  style="background-color: #212121;">
+        
+            <div class="card" style="background-color: #212121;">
                 <div class="card-header">
                     <h3 class="card-title">Power</h3>
                     <i class="fas fa-plug"></i>
                 </div>
                 <div class="card-value" id="powerValue">3.3kW</div>
-                <div class="card-trend">-1.2% from last hour</div>
+                <div class="card-trend" id="powerTrend">Stable</div>
             </div>
         </div>
 
+        <style>
+            .grid-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                padding: 20px;
+            }
+        
+            .card {
+                padding: 15px;
+                border-radius: 10px;
+                color: white;
+                text-align: center;
+                box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+                transition: transform 0.3s ease-in-out;
+            }
+        
+            .card:hover {
+                transform: scale(1.05);
+            }
+        
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+        
+            .card-value {
+                font-size: 1.8em;
+                font-weight: bold;
+            }
+        
+            .card-trend {
+                margin-top: 10px;
+                font-size: 1em;
+                font-weight: bold;
+                color: #94a3b8; /* Default gray */
+            }
+        
+            /* Trend color updates handled dynamically in JavaScript */
+        </style>
+        
 
         <div class="gauge-container" style="display: flex; flex-wrap: wrap; justify-content: center; background-color: #212121; ">
             <div id="gauge1" class="gauge" style="height: 50vh;"></div>
@@ -366,6 +452,74 @@
         
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
+        });
+
+        // Phase Change Functionality
+        function changePhase(phaseNumber) {
+           // Update current phase indicator
+            document.getElementById('currentPhase').textContent = phaseNumber;
+            
+            // Update active state of phase buttons
+            document.querySelectorAll('.phase-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`phase${phaseNumber}Btn`).classList.add('active');
+            
+            // Update active state in sidebar
+            document.querySelectorAll('.nav-item.phase').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.nav-item.phase[data-phase="${phaseNumber}"]`).classList.add('active');
+            
+            // Call sender function if it exists (for data fetching)
+            if (typeof sender === 'function') {
+                sender(phaseNumber);
+            }
+            
+            // You might also want to update other UI elements based on the phase
+            console.log(`Switched to Phase ${phaseNumber}, Device SEG000${phaseNumber}`);
+        }
+
+        // Initialize with Phase 1 or the phase from modal selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set the initial active phase on the phase buttons
+            const initialPhase = parseInt(document.getElementById('currentPhase').textContent) || 1;
+            document.getElementById(`phase${initialPhase}Btn`).classList.add('active');
+            document.querySelector(`.nav-item.phase[data-phase="${initialPhase}"]`).classList.add('active');
+            
+            // Handle phase selection from the initial modal
+            const phaseOptions = document.querySelectorAll('.phase-option');
+            const confirmBtn = document.getElementById('confirmPhase');
+            let selectedPhase = null;
+            
+            phaseOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    phaseOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to selected option
+                    this.classList.add('active');
+                    
+                    // Get selected phase number
+                    selectedPhase = this.getAttribute('data-phase');
+                    
+                    // Enable confirm button
+                    confirmBtn.removeAttribute('disabled');
+                });
+            });
+            
+            confirmBtn.addEventListener('click', function() {
+                if (selectedPhase) {
+                    // Update phase indicator
+                    document.getElementById('currentPhase').textContent = selectedPhase;
+                    
+                    // Close modal
+                    document.getElementById('phaseModal').style.display = 'none';
+                    
+                    // Update active phase button
+                    changePhase(parseInt(selectedPhase));
+                }
+            });
         });
 
     </script>

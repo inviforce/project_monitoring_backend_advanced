@@ -31,7 +31,7 @@ require('dotenv').config();  // Load .env variables
 
 
 const app = express();
-cont httpPort=8737
+const httpPort=8737
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
