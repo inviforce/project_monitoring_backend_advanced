@@ -22,6 +22,27 @@
             color: #fff;
         }
 
+        /* Top-right button */
+        .closebtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .closebtn a {
+            text-decoration: none;
+            background: #f22d2d;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .closebtn a:hover {
+            background: #b71c1c;
+        }
+
         /* Container styling */
         .form-container {
             background: #2c2c2c;
@@ -97,6 +118,10 @@
     </style>
 </head>
 <body>
+
+    <div class="closebtn">
+        <a href="/discography">close</a>
+    </div>
 
     <div class="form-container">
         <h2>Vidyut - Power Monitoring</h2>
