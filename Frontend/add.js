@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const userEmail = getCookie("email");
         try {
             // Send the data to the server using fetch
-            const response = await fetch('http://localhost:8737/api/topic_name', {
+            const response = await fetch('https://vidyut-power-monitoring.onrender.com/api/topic_name', {
                 method: 'POST', // HTTP method
                 headers: {
                     'Content-Type': 'application/json', // Specify the content type
