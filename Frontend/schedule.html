@@ -294,6 +294,72 @@
             transform: scale(1.1);
             background: #8456e9;
         }
+
+        @media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .control-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .status-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .stats-card {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .add-schedule-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .schedule-form {
+        width: 100%;
+    }
+
+    .days-selector {
+        justify-content: center;
+    }
+
+    .day-label {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
     </style>
 </head>
 <body>

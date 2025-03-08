@@ -133,6 +133,72 @@
         .text-dark {
             color: #ff5656 !important;
         }
+
+        @media (max-width: 768px) {
+    /* Sidebar transforms into a bottom navigation on mobile */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid #2a2d32;
+        z-index: 1000;
+        overflow-y: hidden;
+    }
+
+    .logo-container {
+        display: none; /* Hide logo container on mobile */
+    }
+
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        padding: 12px 8px;
+        flex-direction: column;
+        text-align: center;
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .sidebar ul li i {
+        font-size: 18px;
+        width: auto;
+    }
+
+    .container {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .row {
+        justify-content: center;
+    }
+
+    .col-xxl-4, .col-xl-5, .col-lg-5, .col-md-7, .col-sm-9 {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+
+    .text-center h1 {
+        font-size: 20px;
+    }
+}
+
     </style>
 </head>
 <body>

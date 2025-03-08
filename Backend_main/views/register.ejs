@@ -66,6 +66,52 @@
             border: none;
             transition: transform 0.3s ease;
         }
+
+        @media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+    }
+
+    .logo-container {
+        padding: 10px;
+    }
+
+    .container {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .card {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        display: none; /* Hide sidebar on very small screens */
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .form-control {
+        font-size: 14px;
+    }
+}
+
     </style>
 </head>
 <body>

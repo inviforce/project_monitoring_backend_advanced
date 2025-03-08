@@ -220,6 +220,75 @@
             font-size: 12px;
             animation: pulse 2s infinite;
         }
+        @media screen and (max-width: 768px) {
+   /* Sidebar transforms into a bottom navigation on mobile */
+   .sidebar {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        border-right: none;
+        border-top: 1px solid #2a2d32;
+        z-index: 1000;
+        overflow-y: hidden;
+    }
+
+    .logo-container {
+        display: none; /* Hide logo container on mobile */
+    }
+
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        padding: 12px 8px;
+        flex-direction: column;
+        text-align: center;
+        font-size: 12px;
+        gap: 5px;
+    }
+
+    .sidebar ul li i {
+        font-size: 18px;
+        width: auto;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 20px;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .location-card {
+        border-radius: 10px;
+    }
+
+    .card-image {
+        height: 150px;
+    }
+
+    .location-name {
+        font-size: 20px;
+    }
+
+    .card-btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
     </style>
 </head>
 <body>
