@@ -17,7 +17,9 @@ const adder=require("./mqtt_handler/topic_adder.js");
 // const { createClient } = require('redis'); //
 
 // const redisClient = createClient();
+require('dotenv').config();  // Load .env variables
 
+//const httpPort = process.env.PORT || 5000;  
 
 
 
@@ -29,8 +31,7 @@ const adder=require("./mqtt_handler/topic_adder.js");
 
 
 const app = express();
-const httpPort = 8737;
-
+cont httpPort=8737
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
