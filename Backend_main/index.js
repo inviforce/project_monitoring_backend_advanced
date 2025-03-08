@@ -1,9 +1,10 @@
+const path = require('path');
 const WebSocket = require('ws')
+require('dotenv').config(({path : path.resolve(__dirname, "./.env")}));
 const mongoose = require("mongoose")
 const mqtt = require('mqtt');
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const maker = require("./utilities/parseDeviceData.js");
 const Data = require("./models/data.js")
 const cookieParser = require("cookie-parser");
@@ -31,7 +32,7 @@ require('dotenv').config();  // Load .env variables
 
 
 const app = express();
-const httpPort=8737
+const httpPort= process.env.PORT || 8737
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
@@ -41,7 +42,7 @@ const userRoute = require("./routes/user.js");
 
 app.use("/user",userRoute)
 
-const db = 'mongodb+srv://hemlatasharmasatish:lgDngzsMzj1q26bE@cluster0.4ejh8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const db = process.env.MONGO_URL;
 
 
 
@@ -92,7 +93,7 @@ io.on("connection", (socket) => {
 
 mongoose.connect(db)
     .then(() => {
-        console.log("Connected to MongoDB");
+        console.log("Connected to MongoDB : " , process.env.MONGO_URL);
     })
     .catch(err => {
         console.error("MongoDB connection error:", err);
