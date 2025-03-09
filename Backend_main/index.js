@@ -32,7 +32,7 @@ require('dotenv').config();  // Load .env variables
 
 
 const app = express();
-const httpPort= process.env.PORT || 8737
+const httpPort=  process.env.PORT || 8737
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
@@ -202,27 +202,40 @@ function subscribeToMQTT(cluster) {
     });
 
     client.on("message", (topic, message) => {
-        if(topic==="neoway"){
+        if (topic === "neoway") return;
+    
+        console.log("Received message:", message.toString());
+        let formattedMessages = maker(message.toString()); // Now returns an array
+    
+        if (!Array.isArray(formattedMessages) || formattedMessages.length === 0) {
+            console.error("maker() did not return a valid array:", formattedMessages);
             return;
         }
-        let mess = maker(message.toString());
-        mess.host = host;
-        mess.topic = topic;
-        console.log(mess);
-        messageQueue.push(mess);
-        console.log(`Message received on ${topic} from ${host}: ${message.toString()}`);
-
-        // Construct the room name: `host_topic`
-        const roomName = `${host}_${topic}`;
-
-        // Only emit the message if the room exists
-        if (sortedClusters.includes(roomName)) {
-            console.log(`Forwarding MQTT message to room: ${roomName}`);
-            io.to(roomName).emit("roomMessage", mess);
-        } else {
-            console.log(`Ignoring message, room ${roomName} is not in sortedClusters`);
-        }
+    
+        formattedMessages.forEach(mess => {
+            mess.host = host;
+            mess.topic = topic;
+            console.log(mess);
+            messageQueue.push(mess);
+    
+            console.log(`Message received on ${topic} from ${host}: ${message.toString()}`);
+    
+            const roomName = `${host}_${topic}`;
+    
+            if (sortedClusters.includes(roomName)) {
+                console.log(`Forwarding MQTT message to room: ${roomName}`);
+                io.to(roomName).emit("roomMessage", mess);
+            } else {
+                console.log(`Ignoring message, room ${roomName} is not in sortedClusters`);
+            }
+        });
     });
+    
+    
+    
+    
+    
+    
 
     client.on("error", (err) => {
         console.error(`MQTT Error for cluster ${cluster._id}:`, err);
