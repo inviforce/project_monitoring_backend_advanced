@@ -257,11 +257,11 @@ function lineGraph(id, titleText, values) {
     Plotly.newPlot(id, data, layout, config);
 }
 // Create the gauges with initial values
-createGauge('gauge1', 0, 'Voltage', 0.00, 500.00);
-createGauge('gauge2', 0, 'Current', 0.0, 100.0);
-createGauge('gauge3', 0, 'Power', 0.0, 500.0);
-createGauge('gauge4', 0, 'Energy', 0.0000, 0.01000);
-createGauge('gauge5', 0, 'Frequency', 0.0, 200.0);
+createGauge('gauge1', 0, 'Voltage(V)', 0.00, 500.00);
+createGauge('gauge2', 0, 'Current(A)', 0.0, 100.0);
+createGauge('gauge3', 0, 'Power(kW)', 0.0, 500.0);
+createGauge('gauge4', 0, 'Energy(kJ)', 0.0000, 0.01000);
+createGauge('gauge5', 0, 'Frequency(Hz)', 0.0, 200.0);
 createGauge('gauge6', 0, 'Power Factor', 0.0, 1.0);
 lineGraph('line1', 0, 'Temperature Over Time', temperatureData);
 lineGraph('line2', 0, 'Humidity Over Time', humditydata);
