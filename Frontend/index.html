@@ -358,7 +358,7 @@
             </div>
             
 
-            <div class="container11"> 
+            <!-- <div class="container11"> 
                 <div class="container10" id="box">
                     <h2>Enter Device Data</h2>
                     <form id="deviceDataForm">
@@ -438,7 +438,7 @@
                     </div>                        
                     </div>
                 </div>
-    
+     -->
 
 
     </main>
@@ -496,7 +496,7 @@
                 option.addEventListener('click', function() {
                     // Remove active class from all options
                     phaseOptions.forEach(opt => opt.classList.remove('active'));
-                    
+                    sessionStorage.setItem('selectedPhase', selectedPhase);
                     // Add active class to selected option
                     this.classList.add('active');
                     

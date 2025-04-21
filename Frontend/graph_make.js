@@ -42,6 +42,7 @@ const pathParts = window.location.pathname.split("/");
             const selectedPhase = sessionStorage.getItem('selectedPhase');
             let deviceNumber = Number(message.device);
             let key=Number(selectedPhase)
+            console.log(key)
             if (key === deviceNumber)  {
                 updateDashboard(message);
                 

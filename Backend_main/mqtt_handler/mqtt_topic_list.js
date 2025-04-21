@@ -17,8 +17,8 @@ async function mqtt_subs() {
         }
 
         // Fetch initial clusters
-        clusters = await clusterModel.find({});
-        console.log("Initial Clusters Loaded:", clusters);
+        const clusters = await clusterModel.find({});
+        console.log("Initial Clusters Loaded:", JSON.stringify(clusters, null, 2));
 
         // Watch the collection for changes
         const changeStream = clusterModel.watch();
