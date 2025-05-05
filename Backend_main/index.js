@@ -392,6 +392,32 @@ app.post("/api/getUserTopics", async (req, res) => {
 });
 
 
+// app.post("/api/data", async (req, res) => {
+//     try {
+//         const { email, deviceId, status } = req.body;
+
+//         if (!email || !deviceId || !status) {
+//             return res.status(400).json({ error: "Missing required fields" });
+//         }
+
+//         // Find the user's cluster
+//         const clust = await clusterModel.findOne({ "users.email": email });
+
+//         if (!clust || !clust.cluster_info) {
+//             return res.status(404).json({ error: "Cluster not found for the user" });
+//         }
+
+//         // Send message to MQTT
+//         let zey=`${req.body.deviceId} ${req.body.status}`
+//         await publishToMQTT(clust.cluster_info, "neoway", zey);
+
+//         return res.status(200).json({ message: "AC status updated and sent to MQTT" });
+//     } catch (error) {
+//         console.error("Error in /api/data:", error);
+//         return res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
+
 app.post("/api/data", async (req, res) => {
     try {
         const { email, deviceId, status } = req.body;
@@ -400,24 +426,50 @@ app.post("/api/data", async (req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // Find the user's cluster
-        const clust = await clusterModel.findOne({ "users.email": email });
+        // Hardcoded MQTT broker settings (HiveMQ Cloud)
+        const brokerUrl = 'mqtts://e800a45536b84764b7075bdc33165c5a.s1.eu.hivemq.cloud:8883';
 
-        if (!clust || !clust.cluster_info) {
-            return res.status(404).json({ error: "Cluster not found for the user" });
-        }
+        const options = {
+            clientId: 'mqtt_meter_client_' + Math.random().toString(16).substr(2, 8),
+            username: 'meter-module',
+            password: 'Meter@123',
+            clean: true,
+            connectTimeout: 4000,
+            reconnectPeriod: 1000
+        };
 
-        // Send message to MQTT
-        let zey=`${req.body.deviceId} ${req.body.status}`
-        await publishToMQTT(clust.cluster_info, "neoway", zey);
+        const topic = 'neoway';
+        const message = `${deviceId} ${status}`;
 
-        return res.status(200).json({ message: "AC status updated and sent to MQTT" });
+        const client = mqtt.connect(brokerUrl, options);
+
+        client.on('connect', () => {
+            console.log('✅ Connected to HiveMQ Cloud');
+
+            client.publish(topic, message, { qos: 1 }, (err) => {
+                if (err) {
+                    console.error('❌ Publish error:', err);
+                    return res.status(500).json({ error: "Failed to publish message to MQTT" });
+                } else {
+                    console.log(`📤 Published "${message}" to topic "${topic}"`);
+                    res.status(200).json({ message: "AC status updated and sent to MQTT" });
+                }
+
+                client.end();
+            });
+        });
+
+        client.on('error', (err) => {
+            console.error('❌ MQTT Connection error:', err);
+            res.status(500).json({ error: "MQTT connection failed" });
+            client.end();
+        });
+
     } catch (error) {
         console.error("Error in /api/data:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
-
 
 app.use(express.static(path.join(__dirname, "../")));
 
